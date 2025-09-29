@@ -119,15 +119,93 @@
       position: relative;
       overflow-x: hidden;
       overflow-y: auto;
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
     }
-    .block h2 {
-      margin-top: 0;
+    .block-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 4mm;
+      margin-bottom: 4mm;
+    }
+    .block-header h2 {
+      margin: 0;
       font-size: 14pt;
       letter-spacing: -0.2pt;
+      flex: 1 1 auto;
+    }
+    .block-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 2mm;
+      flex-wrap: wrap;
+    }
+    .block-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 999px;
+      background: #f8fafc;
+      padding: 1.5mm 4mm;
+      font-size: 8pt;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+      white-space: nowrap;
+    }
+    .block-action:hover,
+    .block-action:focus-visible {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-soft);
+      outline: none;
+    }
+    .block-action[hidden] {
+      display: none !important;
     }
     .block p, .block li {
       font-size: 10pt;
       line-height: 1.45;
+    }
+    .block.is-expanded {
+      box-shadow: 0 16px 60px rgba(15, 23, 42, 0.22);
+      border-color: rgba(29, 78, 216, 0.35);
+      overflow: auto;
+      background: #ffffff;
+      z-index: 40;
+    }
+    .block.is-expanded[data-expanded-mode="page"] {
+      position: absolute;
+      inset: 14mm 18mm 14mm 18mm;
+      border-radius: 10px;
+      max-width: none;
+      max-height: none;
+    }
+    .block.is-expanded[data-expanded-mode="screen"] {
+      position: fixed;
+      inset: 0;
+      margin: 0;
+      width: 100vw;
+      height: 100vh;
+      border-radius: 0;
+      padding: 16mm;
+      max-width: none;
+      max-height: none;
+      z-index: 1600;
+    }
+    body[data-expanded="screen"] {
+      overflow: hidden;
+    }
+    .page[data-expanded] {
+      overflow: hidden;
+    }
+    .page[data-expanded] header,
+    .page[data-expanded] footer,
+    .page[data-expanded] main > .block:not(.is-expanded) {
+      opacity: 0;
+      pointer-events: none;
+      user-select: none;
     }
     .block ul {
       margin: 0;
@@ -707,6 +785,18 @@
       .page::before {
         display: none;
       }
+      .block-actions {
+        display: none !important;
+      }
+      .block.is-expanded {
+        position: static !important;
+        inset: auto !important;
+        width: auto !important;
+        height: auto !important;
+        padding: 6mm !important;
+        box-shadow: none !important;
+        border-color: rgba(0,0,0,0.1) !important;
+      }
       footer button {
         display: none;
       }
@@ -733,8 +823,15 @@
       </div>
     </header>
     <main>
-      <section class="block flow-map" aria-labelledby="map-title">
-        <h2 id="map-title"></h2>
+      <section class="block flow-map" aria-labelledby="map-title" aria-expanded="false" tabindex="-1" data-block="map">
+        <div class="block-header">
+          <h2 id="map-title"></h2>
+          <div class="block-actions" data-block-actions role="group">
+            <button type="button" class="block-action" data-expand-mode="page"></button>
+            <button type="button" class="block-action" data-expand-mode="screen"></button>
+            <button type="button" class="block-action" data-collapse hidden></button>
+          </div>
+        </div>
         <div class="map-stage" role="application" aria-labelledby="map-title" aria-describedby="map-instructions">
           <div class="map-toolbar" role="group" aria-label="" id="map-toolbar">
             <button type="button" id="fit-to-view"></button>
@@ -783,8 +880,15 @@
           <div class="legend-item" data-type="frame"><span class="legend-swatch"></span><span id="legend-frame"></span></div>
         </div>
       </section>
-      <section class="block" aria-labelledby="steps-title">
-        <h2 id="steps-title"></h2>
+      <section class="block" aria-labelledby="steps-title" aria-expanded="false" tabindex="-1" data-block="timeline">
+        <div class="block-header">
+          <h2 id="steps-title"></h2>
+          <div class="block-actions" data-block-actions role="group">
+            <button type="button" class="block-action" data-expand-mode="page"></button>
+            <button type="button" class="block-action" data-expand-mode="screen"></button>
+            <button type="button" class="block-action" data-collapse hidden></button>
+          </div>
+        </div>
         <div class="timeline" role="tablist" aria-label="" id="timeline"></div>
         <div class="step-panel" role="tabpanel" id="step-panel"></div>
         <div class="regulation-grid" aria-label="" id="regulation-grid"></div>
@@ -887,6 +991,12 @@
         "strand": "Направленность цепи (5′→3′ / 3′→5′)",
         "frame": "Окно координат (frame, сборка hg38)"
       }
+    },
+    "blocks": {
+      "actionsAria": "Режимы просмотра секции",
+      "expandPage": "На страницу A4",
+      "expandScreen": "Во весь экран",
+      "collapse": "Свернуть"
     },
     "timeline": {
       "title": "Ключевые стадии и контрольные точки",
@@ -1658,6 +1768,12 @@
         "frame": "Coordinate frame / genomic window"
       }
     },
+    "blocks": {
+      "actionsAria": "Section view options",
+      "expandPage": "Fill A4 page",
+      "expandScreen": "Full screen",
+      "collapse": "Collapse"
+    },
     "timeline": {
       "title": "Key stages and checkpoints",
       "ariaLabel": "Stages",
@@ -2427,6 +2543,12 @@
         "strand": "Strangrichtung (5′→3′ / 3′→5′)",
         "frame": "Koordinatenrahmen / Genomfenster"
       }
+    },
+    "blocks": {
+      "actionsAria": "Ansichtsmodi der Sektion",
+      "expandPage": "Auf A4-Seite füllen",
+      "expandScreen": "Vollbild",
+      "collapse": "Einklappen"
     },
     "timeline": {
       "title": "Schlüsselphasen und Kontrollpunkte",
@@ -4124,6 +4246,7 @@
       setupTimeline();
       setupOverlay();
       setupModelTabs();
+      setupBlockExpansion();
 
       function init() {
         renderNodes();
@@ -4597,6 +4720,40 @@
         if (stepsTitle) stepsTitle.textContent = getLocaleString('timeline.title');
         const timelineContainer = document.getElementById('timeline');
         if (timelineContainer) timelineContainer.setAttribute('aria-label', getLocaleString('timeline.ariaLabel'));
+
+        document.querySelectorAll('[data-block-actions]').forEach(group => {
+          const label = getLocaleString('blocks.actionsAria');
+          if (label) {
+            group.setAttribute('aria-label', label);
+          }
+          const expandPageButton = group.querySelector('[data-expand-mode="page"]');
+          if (expandPageButton) {
+            const text = getLocaleString('blocks.expandPage');
+            expandPageButton.textContent = text;
+            if (text) {
+              expandPageButton.setAttribute('aria-label', text);
+              expandPageButton.title = text;
+            }
+          }
+          const expandScreenButton = group.querySelector('[data-expand-mode="screen"]');
+          if (expandScreenButton) {
+            const text = getLocaleString('blocks.expandScreen');
+            expandScreenButton.textContent = text;
+            if (text) {
+              expandScreenButton.setAttribute('aria-label', text);
+              expandScreenButton.title = text;
+            }
+          }
+          const collapseButton = group.querySelector('[data-collapse]');
+          if (collapseButton) {
+            const text = getLocaleString('blocks.collapse');
+            collapseButton.textContent = text;
+            if (text) {
+              collapseButton.setAttribute('aria-label', text);
+              collapseButton.title = text;
+            }
+          }
+        });
 
         renderRegulation();
 
@@ -5719,6 +5876,122 @@
 
       function escapeXml(value) {
         return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+      }
+
+      function setupBlockExpansion() {
+        const page = document.querySelector('.page');
+        if (!page) return;
+
+        const groups = Array.from(document.querySelectorAll('[data-block-actions]'));
+        if (!groups.length) return;
+
+        let activeBlock = null;
+
+        groups.forEach(group => {
+          const block = group.closest('.block');
+          if (!(block instanceof HTMLElement)) return;
+          if (!block.hasAttribute('aria-expanded')) {
+            block.setAttribute('aria-expanded', 'false');
+          }
+
+          updateButtons(block, block.classList.contains('is-expanded'));
+
+          const expandButtons = group.querySelectorAll('[data-expand-mode]');
+          const collapseButton = group.querySelector('[data-collapse]');
+
+          expandButtons.forEach(button => {
+            button.addEventListener('click', () => {
+              const mode = button.dataset.expandMode;
+              if (!mode) return;
+              if (activeBlock && activeBlock !== block) {
+                collapseBlock(activeBlock);
+              }
+              if (block.classList.contains('is-expanded') && block.getAttribute('data-expanded-mode') === mode) {
+                collapseBlock(block);
+                activeBlock = null;
+                return;
+              }
+              expandBlock(block, mode);
+              activeBlock = block;
+            });
+          });
+
+          if (collapseButton) {
+            collapseButton.addEventListener('click', () => {
+              collapseBlock(block);
+              if (activeBlock === block) {
+                activeBlock = null;
+              }
+            });
+          }
+        });
+
+        document.addEventListener('keydown', event => {
+          if (event.key === 'Escape' && activeBlock) {
+            collapseBlock(activeBlock);
+            activeBlock = null;
+          }
+        });
+
+        function expandBlock(block, mode) {
+          block.classList.add('is-expanded');
+          block.setAttribute('data-expanded-mode', mode);
+          block.setAttribute('aria-expanded', 'true');
+          page.dataset.expanded = mode;
+          if (mode === 'screen') {
+            document.body.dataset.expanded = 'screen';
+          } else {
+            document.body.removeAttribute('data-expanded');
+          }
+          toggleContext(block, true);
+          updateButtons(block, true);
+          if (typeof block.focus === 'function') {
+            block.focus();
+          }
+        }
+
+        function collapseBlock(block) {
+          block.classList.remove('is-expanded');
+          block.removeAttribute('data-expanded-mode');
+          block.setAttribute('aria-expanded', 'false');
+          page.removeAttribute('data-expanded');
+          document.body.removeAttribute('data-expanded');
+          toggleContext(block, false);
+          updateButtons(block, false);
+        }
+
+        function toggleContext(block, expanded) {
+          const sections = Array.from(page.querySelectorAll('main > .block'));
+          sections.forEach(section => {
+            if (!(section instanceof HTMLElement) || section === block) return;
+            if (expanded) {
+              section.setAttribute('aria-hidden', 'true');
+            } else {
+              section.removeAttribute('aria-hidden');
+            }
+          });
+          ['header', 'footer'].forEach(selector => {
+            const element = page.querySelector(selector);
+            if (!(element instanceof HTMLElement)) return;
+            if (expanded) {
+              element.setAttribute('aria-hidden', 'true');
+            } else {
+              element.removeAttribute('aria-hidden');
+            }
+          });
+        }
+
+        function updateButtons(block, isExpanded) {
+          const group = block.querySelector('[data-block-actions]');
+          if (!group) return;
+          group.querySelectorAll('[data-expand-mode]').forEach(button => {
+            button.hidden = isExpanded;
+          });
+          const collapseButton = group.querySelector('[data-collapse]');
+          if (collapseButton) {
+            collapseButton.hidden = !isExpanded;
+          }
+        }
       }
 
       function setupTimeline() {
