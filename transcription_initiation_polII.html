@@ -39,8 +39,9 @@
       padding: 12mm;
     }
     .page {
-      width: 297mm;
-      height: 210mm;
+      width: 100%;
+      max-width: 297mm;
+      min-height: 210mm;
       background: var(--bg);
       border: 1px solid rgba(0,0,0,0.08);
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
@@ -49,7 +50,7 @@
       gap: 8mm;
       padding: 14mm 18mm;
       position: relative;
-      overflow: hidden;
+      overflow: auto;
     }
     .page::before {
       content: "";
@@ -664,8 +665,9 @@
         margin: 0;
         box-shadow: none;
         border: none;
-        width: 100%;
-        height: auto;
+        width: 297mm;
+        height: 210mm;
+        overflow: hidden;
       }
       .page::before {
         display: none;
