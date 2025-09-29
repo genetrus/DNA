@@ -133,7 +133,8 @@
       align-items: center;
     }
     .map-toolbar button,
-    .map-toolbar label {
+    .map-toolbar label,
+    .map-toolbar .preset-control {
       display: inline-flex;
       align-items: center;
       gap: 2mm;
@@ -144,6 +145,30 @@
       font-size: 8.5pt;
       cursor: pointer;
       transition: background 0.2s, border 0.2s, color 0.2s;
+    }
+    .map-toolbar label.preset-control {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1mm;
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: default;
+    }
+    .map-toolbar label.preset-control span {
+      font-size: 6.5pt;
+      letter-spacing: 0.5pt;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .map-toolbar label.preset-control select {
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 6px;
+      padding: 1mm 3mm;
+      font-size: 8.5pt;
+      background: #ffffff;
+      min-width: 132px;
+      cursor: pointer;
     }
     .map-toolbar button:focus-visible,
     .map-toolbar label:focus-within {
@@ -579,6 +604,14 @@
           </label>
             <span aria-hidden="true">·</span>
             <button type="button" id="reset-overlap"></button>
+            <label class="preset-control" id="preset-control" for="preset-select">
+              <span id="preset-select-label"></span>
+              <select id="preset-select"></select>
+            </label>
+            <label class="preset-control" id="org-control" for="org-select">
+              <span id="org-select-label"></span>
+              <select id="org-select"></select>
+            </label>
           </div>
           <div class="map-canvas" id="map-canvas" tabindex="0" aria-label="" role="region">
             <div class="axis-label" aria-hidden="true" id="axis-label"></div>
@@ -678,6 +711,23 @@
         "grid": "Сетка",
         "snap": "Привязка к сетке",
         "resetOverlap": "Упорядочить слои"
+      },
+      "presets": {
+        "presetLabel": "Пресет",
+        "presetAria": "Выбор пресета диаграммы",
+        "orgLabel": "Организм",
+        "orgAria": "Выбор домена жизни",
+        "options": {
+          "tssMini": "TSS(+1) мини",
+          "exonIntron": "Экзон-интрон карта",
+          "operon": "Оперон",
+          "library": "Расширенная библиотека"
+        },
+        "orgOptions": {
+          "eukaryote": "Эукариоты",
+          "prokaryote": "Прокариоты",
+          "virus": "Вирусы"
+        }
       },
       "canvasAria": "Рабочая зона",
       "axisLabel": "Геном (5′ → 3′)",
@@ -860,6 +910,478 @@
         }
       ]
     },
+    "presets": {
+      "tssMini": {
+        "prokaryote": {
+          "nodes": {
+            "promoter": {
+              "label": "−35/−10 промотор",
+              "type": "Промотор σ70",
+              "notes": [
+                "Консервативные −35 TTGACA и −10 TATAAT мотивы",
+                "UP-элементы усиливают связывание RNAP"
+              ]
+            },
+            "holoenzyme": {
+              "label": "RNAP σ70 холоэнзим",
+              "type": "Полимераза",
+              "notes": [
+                "β/β′ формируют канал; σ распознаёт промотор",
+                "α-CTD взаимодействует с UP-элементами"
+              ]
+            },
+            "openComplex": {
+              "label": "Открытый комплекс",
+              "type": "Инициирующий комплекс",
+              "notes": [
+                "DNA расплетается на ~13 п. н.",
+                "Начальные транскрипты удерживаются петлёй σ3.2"
+              ]
+            },
+            "clearance": {
+              "label": "Побег и σ-фактор",
+              "type": "Ранняя транскрипция",
+              "notes": [
+                "σ освобождается при +10/+12",
+                "GreA/B предотвращают остановки"
+              ]
+            }
+          },
+          "edges": {
+            "promoterToRnap": "Рекрутирует RNAP",
+            "rnapToOpen": "Изомеризация",
+            "openToClearance": "Промоторный побег"
+          }
+        },
+        "virus": {
+          "nodes": {
+            "hostChromatin": {
+              "label": "Хостовый промотор",
+              "type": "ДНК/хроматин",
+              "notes": [
+                "Вирусные белки меняют ацетиляцию и метилирование",
+                "Интеграция создаёт LTR или инвертированные повторы"
+              ]
+            },
+            "viralFactors": {
+              "label": "Вирусные факторы",
+              "type": "Регуляция",
+              "notes": [
+                "Tat/ICP4/VP16 рекрутируют коактиваторы",
+                "Перенаправляют Mediator и P-TEFb"
+              ]
+            },
+            "hostPol": {
+              "label": "Pol II/Pol III перенацелены",
+              "type": "Полимераза хозяина",
+              "notes": [
+                "CDK7/CDK9 активируются вирусными сигналами",
+                "Транскрипционные фабрики смещаются к вирусу"
+              ]
+            },
+            "release": {
+              "label": "Побег и переключение фаз",
+              "type": "Экспрессия вируса",
+              "notes": [
+                "Ранние транскрипты запускают репликацию",
+                "Поздние гены включаются по таймеру"
+              ]
+            }
+          },
+          "edges": {
+            "chromatinToFactors": "Перестраивает хроматин",
+            "factorsToPol": "Загружает полимеразу",
+            "polToEscape": "Переход к вирусной РНК"
+          }
+        }
+      },
+      "exonIntron": {
+        "eukaryote": {
+          "nodes": {
+            "promoter": {
+              "label": "Промотор и 5′ UTR",
+              "type": "Промотор",
+              "notes": [
+                "CpG-островки и гистоновые метки",
+                "Ко-транскрипционное кэпирование"
+              ]
+            },
+            "exon1": {
+              "label": "Экзон 1",
+              "type": "Экзон",
+              "notes": [
+                "Содержит стартовый кодон и ESE",
+                "SR-белки стабилизируют участок"
+              ]
+            },
+            "intron": {
+              "label": "Интрон",
+              "type": "Интрон",
+              "notes": [
+                "5′ GU … AG 3′ и бранч-точка A",
+                "RNP формирует шпильку"
+              ]
+            },
+            "exon2": {
+              "label": "Экзон 2",
+              "type": "Экзон",
+              "notes": [
+                "Содержит ESE/ISE для выбора",
+                "Поддерживает кадр считывания"
+              ]
+            },
+            "splicing": {
+              "label": "Сплайсосома",
+              "type": "Комплекс",
+              "notes": [
+                "U1/U2/U4/U5/U6 проводят катализ",
+                "PRP8 и ATPазы обеспечивают динамику"
+              ]
+            }
+          },
+          "edges": {
+            "promoterToExon1": "Транскрибирует",
+            "exon1ToIntron": "Формирует пре-мРНК",
+            "intronToExon2": "Лигирование экзонов",
+            "splicingControl": "Катализирует сплайсинг"
+          }
+        },
+        "prokaryote": {
+          "nodes": {
+            "leader": {
+              "label": "Лидерная последовательность",
+              "type": "5′ UTR",
+              "notes": [
+                "Shine-Dalgarno и RBS",
+                "Содержит элементы аттенюации"
+              ]
+            },
+            "coding": {
+              "label": "Кодирующий регион",
+              "type": "ORF",
+              "notes": [
+                "Часто полицестронный",
+                "Перекрывающиеся старт и стоп"
+              ]
+            },
+            "terminator": {
+              "label": "Терминатор",
+              "type": "ρ-независимый/зависимый",
+              "notes": [
+                "ГЦ-шпилька + поли-U или Rut-сайт",
+                "Определяет скорость транскрипции"
+              ]
+            },
+            "processing": {
+              "label": "Обработка РНК",
+              "type": "Рибонуклеаза",
+              "notes": [
+                "RNase E/III обрезают полицистрон",
+                "Riboswitch управляет стабильностью"
+              ]
+            }
+          },
+          "edges": {
+            "leaderToCoding": "Инициирует трансляцию",
+            "codingToTerminator": "Синтезирует транскрипт",
+            "terminatorToProcessing": "Передаёт на обработку"
+          }
+        },
+        "virus": {
+          "nodes": {
+            "donor": {
+              "label": "Донорный сайт",
+              "type": "5′ сплайс",
+              "notes": [
+                "Слабые консенсусы",
+                "Зависит от SR/hnRNP белков"
+              ]
+            },
+            "intronic": {
+              "label": "Вирусные интроны",
+              "type": "Интрон",
+              "notes": [
+                "Регуляторные элементы ESS/EIS",
+                "Контроль экспорта и фаз"
+              ]
+            },
+            "acceptor": {
+              "label": "Акцепторный сайт",
+              "type": "3′ сплайс",
+              "notes": [
+                "AG + полипиримидиновый трек",
+                "Формирует множественные белки"
+              ]
+            },
+            "export": {
+              "label": "Экспорт и переключение",
+              "type": "Регуляция",
+              "notes": [
+                "Rev/Crm1 или M-экспортные комплексы",
+                "Делит экспрессию на раннюю и позднюю"
+              ]
+            }
+          },
+          "edges": {
+            "donorToIntronic": "Формирует интрон",
+            "intronicToAcceptor": "Сплайсинг",
+            "acceptorToExport": "Экспортирует мРНК"
+          }
+        }
+      },
+      "operon": {
+        "eukaryote": {
+          "nodes": {
+            "enhancer": {
+              "label": "Enhancer/активаторы",
+              "type": "Регуляция",
+              "notes": [
+                "mtDNA/пластидные факторы",
+                "Петля к промотору"
+              ]
+            },
+            "promoter": {
+              "label": "Бикадровый промотор",
+              "type": "Промотор",
+              "notes": [
+                "POLRMT/TFB2M и TFBM",
+                "Формирует лидерную мРНК"
+              ]
+            },
+            "polycistronic": {
+              "label": "Полицестронная транскрипт",
+              "type": "мРНК",
+              "notes": [
+                "Общие 5′/3′ UTR",
+                "Резка эндорибонуклеазами"
+              ]
+            },
+            "processing": {
+              "label": "Обработка и редактирование",
+              "type": "RNP-комплекс",
+              "notes": [
+                "RNase P/Z, полиаденилирование",
+                "Редактирование и сплайсинг tRNA"
+              ]
+            }
+          },
+          "edges": {
+            "enhancerToPromoter": "Активирует",
+            "promoterToPoly": "Транскрибирует кластер",
+            "polyToProcessing": "Передаёт на обработку"
+          }
+        },
+        "prokaryote": {
+          "nodes": {
+            "operator": {
+              "label": "Оператор",
+              "type": "DNA оператор",
+              "notes": [
+                "Связывает репрессоры/активаторы",
+                "Пример: lacO, trpO"
+              ]
+            },
+            "rnap": {
+              "label": "RNAP + σ",
+              "type": "Полимераза",
+              "notes": [
+                "Инициирует на промоторе",
+                "Чувствителен к ко-активаторам"
+              ]
+            },
+            "genes": {
+              "label": "Структурные гены",
+              "type": "Полицестронная мРНК",
+              "notes": [
+                "lacZYA/trpEDCBA",
+                "Связанные трансляцией"
+              ]
+            },
+            "attenuation": {
+              "label": "Аттенюация/регуляция",
+              "type": "Регуляция",
+              "notes": [
+                "Leader-пептид и остановки",
+                "Metabolite riboswitch"
+              ]
+            }
+          },
+          "edges": {
+            "operatorToRnap": "Регулирует связывание",
+            "rnapToGenes": "Синтезирует мРНК",
+            "genesToAttenuation": "Лидер-транскрипт",
+            "attenuationToRnap": "Модулирует продолжение"
+          }
+        },
+        "virus": {
+          "nodes": {
+            "ltr": {
+              "label": "LTR промотор",
+              "type": "Промотор",
+              "notes": [
+                "U3/R/U5 модули",
+                "Требует Tat/интеграцию"
+              ]
+            },
+            "polymerase": {
+              "label": "Вирусная полимераза",
+              "type": "Фермент",
+              "notes": [
+                "RT или хостовый фактор",
+                "Инициирует транскрипцию"
+              ]
+            },
+            "polyprotein": {
+              "label": "Полипротеин мРНК",
+              "type": "мРНК",
+              "notes": [
+                "Gag-Pol/NS транскрипты",
+                "Фреймшифт регулирует стехиометрию"
+              ]
+            },
+            "frameshift": {
+              "label": "Frameshift/редактирование",
+              "type": "Регуляция",
+              "notes": [
+                "−1 frameshift или RNA-editing",
+                "Контролирует поздние белки"
+              ]
+            }
+          },
+          "edges": {
+            "ltrToPolymerase": "Запускает транскрипцию",
+            "polymeraseToPolyprotein": "Синтезирует мРНК",
+            "polyproteinToFrameshift": "Переключает считывание"
+          }
+        }
+      },
+      "library": {
+        "eukaryote": {
+          "nodes": {
+            "factors": {
+              "label": "Библиотека факторов",
+              "type": "PIC ядро",
+              "notes": [
+                "TFIID/TFIIA/TFIIB",
+                "Подготовка TSS"
+              ]
+            },
+            "coactivators": {
+              "label": "Коактиваторы/хроматин",
+              "type": "Регуляция",
+              "notes": [
+                "Mediator, SAGA, SWI/SNF",
+                "Метки H3K4me3/H3K27ac"
+              ]
+            },
+            "pause": {
+              "label": "Пауза и контроль",
+              "type": "RNA пауза",
+              "notes": [
+                "DSIF/NELF",
+                "P-TEFb запускает элонгацию"
+              ]
+            },
+            "elongation": {
+              "label": "Элонгация/процессивность",
+              "type": "Элонгация",
+              "notes": [
+                "FACT, PAF1C, writer m6A",
+                "Связь с ко-транскрипционным процессингом"
+              ]
+            }
+          },
+          "edges": {
+            "factorsToCoactivators": "Привлекает модули",
+            "coactivatorsToPause": "Настраивает платформу",
+            "pauseToElongation": "Запускает элонгацию"
+          }
+        },
+        "prokaryote": {
+          "nodes": {
+            "sigma": {
+              "label": "σ-факторы",
+              "type": "Регуляция",
+              "notes": [
+                "σ70, σ32, σ54",
+                "Определяют спектр промоторов"
+              ]
+            },
+            "remodeling": {
+              "label": "Нуклеоид/ремоделлеры",
+              "type": "ДНК-организация",
+              "notes": [
+                "Fis, H-NS, IHF",
+                "Контролируют суперскручивание"
+              ]
+            },
+            "termination": {
+              "label": "Терминация",
+              "type": "Процесс",
+              "notes": [
+                "ρ, NusA/B",
+                "Coupling с трансляцией"
+              ]
+            },
+            "stress": {
+              "label": "Стрессовые сигналы",
+              "type": "Регуляция",
+              "notes": [
+                "ppGpp/DksA, CsrA",
+                "Переключают σ-факторы"
+              ]
+            }
+          },
+          "edges": {
+            "sigmaToRemodeling": "Направляет открытие",
+            "remodelingToTermination": "Формирует окно транскрипции",
+            "stressToTermination": "Модулирует завершение"
+          }
+        },
+        "virus": {
+          "nodes": {
+            "entry": {
+              "label": "Вход/шаблон",
+              "type": "Геном",
+              "notes": [
+                "ssRNA или dsDNA",
+                "Капсид/нуклеосома раскрывается"
+              ]
+            },
+            "hostFactors": {
+              "label": "Хостовые факторы",
+              "type": "Ко-факторы",
+              "notes": [
+                "TFIID, P-TEFb, HAT",
+                "Репрограммирование клеточного цикла"
+              ]
+            },
+            "polymerase": {
+              "label": "Вирусная полимераза",
+              "type": "Фермент",
+              "notes": [
+                "RdRp или DNA-полимераза",
+                "Зависит от праймирования"
+              ]
+            },
+            "switching": {
+              "label": "Переключение программ",
+              "type": "Регуляция",
+              "notes": [
+                "Литический/латентный выбор",
+                "Антисмысловые РНК"
+              ]
+            }
+          },
+          "edges": {
+            "entryToHost": "Рекрутирует факторы",
+            "hostToPolymerase": "Активирует синтез",
+            "polymeraseToSwitching": "Управляет стадиями"
+          }
+        }
+      }
+    },
+
     "nodes": {
       "chromatin": {
         "label": "Хроматин ремоделирован",
@@ -949,6 +1471,23 @@
         "grid": "Grid",
         "snap": "Snap to grid",
         "resetOverlap": "Arrange layers"
+      },
+      "presets": {
+        "presetLabel": "Preset",
+        "presetAria": "Choose diagram preset",
+        "orgLabel": "Organism",
+        "orgAria": "Select domain",
+        "options": {
+          "tssMini": "TSS(+1) mini",
+          "exonIntron": "Exon–intron map",
+          "operon": "Operon",
+          "library": "Extended library"
+        },
+        "orgOptions": {
+          "eukaryote": "Eukaryote",
+          "prokaryote": "Prokaryote",
+          "virus": "Virus"
+        }
       },
       "canvasAria": "Workspace",
       "axisLabel": "Genome (5′ → 3′)",
@@ -1131,6 +1670,478 @@
         }
       ]
     },
+    "presets": {
+      "tssMini": {
+        "prokaryote": {
+          "nodes": {
+            "promoter": {
+              "label": "−35/−10 promoter",
+              "type": "σ70 promoter",
+              "notes": [
+                "Conserved −35 TTGACA and −10 TATAAT elements",
+                "UP-elements raise RNAP affinity"
+              ]
+            },
+            "holoenzyme": {
+              "label": "RNAP σ70 holoenzyme",
+              "type": "Polymerase",
+              "notes": [
+                "β/β′ form the channel; σ recognizes motifs",
+                "α-CTD contacts UP-elements"
+              ]
+            },
+            "openComplex": {
+              "label": "Open complex",
+              "type": "Initiation complex",
+              "notes": [
+                "DNA unwound across ~13 bp",
+                "Initial transcripts stabilized by σ3.2"
+              ]
+            },
+            "clearance": {
+              "label": "Promoter clearance",
+              "type": "Early transcription",
+              "notes": [
+                "σ releases near +10/+12",
+                "GreA/B suppress backtracking"
+              ]
+            }
+          },
+          "edges": {
+            "promoterToRnap": "Recruit RNAP",
+            "rnapToOpen": "Isomerize",
+            "openToClearance": "Promoter escape"
+          }
+        },
+        "virus": {
+          "nodes": {
+            "hostChromatin": {
+              "label": "Host promoter",
+              "type": "DNA/chromatin",
+              "notes": [
+                "Viral proteins remodel acetylation and methylation",
+                "Integration can create LTR or inverted repeats"
+              ]
+            },
+            "viralFactors": {
+              "label": "Viral activators",
+              "type": "Regulation",
+              "notes": [
+                "Tat/ICP4/VP16 recruit co-activators",
+                "Redirect Mediator and P-TEFb"
+              ]
+            },
+            "hostPol": {
+              "label": "Retasked host polymerase",
+              "type": "Host polymerase",
+              "notes": [
+                "CDK7/CDK9 activated by viral cues",
+                "Transcription factories relocalize to viral loci"
+              ]
+            },
+            "release": {
+              "label": "Escape and phase switch",
+              "type": "Viral expression",
+              "notes": [
+                "Early RNAs trigger replication",
+                "Late programs follow timed cascades"
+              ]
+            }
+          },
+          "edges": {
+            "chromatinToFactors": "Remodel chromatin",
+            "factorsToPol": "Load polymerase",
+            "polToEscape": "Shift to viral RNA"
+          }
+        }
+      },
+      "exonIntron": {
+        "eukaryote": {
+          "nodes": {
+            "promoter": {
+              "label": "Promoter + 5′ UTR",
+              "type": "Promoter",
+              "notes": [
+                "CpG islands and histone marks",
+                "Co-transcriptional capping"
+              ]
+            },
+            "exon1": {
+              "label": "Exon 1",
+              "type": "Exon",
+              "notes": [
+                "Contains start codon and ESE",
+                "SR proteins stabilize the region"
+              ]
+            },
+            "intron": {
+              "label": "Intron",
+              "type": "Intron",
+              "notes": [
+                "5′ GU … AG 3′ with branch point A",
+                "RNP forms a lariat"
+              ]
+            },
+            "exon2": {
+              "label": "Exon 2",
+              "type": "Exon",
+              "notes": [
+                "Carries ESE/ISE to enforce choice",
+                "Maintains reading frame"
+              ]
+            },
+            "splicing": {
+              "label": "Spliceosome",
+              "type": "Complex",
+              "notes": [
+                "U1/U2/U4/U5/U6 orchestrate catalysis",
+                "PRP8 and ATPases drive remodeling"
+              ]
+            }
+          },
+          "edges": {
+            "promoterToExon1": "Transcribes",
+            "exon1ToIntron": "Forms pre-mRNA",
+            "intronToExon2": "Ligates exons",
+            "splicingControl": "Catalyzes splicing"
+          }
+        },
+        "prokaryote": {
+          "nodes": {
+            "leader": {
+              "label": "Leader sequence",
+              "type": "5′ UTR",
+              "notes": [
+                "Shine–Dalgarno ribosome binding site",
+                "Contains attenuation switches"
+              ]
+            },
+            "coding": {
+              "label": "Coding region",
+              "type": "ORF",
+              "notes": [
+                "Often polycistronic",
+                "Overlapping start/stop sites"
+              ]
+            },
+            "terminator": {
+              "label": "Terminator",
+              "type": "ρ-dependent/independent",
+              "notes": [
+                "GC stem–loop plus poly-U or Rut site",
+                "Sets transcription speed"
+              ]
+            },
+            "processing": {
+              "label": "RNA processing",
+              "type": "Ribonuclease",
+              "notes": [
+                "RNase E/III cleave operons",
+                "Riboswitches modulate stability"
+              ]
+            }
+          },
+          "edges": {
+            "leaderToCoding": "Initiates translation",
+            "codingToTerminator": "Synthesizes transcript",
+            "terminatorToProcessing": "Hands off to processing"
+          }
+        },
+        "virus": {
+          "nodes": {
+            "donor": {
+              "label": "Donor site",
+              "type": "5′ splice site",
+              "notes": [
+                "Weak consensus motifs",
+                "Depends on host SR/hnRNP balance"
+              ]
+            },
+            "intronic": {
+              "label": "Viral introns",
+              "type": "Intron",
+              "notes": [
+                "Regulatory ESS/EIS elements",
+                "Control export and temporal phases"
+              ]
+            },
+            "acceptor": {
+              "label": "Acceptor site",
+              "type": "3′ splice site",
+              "notes": [
+                "AG plus polypyrimidine tract",
+                "Generates multiple proteins"
+              ]
+            },
+            "export": {
+              "label": "Export and switching",
+              "type": "Regulation",
+              "notes": [
+                "Rev/Crm1 or M export complexes",
+                "Defines early versus late transcripts"
+              ]
+            }
+          },
+          "edges": {
+            "donorToIntronic": "Forms intron",
+            "intronicToAcceptor": "Splices",
+            "acceptorToExport": "Exports mRNA"
+          }
+        }
+      },
+      "operon": {
+        "eukaryote": {
+          "nodes": {
+            "enhancer": {
+              "label": "Enhancer/activator cluster",
+              "type": "Regulation",
+              "notes": [
+                "mtDNA/plastid factors (NRF1)",
+                "Loops to the promoter"
+              ]
+            },
+            "promoter": {
+              "label": "Bicistronic promoter",
+              "type": "Promoter",
+              "notes": [
+                "POLRMT/TFB2M driven",
+                "Produces a leader RNA"
+              ]
+            },
+            "polycistronic": {
+              "label": "Polycistronic transcript",
+              "type": "mRNA",
+              "notes": [
+                "Shared 5′/3′ UTR",
+                "Processed by endoribonucleases"
+              ]
+            },
+            "processing": {
+              "label": "Processing & editing",
+              "type": "RNP complex",
+              "notes": [
+                "RNase P/Z and polyadenylation",
+                "RNA editing and tRNA excision"
+              ]
+            }
+          },
+          "edges": {
+            "enhancerToPromoter": "Activates",
+            "promoterToPoly": "Transcribes the cluster",
+            "polyToProcessing": "Feeds into processing"
+          }
+        },
+        "prokaryote": {
+          "nodes": {
+            "operator": {
+              "label": "Operator",
+              "type": "DNA operator",
+              "notes": [
+                "Binds repressors/activators",
+                "Examples: lacO, trpO"
+              ]
+            },
+            "rnap": {
+              "label": "RNAP + σ",
+              "type": "Polymerase",
+              "notes": [
+                "Initiates at the promoter",
+                "Responsive to co-activators"
+              ]
+            },
+            "genes": {
+              "label": "Structural genes",
+              "type": "Polycistronic mRNA",
+              "notes": [
+                "lacZYA/trpEDCBA operons",
+                "Coupled transcription-translation"
+              ]
+            },
+            "attenuation": {
+              "label": "Attenuation/regulation",
+              "type": "Regulation",
+              "notes": [
+                "Leader peptide stalling",
+                "Metabolite riboswitch control"
+              ]
+            }
+          },
+          "edges": {
+            "operatorToRnap": "Modulates RNAP binding",
+            "rnapToGenes": "Produces mRNA",
+            "genesToAttenuation": "Leader transcript",
+            "attenuationToRnap": "Regulates continuation"
+          }
+        },
+        "virus": {
+          "nodes": {
+            "ltr": {
+              "label": "LTR promoter",
+              "type": "Promoter",
+              "notes": [
+                "U3/R/U5 modules",
+                "Requires Tat/integration"
+              ]
+            },
+            "polymerase": {
+              "label": "Viral polymerase",
+              "type": "Enzyme",
+              "notes": [
+                "RT or hijacked Pol II",
+                "Initiates transcription"
+              ]
+            },
+            "polyprotein": {
+              "label": "Polyprotein mRNA",
+              "type": "mRNA",
+              "notes": [
+                "Gag-Pol/NS transcripts",
+                "Frameshift tunes stoichiometry"
+              ]
+            },
+            "frameshift": {
+              "label": "Frameshift/editing",
+              "type": "Regulation",
+              "notes": [
+                "−1 frameshift or RNA editing",
+                "Controls late proteins"
+              ]
+            }
+          },
+          "edges": {
+            "ltrToPolymerase": "Launches transcription",
+            "polymeraseToPolyprotein": "Produces mRNA",
+            "polyproteinToFrameshift": "Switches reading frame"
+          }
+        }
+      },
+      "library": {
+        "eukaryote": {
+          "nodes": {
+            "factors": {
+              "label": "Factor library",
+              "type": "PIC core",
+              "notes": [
+                "TFIID/TFIIA/TFIIB sets",
+                "Prepares the TSS"
+              ]
+            },
+            "coactivators": {
+              "label": "Co-activators/chromatin",
+              "type": "Regulation",
+              "notes": [
+                "Mediator, SAGA, SWI/SNF",
+                "Histone marks H3K4me3/H3K27ac"
+              ]
+            },
+            "pause": {
+              "label": "Pause control",
+              "type": "RNA pause",
+              "notes": [
+                "DSIF/NELF pause module",
+                "P-TEFb gate to elongation"
+              ]
+            },
+            "elongation": {
+              "label": "Elongation/processivity",
+              "type": "Elongation",
+              "notes": [
+                "FACT, PAF1C, m6A writers",
+                "Coupled co-transcriptional processing"
+              ]
+            }
+          },
+          "edges": {
+            "factorsToCoactivators": "Recruit modules",
+            "coactivatorsToPause": "Prepare pause platform",
+            "pauseToElongation": "Trigger elongation"
+          }
+        },
+        "prokaryote": {
+          "nodes": {
+            "sigma": {
+              "label": "Sigma factors",
+              "type": "Regulation",
+              "notes": [
+                "σ70, σ32, σ54",
+                "Define promoter classes"
+              ]
+            },
+            "remodeling": {
+              "label": "Nucleoid remodeling",
+              "type": "DNA organization",
+              "notes": [
+                "Fis, H-NS, IHF",
+                "Shape supercoiled domains"
+              ]
+            },
+            "termination": {
+              "label": "Termination",
+              "type": "Process",
+              "notes": [
+                "ρ, NusA/B factors",
+                "Coordinates with translation"
+              ]
+            },
+            "stress": {
+              "label": "Stress signals",
+              "type": "Regulation",
+              "notes": [
+                "ppGpp/DksA, CsrA",
+                "Switch sigma usage"
+              ]
+            }
+          },
+          "edges": {
+            "sigmaToRemodeling": "Guide opening",
+            "remodelingToTermination": "Set transcription window",
+            "stressToTermination": "Modulate termination"
+          }
+        },
+        "virus": {
+          "nodes": {
+            "entry": {
+              "label": "Entry/template",
+              "type": "Genome",
+              "notes": [
+                "ssRNA or dsDNA template",
+                "Capsid or nucleosome release"
+              ]
+            },
+            "hostFactors": {
+              "label": "Host factors",
+              "type": "Co-factors",
+              "notes": [
+                "TFIID, P-TEFb, HAT",
+                "Reprogram cell cycle"
+              ]
+            },
+            "polymerase": {
+              "label": "Viral polymerase",
+              "type": "Enzyme",
+              "notes": [
+                "RdRp or DNA polymerase",
+                "Requires priming"
+              ]
+            },
+            "switching": {
+              "label": "Program switching",
+              "type": "Regulation",
+              "notes": [
+                "Lytic/latent decisions",
+                "Antisense RNAs"
+              ]
+            }
+          },
+          "edges": {
+            "entryToHost": "Recruit factors",
+            "hostToPolymerase": "Activate synthesis",
+            "polymeraseToSwitching": "Control phases"
+          }
+        }
+      }
+    },
+
     "nodes": {
       "chromatin": {
         "label": "Chromatin remodeled",
@@ -1220,6 +2231,23 @@
         "grid": "Raster",
         "snap": "Am Raster ausrichten",
         "resetOverlap": "Ebenen ordnen"
+      },
+      "presets": {
+        "presetLabel": "Voreinstellung",
+        "presetAria": "Diagramm-Voreinstellung wählen",
+        "orgLabel": "Organismus",
+        "orgAria": "Domäne auswählen",
+        "options": {
+          "tssMini": "TSS(+1) Mini",
+          "exonIntron": "Exon–Intron-Karte",
+          "operon": "Operon",
+          "library": "Erweiterte Bibliothek"
+        },
+        "orgOptions": {
+          "eukaryote": "Eukaryoten",
+          "prokaryote": "Prokaryoten",
+          "virus": "Viren"
+        }
       },
       "canvasAria": "Arbeitsbereich",
       "axisLabel": "Genom (5′ → 3′)",
@@ -1402,6 +2430,477 @@
         }
       ]
     },
+    "presets": {
+      "tssMini": {
+        "prokaryote": {
+          "nodes": {
+            "promoter": {
+              "label": "−35/−10-Promotor",
+              "type": "σ70-Promotor",
+              "notes": [
+                "Konservierte −35-TTGACA- und −10-TATAAT-Motive",
+                "UP-Elemente erhöhen die RNAP-Affinität"
+              ]
+            },
+            "holoenzyme": {
+              "label": "RNAP-σ70-Holoenzym",
+              "type": "Polymerase",
+              "notes": [
+                "β/β′ bilden den Kanal; σ erkennt Motive",
+                "α-CTD kontaktiert UP-Elemente"
+              ]
+            },
+            "openComplex": {
+              "label": "Offener Komplex",
+              "type": "Initiationskomplex",
+              "notes": [
+                "DNA über ~13 bp aufgeschmolzen",
+                "σ3.2 stabilisiert Initialtranskripte"
+              ]
+            },
+            "clearance": {
+              "label": "Promotor-Freisetzung",
+              "type": "Frühe Transkription",
+              "notes": [
+                "σ löst sich bei +10/+12",
+                "GreA/B verhindern Zurückrutschen"
+              ]
+            }
+          },
+          "edges": {
+            "promoterToRnap": "Rekrutiert RNAP",
+            "rnapToOpen": "Isomerisiert",
+            "openToClearance": "Promotor-Escape"
+          }
+        },
+        "virus": {
+          "nodes": {
+            "hostChromatin": {
+              "label": "Wirtspromotor",
+              "type": "DNA/Chromatin",
+              "notes": [
+                "Virale Proteine verändern Acetylierung und Methylierung",
+                "Integration erzeugt LTRs oder invertierte Wiederholungen"
+              ]
+            },
+            "viralFactors": {
+              "label": "Virale Aktivatoren",
+              "type": "Regulation",
+              "notes": [
+                "Tat/ICP4/VP16 rekrutieren Koaktivatoren",
+                "Lenken Mediator und P-TEFb um"
+              ]
+            },
+            "hostPol": {
+              "label": "Umgelenkte Wirts-Polymerase",
+              "type": "Wirtspolymerase",
+              "notes": [
+                "CDK7/CDK9 durch virale Signale aktiviert",
+                "Transkriptionsfabriken verlagern sich zu viralen Loci"
+              ]
+            },
+            "release": {
+              "label": "Escape und Phasenwechsel",
+              "type": "Virale Expression",
+              "notes": [
+                "Frühe RNAs starten Replikation",
+                "Späte Programme folgen Zeitkaskaden"
+              ]
+            }
+          },
+          "edges": {
+            "chromatinToFactors": "Chromatin umbauen",
+            "factorsToPol": "Polymerase laden",
+            "polToEscape": "Auf virale RNA umschalten"
+          }
+        }
+      },
+      "exonIntron": {
+        "eukaryote": {
+          "nodes": {
+            "promoter": {
+              "label": "Promotor + 5′-UTR",
+              "type": "Promotor",
+              "notes": [
+                "CpG-Inseln und Histonmarken",
+                "Ko-transkriptionelles Capping"
+              ]
+            },
+            "exon1": {
+              "label": "Exon 1",
+              "type": "Exon",
+              "notes": [
+                "Enthält Startcodon und ESE",
+                "SR-Proteine stabilisieren den Bereich"
+              ]
+            },
+            "intron": {
+              "label": "Intron",
+              "type": "Intron",
+              "notes": [
+                "5′ GU … AG 3′ mit Branchpoint-A",
+                "RNP bildet ein Lariat"
+              ]
+            },
+            "exon2": {
+              "label": "Exon 2",
+              "type": "Exon",
+              "notes": [
+                "Trägt ESE/ISE für Auswahl",
+                "Erhält Leserahmen"
+              ]
+            },
+            "splicing": {
+              "label": "Spleißosom",
+              "type": "Komplex",
+              "notes": [
+                "U1/U2/U4/U5/U6 katalysieren",
+                "PRP8 und ATPasen treiben Dynamik"
+              ]
+            }
+          },
+          "edges": {
+            "promoterToExon1": "Transkribiert",
+            "exon1ToIntron": "Bildet Prä-mRNA",
+            "intronToExon2": "Ligiert Exons",
+            "splicingControl": "Katalysiert Spleißen"
+          }
+        },
+        "prokaryote": {
+          "nodes": {
+            "leader": {
+              "label": "Leader-Sequenz",
+              "type": "5′-UTR",
+              "notes": [
+                "Shine-Dalgarno und RBS",
+                "Enthält Attenuations-Elemente"
+              ]
+            },
+            "coding": {
+              "label": "Kodierbereich",
+              "type": "ORF",
+              "notes": [
+                "Oft polycistronisch",
+                "Überlappende Start-/Stoppsignale"
+              ]
+            },
+            "terminator": {
+              "label": "Terminator",
+              "type": "ρ-unabhängig/abhängig",
+              "notes": [
+                "GC-Haarnadel + Poly-U oder Rut-Stelle",
+                "Bestimmt Transkriptionsgeschwindigkeit"
+              ]
+            },
+            "processing": {
+              "label": "RNA-Verarbeitung",
+              "type": "Ribonuklease",
+              "notes": [
+                "RNase E/III schneiden Polycistron",
+                "Riboswitch steuert Stabilität"
+              ]
+            }
+          },
+          "edges": {
+            "leaderToCoding": "Startet Translation",
+            "codingToTerminator": "Synthese des Transkripts",
+            "terminatorToProcessing": "Gibt zur Verarbeitung weiter"
+          }
+        },
+        "virus": {
+          "nodes": {
+            "donor": {
+              "label": "Donor-Stelle",
+              "type": "5′-Spleißstelle",
+              "notes": [
+                "Schwache Konsensussequenzen",
+                "Abhängig von SR-/hnRNP-Proteinen"
+              ]
+            },
+            "intronic": {
+              "label": "Virale Introns",
+              "type": "Intron",
+              "notes": [
+                "Regulatorische ESS/EIS-Elemente",
+                "Steuern Export und Phasen"
+              ]
+            },
+            "acceptor": {
+              "label": "Akzeptor-Stelle",
+              "type": "3′-Spleißstelle",
+              "notes": [
+                "AG + Polypyrimidinspur",
+                "Erzeugt multiple Proteine"
+              ]
+            },
+            "export": {
+              "label": "Export & Umschalten",
+              "type": "Regulation",
+              "notes": [
+                "Rev/Crm1 oder M-Export-Komplexe",
+                "Teilen Expression in früh/spät"
+              ]
+            }
+          },
+          "edges": {
+            "donorToIntronic": "Bildet Intron",
+            "intronicToAcceptor": "Spleißt",
+            "acceptorToExport": "Exportiert mRNA"
+          }
+        }
+      },
+      "operon": {
+        "eukaryote": {
+          "nodes": {
+            "enhancer": {
+              "label": "Enhancer/Aktivatoren",
+              "type": "Regulation",
+              "notes": [
+                "mtDNA/Plastidenfaktoren",
+                "Schleife zum Promotor"
+              ]
+            },
+            "promoter": {
+              "label": "Bidirektionaler Promotor",
+              "type": "Promotor",
+              "notes": [
+                "POLRMT/TFB2M und TFBM",
+                "Bildet Leader-mRNA"
+              ]
+            },
+            "polycistronic": {
+              "label": "Polycistronisches Transkript",
+              "type": "mRNA",
+              "notes": [
+                "Geteilte 5′/3′-UTRs",
+                "Prozessiert durch Endoribonukleasen"
+              ]
+            },
+            "processing": {
+              "label": "Verarbeitung & Editing",
+              "type": "RNP-Komplex",
+              "notes": [
+                "RNase P/Z, Polyadenylierung",
+                "Editing & tRNA-Spleißen"
+              ]
+            }
+          },
+          "edges": {
+            "enhancerToPromoter": "Aktiviert",
+            "promoterToPoly": "Transkribiert Cluster",
+            "polyToProcessing": "Überführt in Verarbeitung"
+          }
+        },
+        "prokaryote": {
+          "nodes": {
+            "operator": {
+              "label": "Operator",
+              "type": "DNA-Operator",
+              "notes": [
+                "Bindet Repressoren/Aktivatoren",
+                "Beispiel: lacO, trpO"
+              ]
+            },
+            "rnap": {
+              "label": "RNAP + σ",
+              "type": "Polymerase",
+              "notes": [
+                "Initiiert am Promotor",
+                "Sensitiv für Koaktivatoren"
+              ]
+            },
+            "genes": {
+              "label": "Strukturgene",
+              "type": "Polycistronische mRNA",
+              "notes": [
+                "lacZYA/trpEDCBA",
+                "Koppeln Translation"
+              ]
+            },
+            "attenuation": {
+              "label": "Attenuation/Regulation",
+              "type": "Regulation",
+              "notes": [
+                "Leader-Peptid und Stalls",
+                "Metabolit-Riboswitch"
+              ]
+            }
+          },
+          "edges": {
+            "operatorToRnap": "Steuert Bindung",
+            "rnapToGenes": "Synthese der mRNA",
+            "genesToAttenuation": "Leader-Transkript",
+            "attenuationToRnap": "Moduliert Fortsetzung"
+          }
+        },
+        "virus": {
+          "nodes": {
+            "ltr": {
+              "label": "LTR-Promotor",
+              "type": "Promotor",
+              "notes": [
+                "U3/R/U5-Module",
+                "Benötigt Tat/Integration"
+              ]
+            },
+            "polymerase": {
+              "label": "Virale Polymerase",
+              "type": "Enzym",
+              "notes": [
+                "RT oder Wirtsfaktor",
+                "Startet Transkription"
+              ]
+            },
+            "polyprotein": {
+              "label": "Polyprotein-mRNA",
+              "type": "mRNA",
+              "notes": [
+                "Gag-Pol/NS-Transkripte",
+                "Frameshift steuert Stöchiometrie"
+              ]
+            },
+            "frameshift": {
+              "label": "Frameshift/Editing",
+              "type": "Regulation",
+              "notes": [
+                "−1 Frameshift oder RNA-Editing",
+                "Kontrolliert späte Proteine"
+              ]
+            }
+          },
+          "edges": {
+            "ltrToPolymerase": "Startet Transkription",
+            "polymeraseToPolyprotein": "Produziert mRNA",
+            "polyproteinToFrameshift": "Schaltet Leserahmen"
+          }
+        }
+      },
+      "library": {
+        "eukaryote": {
+          "nodes": {
+            "factors": {
+              "label": "Faktor-Bibliothek",
+              "type": "PIC-Kern",
+              "notes": [
+                "TFIID/TFIIA/TFIIB-Sets",
+                "Bereitet den TSS vor"
+              ]
+            },
+            "coactivators": {
+              "label": "Koaktivatoren/Chromatin",
+              "type": "Regulation",
+              "notes": [
+                "Mediator, SAGA, SWI/SNF",
+                "Histonmarken H3K4me3/H3K27ac"
+              ]
+            },
+            "pause": {
+              "label": "Pause & Kontrolle",
+              "type": "RNA-Pause",
+              "notes": [
+                "DSIF/NELF",
+                "P-TEFb startet Elongation"
+              ]
+            },
+            "elongation": {
+              "label": "Elongation/Prozessivität",
+              "type": "Elongation",
+              "notes": [
+                "FACT, PAF1C, m6A-Schreiber",
+                "Gekoppelte ko-transkriptionelle Verarbeitung"
+              ]
+            }
+          },
+          "edges": {
+            "factorsToCoactivators": "Rekrutiert Module",
+            "coactivatorsToPause": "Bereitet Pausenplattform vor",
+            "pauseToElongation": "Startet Elongation"
+          }
+        },
+        "prokaryote": {
+          "nodes": {
+            "sigma": {
+              "label": "Sigma-Faktoren",
+              "type": "Regulation",
+              "notes": [
+                "σ70, σ32, σ54",
+                "Bestimmen Promotor-Spektrum"
+              ]
+            },
+            "remodeling": {
+              "label": "Nukleoid/Remodeler",
+              "type": "DNA-Organisation",
+              "notes": [
+                "Fis, H-NS, IHF",
+                "Kontrollieren Supercoiling"
+              ]
+            },
+            "termination": {
+              "label": "Terminierung",
+              "type": "Prozess",
+              "notes": [
+                "ρ-, NusA/B-Faktoren",
+                "Koppelt an Translation"
+              ]
+            },
+            "stress": {
+              "label": "Stresssignale",
+              "type": "Regulation",
+              "notes": [
+                "ppGpp/DksA, CsrA",
+                "Schalten Sigma-Nutzung um"
+              ]
+            }
+          },
+          "edges": {
+            "sigmaToRemodeling": "Steuert Öffnung",
+            "remodelingToTermination": "Setzt Transkriptionsfenster",
+            "stressToTermination": "Moduliert Terminierung"
+          }
+        },
+        "virus": {
+          "nodes": {
+            "entry": {
+              "label": "Einstieg/Vorlage",
+              "type": "Genom",
+              "notes": [
+                "ssRNA oder dsDNA",
+                "Kapsid/Nukleosom wird freigesetzt"
+              ]
+            },
+            "hostFactors": {
+              "label": "Wirtsfaktoren",
+              "type": "Ko-Faktoren",
+              "notes": [
+                "TFIID, P-TEFb, HAT",
+                "Reprogrammieren Zellzyklus"
+              ]
+            },
+            "polymerase": {
+              "label": "Virale Polymerase",
+              "type": "Enzym",
+              "notes": [
+                "RdRp oder DNA-Polymerase",
+                "Benötigt Priming"
+              ]
+            },
+            "switching": {
+              "label": "Programmwechsel",
+              "type": "Regulation",
+              "notes": [
+                "Lytische/latente Entscheidung",
+                "Antisense-RNAs"
+              ]
+            }
+          },
+          "edges": {
+            "entryToHost": "Rekrutiert Faktoren",
+            "hostToPolymerase": "Aktiviert Synthese",
+            "polymeraseToSwitching": "Steuert Stadien"
+          }
+        }
+      }
+    },
     "nodes": {
       "chromatin": {
         "label": "Chromatin umgebaut",
@@ -1528,7 +3027,7 @@
       const GRID_SIZE = 24;
       const MAP_WIDTH = 960;
       const MAP_HEIGHT = 520;
-      const STORAGE_KEY = 'polii-map-layout-v1';
+      const STORAGE_KEY_BASE = 'polii-map-layout-v1';
       const LAYER_ORDER = { chromatin: 10, factors: 20, rna: 30, annotations: 40 };
       const LAYER_STYLE = {
         chromatin: { fill: '#dcfce7', stroke: '#4d7c0f' },
@@ -1536,6 +3035,12 @@
         rna: { fill: '#fee2e2', stroke: '#b91c1c' },
         annotations: { fill: '#e2e8f0', stroke: '#475569' }
       };
+
+      let activePresetKey = 'tssMini';
+      let activeOrgKey = 'eukaryote';
+      let storageKey = buildStorageKey(activePresetKey, activeOrgKey);
+      let presetNodes = [];
+      let presetEdges = [];
 
       const NODE_TEMPLATES = [
   {
@@ -1642,8 +3147,241 @@
   }
 ];
 
-      const BASE_NODES = NODE_TEMPLATES.map(createLocalizedNode);
-      const BASE_EDGES = EDGE_TEMPLATES.map(createLocalizedEdge);
+      const PRESET_VARIANTS = {
+        'tssMini.prokaryote': {
+          nodes: [
+            { id: 'node:tss-pro:promoter', localePath: 'presets.tssMini.prokaryote.nodes.promoter', layer: 'chromatin', x: 48, y: 210, width: 216, height: 120 },
+            { id: 'node:tss-pro:rnap', localePath: 'presets.tssMini.prokaryote.nodes.holoenzyme', layer: 'factors', x: 288, y: 192, width: 216, height: 132 },
+            { id: 'node:tss-pro:open', localePath: 'presets.tssMini.prokaryote.nodes.openComplex', layer: 'factors', x: 528, y: 180, width: 216, height: 132 },
+            { id: 'node:tss-pro:clearance', localePath: 'presets.tssMini.prokaryote.nodes.clearance', layer: 'rna', x: 768, y: 228, width: 192, height: 120 }
+          ],
+          edges: [
+            { id: 'edge:tss-pro:promoter-rnap', localePath: 'presets.tssMini.prokaryote.edges.promoterToRnap', from: 'node:tss-pro:promoter', to: 'node:tss-pro:rnap', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:tss-pro:rnap-open', localePath: 'presets.tssMini.prokaryote.edges.rnapToOpen', from: 'node:tss-pro:rnap', to: 'node:tss-pro:open', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:tss-pro:open-clearance', localePath: 'presets.tssMini.prokaryote.edges.openToClearance', from: 'node:tss-pro:open', to: 'node:tss-pro:clearance', kind: 'flow', router: 'orthogonal' }
+          ]
+        },
+        'tssMini.virus': {
+          nodes: [
+            { id: 'node:tss-vir:chromatin', localePath: 'presets.tssMini.virus.nodes.hostChromatin', layer: 'chromatin', x: 48, y: 210, width: 216, height: 120 },
+            { id: 'node:tss-vir:viralFactors', localePath: 'presets.tssMini.virus.nodes.viralFactors', layer: 'factors', x: 288, y: 168, width: 216, height: 132 },
+            { id: 'node:tss-vir:polii', localePath: 'presets.tssMini.virus.nodes.hostPol', layer: 'factors', x: 528, y: 186, width: 216, height: 132 },
+            { id: 'node:tss-vir:escape', localePath: 'presets.tssMini.virus.nodes.release', layer: 'rna', x: 768, y: 228, width: 192, height: 120 }
+          ],
+          edges: [
+            { id: 'edge:tss-vir:chromatin-factors', localePath: 'presets.tssMini.virus.edges.chromatinToFactors', from: 'node:tss-vir:chromatin', to: 'node:tss-vir:viralFactors', kind: 'regulation', router: 'orthogonal', markers: { end: 'arrow-regulation' } },
+            { id: 'edge:tss-vir:factors-polii', localePath: 'presets.tssMini.virus.edges.factorsToPol', from: 'node:tss-vir:viralFactors', to: 'node:tss-vir:polii', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:tss-vir:polii-escape', localePath: 'presets.tssMini.virus.edges.polToEscape', from: 'node:tss-vir:polii', to: 'node:tss-vir:escape', kind: 'flow', router: 'orthogonal' }
+          ]
+        },
+        'exonIntron.eukaryote': {
+          nodes: [
+            { id: 'node:exonmap:promoter', localePath: 'presets.exonIntron.eukaryote.nodes.promoter', layer: 'chromatin', x: 48, y: 210, width: 216, height: 120 },
+            { id: 'node:exonmap:exon1', localePath: 'presets.exonIntron.eukaryote.nodes.exon1', layer: 'rna', x: 288, y: 156, width: 216, height: 120 },
+            { id: 'node:exonmap:intron', localePath: 'presets.exonIntron.eukaryote.nodes.intron', layer: 'annotations', x: 528, y: 228, width: 216, height: 120 },
+            { id: 'node:exonmap:exon2', localePath: 'presets.exonIntron.eukaryote.nodes.exon2', layer: 'rna', x: 768, y: 156, width: 192, height: 120 },
+            { id: 'node:exonmap:splice', localePath: 'presets.exonIntron.eukaryote.nodes.splicing', layer: 'factors', x: 528, y: 48, width: 216, height: 120 }
+          ],
+          edges: [
+            { id: 'edge:exonmap:promoter-exon1', localePath: 'presets.exonIntron.eukaryote.edges.promoterToExon1', from: 'node:exonmap:promoter', to: 'node:exonmap:exon1', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:exonmap:exon1-intron', localePath: 'presets.exonIntron.eukaryote.edges.exon1ToIntron', from: 'node:exonmap:exon1', to: 'node:exonmap:intron', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:exonmap:intron-exon2', localePath: 'presets.exonIntron.eukaryote.edges.intronToExon2', from: 'node:exonmap:intron', to: 'node:exonmap:exon2', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:exonmap:splice-intron', localePath: 'presets.exonIntron.eukaryote.edges.splicingControl', from: 'node:exonmap:splice', to: 'node:exonmap:intron', kind: 'regulation', router: 'orthogonal', markers: { end: 'arrow-regulation' } }
+          ]
+        },
+        'exonIntron.prokaryote': {
+          nodes: [
+            { id: 'node:exonmap-pro:leader', localePath: 'presets.exonIntron.prokaryote.nodes.leader', layer: 'chromatin', x: 48, y: 210, width: 216, height: 120 },
+            { id: 'node:exonmap-pro:coding', localePath: 'presets.exonIntron.prokaryote.nodes.coding', layer: 'rna', x: 288, y: 210, width: 216, height: 120 },
+            { id: 'node:exonmap-pro:terminator', localePath: 'presets.exonIntron.prokaryote.nodes.terminator', layer: 'annotations', x: 528, y: 210, width: 216, height: 120 },
+            { id: 'node:exonmap-pro:processing', localePath: 'presets.exonIntron.prokaryote.nodes.processing', layer: 'factors', x: 768, y: 180, width: 192, height: 120 }
+          ],
+          edges: [
+            { id: 'edge:exonmap-pro:leader-coding', localePath: 'presets.exonIntron.prokaryote.edges.leaderToCoding', from: 'node:exonmap-pro:leader', to: 'node:exonmap-pro:coding', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:exonmap-pro:coding-terminator', localePath: 'presets.exonIntron.prokaryote.edges.codingToTerminator', from: 'node:exonmap-pro:coding', to: 'node:exonmap-pro:terminator', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:exonmap-pro:terminator-processing', localePath: 'presets.exonIntron.prokaryote.edges.terminatorToProcessing', from: 'node:exonmap-pro:terminator', to: 'node:exonmap-pro:processing', kind: 'regulation', router: 'orthogonal', markers: { end: 'arrow-flow' } }
+          ]
+        },
+        'exonIntron.virus': {
+          nodes: [
+            { id: 'node:exonmap-vir:donor', localePath: 'presets.exonIntron.virus.nodes.donor', layer: 'chromatin', x: 48, y: 210, width: 216, height: 120 },
+            { id: 'node:exonmap-vir:intronic', localePath: 'presets.exonIntron.virus.nodes.intronic', layer: 'annotations', x: 288, y: 120, width: 216, height: 120 },
+            { id: 'node:exonmap-vir:acceptor', localePath: 'presets.exonIntron.virus.nodes.acceptor', layer: 'rna', x: 528, y: 210, width: 216, height: 120 },
+            { id: 'node:exonmap-vir:export', localePath: 'presets.exonIntron.virus.nodes.export', layer: 'factors', x: 768, y: 180, width: 192, height: 120 }
+          ],
+          edges: [
+            { id: 'edge:exonmap-vir:donor-intronic', localePath: 'presets.exonIntron.virus.edges.donorToIntronic', from: 'node:exonmap-vir:donor', to: 'node:exonmap-vir:intronic', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:exonmap-vir:intronic-acceptor', localePath: 'presets.exonIntron.virus.edges.intronicToAcceptor', from: 'node:exonmap-vir:intronic', to: 'node:exonmap-vir:acceptor', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:exonmap-vir:acceptor-export', localePath: 'presets.exonIntron.virus.edges.acceptorToExport', from: 'node:exonmap-vir:acceptor', to: 'node:exonmap-vir:export', kind: 'flow', router: 'orthogonal' }
+          ]
+        },
+        'operon.eukaryote': {
+          nodes: [
+            { id: 'node:operon-euk:enhancer', localePath: 'presets.operon.eukaryote.nodes.enhancer', layer: 'annotations', x: 48, y: 108, width: 216, height: 120 },
+            { id: 'node:operon-euk:promoter', localePath: 'presets.operon.eukaryote.nodes.promoter', layer: 'chromatin', x: 288, y: 210, width: 216, height: 120 },
+            { id: 'node:operon-euk:poly', localePath: 'presets.operon.eukaryote.nodes.polycistronic', layer: 'rna', x: 528, y: 210, width: 216, height: 120 },
+            { id: 'node:operon-euk:processing', localePath: 'presets.operon.eukaryote.nodes.processing', layer: 'factors', x: 768, y: 180, width: 192, height: 120 }
+          ],
+          edges: [
+            { id: 'edge:operon-euk:enhancer-promoter', localePath: 'presets.operon.eukaryote.edges.enhancerToPromoter', from: 'node:operon-euk:enhancer', to: 'node:operon-euk:promoter', kind: 'regulation', router: 'orthogonal', markers: { end: 'arrow-regulation' } },
+            { id: 'edge:operon-euk:promoter-poly', localePath: 'presets.operon.eukaryote.edges.promoterToPoly', from: 'node:operon-euk:promoter', to: 'node:operon-euk:poly', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:operon-euk:poly-processing', localePath: 'presets.operon.eukaryote.edges.polyToProcessing', from: 'node:operon-euk:poly', to: 'node:operon-euk:processing', kind: 'flow', router: 'orthogonal' }
+          ]
+        },
+        'operon.prokaryote': {
+          nodes: [
+            { id: 'node:operon-pro:operator', localePath: 'presets.operon.prokaryote.nodes.operator', layer: 'chromatin', x: 48, y: 210, width: 216, height: 120 },
+            { id: 'node:operon-pro:rnap', localePath: 'presets.operon.prokaryote.nodes.rnap', layer: 'factors', x: 288, y: 210, width: 216, height: 120 },
+            { id: 'node:operon-pro:genes', localePath: 'presets.operon.prokaryote.nodes.genes', layer: 'rna', x: 528, y: 210, width: 216, height: 120 },
+            { id: 'node:operon-pro:attenuation', localePath: 'presets.operon.prokaryote.nodes.attenuation', layer: 'annotations', x: 768, y: 108, width: 192, height: 120 }
+          ],
+          edges: [
+            { id: 'edge:operon-pro:operator-rnap', localePath: 'presets.operon.prokaryote.edges.operatorToRnap', from: 'node:operon-pro:operator', to: 'node:operon-pro:rnap', kind: 'regulation', router: 'orthogonal', markers: { end: 'arrow-regulation' } },
+            { id: 'edge:operon-pro:rnap-genes', localePath: 'presets.operon.prokaryote.edges.rnapToGenes', from: 'node:operon-pro:rnap', to: 'node:operon-pro:genes', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:operon-pro:genes-attenuation', localePath: 'presets.operon.prokaryote.edges.genesToAttenuation', from: 'node:operon-pro:genes', to: 'node:operon-pro:attenuation', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:operon-pro:attenuation-rnap', localePath: 'presets.operon.prokaryote.edges.attenuationToRnap', from: 'node:operon-pro:attenuation', to: 'node:operon-pro:rnap', kind: 'regulation', router: 'orthogonal', markers: { end: 'tee-regulation' } }
+          ]
+        },
+        'operon.virus': {
+          nodes: [
+            { id: 'node:operon-vir:ltr', localePath: 'presets.operon.virus.nodes.ltr', layer: 'chromatin', x: 48, y: 210, width: 216, height: 120 },
+            { id: 'node:operon-vir:polymerase', localePath: 'presets.operon.virus.nodes.polymerase', layer: 'factors', x: 288, y: 186, width: 216, height: 120 },
+            { id: 'node:operon-vir:polyprotein', localePath: 'presets.operon.virus.nodes.polyprotein', layer: 'rna', x: 528, y: 210, width: 216, height: 120 },
+            { id: 'node:operon-vir:frameshift', localePath: 'presets.operon.virus.nodes.frameshift', layer: 'annotations', x: 768, y: 132, width: 192, height: 120 }
+          ],
+          edges: [
+            { id: 'edge:operon-vir:ltr-polymerase', localePath: 'presets.operon.virus.edges.ltrToPolymerase', from: 'node:operon-vir:ltr', to: 'node:operon-vir:polymerase', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:operon-vir:polymerase-polyprotein', localePath: 'presets.operon.virus.edges.polymeraseToPolyprotein', from: 'node:operon-vir:polymerase', to: 'node:operon-vir:polyprotein', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:operon-vir:polyprotein-frameshift', localePath: 'presets.operon.virus.edges.polyproteinToFrameshift', from: 'node:operon-vir:polyprotein', to: 'node:operon-vir:frameshift', kind: 'regulation', router: 'orthogonal', markers: { end: 'arrow-regulation' } }
+          ]
+        },
+        'library.eukaryote': {
+          nodes: [
+            { id: 'node:library-euk:factors', localePath: 'presets.library.eukaryote.nodes.factors', layer: 'factors', x: 72, y: 168, width: 216, height: 120 },
+            { id: 'node:library-euk:coactivators', localePath: 'presets.library.eukaryote.nodes.coactivators', layer: 'annotations', x: 312, y: 108, width: 216, height: 120 },
+            { id: 'node:library-euk:pause', localePath: 'presets.library.eukaryote.nodes.pause', layer: 'rna', x: 552, y: 210, width: 216, height: 120 },
+            { id: 'node:library-euk:elongation', localePath: 'presets.library.eukaryote.nodes.elongation', layer: 'factors', x: 768, y: 168, width: 168, height: 120 }
+          ],
+          edges: [
+            { id: 'edge:library-euk:factors-coactivators', localePath: 'presets.library.eukaryote.edges.factorsToCoactivators', from: 'node:library-euk:factors', to: 'node:library-euk:coactivators', kind: 'regulation', router: 'orthogonal', markers: { end: 'arrow-regulation' } },
+            { id: 'edge:library-euk:coactivators-pause', localePath: 'presets.library.eukaryote.edges.coactivatorsToPause', from: 'node:library-euk:coactivators', to: 'node:library-euk:pause', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:library-euk:pause-elongation', localePath: 'presets.library.eukaryote.edges.pauseToElongation', from: 'node:library-euk:pause', to: 'node:library-euk:elongation', kind: 'flow', router: 'orthogonal' }
+          ]
+        },
+        'library.prokaryote': {
+          nodes: [
+            { id: 'node:library-pro:sigma', localePath: 'presets.library.prokaryote.nodes.sigma', layer: 'factors', x: 72, y: 168, width: 216, height: 120 },
+            { id: 'node:library-pro:remodeling', localePath: 'presets.library.prokaryote.nodes.remodeling', layer: 'chromatin', x: 312, y: 198, width: 216, height: 120 },
+            { id: 'node:library-pro:termination', localePath: 'presets.library.prokaryote.nodes.termination', layer: 'annotations', x: 552, y: 198, width: 216, height: 120 },
+            { id: 'node:library-pro:stress', localePath: 'presets.library.prokaryote.nodes.stress', layer: 'factors', x: 792, y: 138, width: 168, height: 120 }
+          ],
+          edges: [
+            { id: 'edge:library-pro:sigma-remodeling', localePath: 'presets.library.prokaryote.edges.sigmaToRemodeling', from: 'node:library-pro:sigma', to: 'node:library-pro:remodeling', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:library-pro:remodeling-termination', localePath: 'presets.library.prokaryote.edges.remodelingToTermination', from: 'node:library-pro:remodeling', to: 'node:library-pro:termination', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:library-pro:stress-termination', localePath: 'presets.library.prokaryote.edges.stressToTermination', from: 'node:library-pro:stress', to: 'node:library-pro:termination', kind: 'regulation', router: 'orthogonal', markers: { end: 'arrow-regulation' } }
+          ]
+        },
+        'library.virus': {
+          nodes: [
+            { id: 'node:library-vir:entry', localePath: 'presets.library.virus.nodes.entry', layer: 'chromatin', x: 72, y: 210, width: 216, height: 120 },
+            { id: 'node:library-vir:host', localePath: 'presets.library.virus.nodes.hostFactors', layer: 'factors', x: 312, y: 168, width: 216, height: 120 },
+            { id: 'node:library-vir:polymerase', localePath: 'presets.library.virus.nodes.polymerase', layer: 'factors', x: 552, y: 210, width: 216, height: 120 },
+            { id: 'node:library-vir:switching', localePath: 'presets.library.virus.nodes.switching', layer: 'annotations', x: 792, y: 150, width: 168, height: 120 }
+          ],
+          edges: [
+            { id: 'edge:library-vir:entry-host', localePath: 'presets.library.virus.edges.entryToHost', from: 'node:library-vir:entry', to: 'node:library-vir:host', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:library-vir:host-polymerase', localePath: 'presets.library.virus.edges.hostToPolymerase', from: 'node:library-vir:host', to: 'node:library-vir:polymerase', kind: 'flow', router: 'orthogonal' },
+            { id: 'edge:library-vir:polymerase-switching', localePath: 'presets.library.virus.edges.polymeraseToSwitching', from: 'node:library-vir:polymerase', to: 'node:library-vir:switching', kind: 'regulation', router: 'orthogonal', markers: { end: 'arrow-regulation' } }
+          ]
+        }
+      };
+
+      const PRESETS = {
+        tssMini: {
+          topicKeywords: ['transcription initiation (pol ii, +1 tss)', 'tss', 'tss+1', '+1 tss'],
+          aliases: ['tss-mini', 'tss_plus1'],
+          orgs: {
+            eukaryote: () => ({
+              nodes: NODE_TEMPLATES.map(createLocalizedNode),
+              edges: EDGE_TEMPLATES.map(createLocalizedEdge)
+            }),
+            prokaryote: () => buildPresetVariant('tssMini.prokaryote'),
+            virus: () => buildPresetVariant('tssMini.virus')
+          }
+        },
+        exonIntron: {
+          topicKeywords: ['exon', 'intron', 'splicing', 'exon–intron map'],
+          aliases: ['exon-map', 'exon_intron', 'exon-intron'],
+          orgs: {
+            eukaryote: () => buildPresetVariant('exonIntron.eukaryote'),
+            prokaryote: () => buildPresetVariant('exonIntron.prokaryote'),
+            virus: () => buildPresetVariant('exonIntron.virus')
+          }
+        },
+        operon: {
+          topicKeywords: ['operon', 'polycistronic'],
+          aliases: ['operon-map'],
+          orgs: {
+            eukaryote: () => buildPresetVariant('operon.eukaryote'),
+            prokaryote: () => buildPresetVariant('operon.prokaryote'),
+            virus: () => buildPresetVariant('operon.virus')
+          }
+        },
+        library: {
+          topicKeywords: ['extended library', 'module library', 'factor library'],
+          aliases: ['extended-library', 'library-extended'],
+          orgs: {
+            eukaryote: () => buildPresetVariant('library.eukaryote'),
+            prokaryote: () => buildPresetVariant('library.prokaryote'),
+            virus: () => buildPresetVariant('library.virus')
+          }
+        }
+      };
+
+      const ORG_ALIASES = {
+        eukaryote: ['euk', 'euka', 'eukaryotic', 'eukaryota', 'eukaryotes'],
+        prokaryote: ['prok', 'prokaryotes', 'bacteria', 'bacterial', 'archaea'],
+        virus: ['viral', 'vir', 'viruses', 'phage']
+      };
+
+      function buildPresetVariant(key) {
+        const variant = PRESET_VARIANTS[key];
+        if (!variant) return { nodes: [], edges: [] };
+        const nodes = Array.isArray(variant.nodes) ? variant.nodes.map(createPresetNode) : [];
+        const edges = Array.isArray(variant.edges) ? variant.edges.map(createPresetEdge) : [];
+        return { nodes, edges };
+      }
+
+      function createPresetNode(template) {
+        const entry = template.localePath ? getLocaleEntry(template.localePath) : null;
+        const baseNotes = Array.isArray(template.notes) ? template.notes.slice() : [];
+        const notes = Array.isArray(entry?.notes) ? entry.notes.map(note => String(note)) : baseNotes;
+        return {
+          id: template.id,
+          label: typeof entry?.label === 'string' ? entry.label : template.label || '',
+          type: typeof entry?.type === 'string' ? entry.type : template.type || '',
+          layer: template.layer,
+          x: template.x,
+          y: template.y,
+          width: template.width,
+          height: template.height,
+          notes,
+          z: template.z
+        };
+      }
+
+      function createPresetEdge(template) {
+        const markers = template.markers ? { ...template.markers } : undefined;
+        return {
+          id: template.id,
+          from: template.from,
+          to: template.to,
+          kind: template.kind || 'flow',
+          router: template.router || 'orthogonal',
+          label: template.localePath ? getLocaleString(template.localePath) : template.label || '',
+          markers
+        };
+      }
 
       function createLocalizedNode(template) {
         const nodeStrings = getLocaleEntry(`nodes.${template.key}`) || {};
@@ -1676,8 +3414,8 @@
       }
 
       const state = {
-        nodes: new Map(BASE_NODES.map(node => [node.id, cloneNode(node)])),
-        edges: BASE_EDGES.map(edge => ({ ...edge }))
+        nodes: new Map(),
+        edges: []
       };
 
       let scale = 1;
@@ -1702,15 +3440,19 @@
       const exportSvgButton = document.getElementById('export-svg');
       const exportPngButton = document.getElementById('export-png');
       const exportPdfButton = document.getElementById('export-pdf');
+      const presetSelect = document.getElementById('preset-select');
+      const orgSelect = document.getElementById('org-select');
+      const presetControl = document.getElementById('preset-control');
+      const orgControl = document.getElementById('org-control');
 
       applyStaticText();
+      setupPresetSystem();
       init();
       setupTimeline();
       setupOverlay();
       setupModelTabs();
 
       function init() {
-        restoreState();
         renderNodes();
         applyTransform();
         updateEdges();
@@ -1744,7 +3486,9 @@
         });
 
         resetLayoutButton.addEventListener('click', () => {
-          localStorage.removeItem(STORAGE_KEY);
+          if (storageKey) {
+            localStorage.removeItem(storageKey);
+          }
           scale = 1;
           pan = { x: 0, y: 0 };
           gridVisible = true;
@@ -1753,13 +3497,29 @@
           toggleGridButton.setAttribute('aria-pressed', 'true');
           snapCheckbox.checked = true;
           mapCanvas.classList.remove('no-grid');
-          state.nodes = new Map(BASE_NODES.map(node => [node.id, cloneNode(node)]));
-          state.edges = BASE_EDGES.map(edge => ({ ...edge }));
+          state.nodes = new Map(presetNodes.map(node => [node.id, cloneNode(node)]));
+          state.edges = presetEdges.map(edge => ({ ...edge }));
           renderNodes();
           applyTransform();
           updateEdges();
           persistState();
         });
+
+        if (presetSelect) {
+          presetSelect.addEventListener('change', () => {
+            const nextPreset = presetSelect.value || activePresetKey;
+            const nextOrg = orgSelect && PRESETS[nextPreset]?.orgs?.[orgSelect.value]
+              ? orgSelect.value
+              : getDefaultOrgKey(nextPreset);
+            applyPreset(nextPreset, nextOrg);
+          });
+        }
+
+        if (orgSelect) {
+          orgSelect.addEventListener('change', () => {
+            applyPreset(activePresetKey, orgSelect.value || activeOrgKey);
+          });
+        }
 
         exportJsonButton.addEventListener('click', () => {
           const payload = exportState();
@@ -1814,6 +3574,197 @@
         mapCanvas.addEventListener('keydown', handleCanvasKeydown);
       }
 
+      function applyPreset(nextPresetKey, nextOrgKey, options = {}) {
+        const presetKey = PRESETS[nextPresetKey] ? nextPresetKey : activePresetKey;
+        const fallbackPreset = PRESETS[presetKey] ? presetKey : 'tssMini';
+        const preset = PRESETS[fallbackPreset];
+        const orgEntries = preset?.orgs || {};
+        const resolvedOrg = orgEntries[nextOrgKey] ? nextOrgKey : getDefaultOrgKey(fallbackPreset);
+        const builder = orgEntries[resolvedOrg];
+        const result = typeof builder === 'function' ? builder() : { nodes: [], edges: [] };
+        const baseNodes = Array.isArray(result.nodes) ? result.nodes : [];
+        const baseEdges = Array.isArray(result.edges) ? result.edges : [];
+
+        presetNodes = baseNodes.map(node => cloneNode(node));
+        presetEdges = baseEdges.map(edge => ({ ...edge }));
+
+        activePresetKey = fallbackPreset;
+        activeOrgKey = resolvedOrg;
+        storageKey = buildStorageKey(activePresetKey, activeOrgKey);
+
+        if (!options.preserveTransform) {
+          scale = 1;
+          pan = { x: 0, y: 0 };
+        }
+        if (!options.preserveGrid) {
+          gridVisible = true;
+          gridSnapEnabled = true;
+        }
+
+        state.nodes = new Map(presetNodes.map(node => [node.id, cloneNode(node)]));
+        state.edges = presetEdges.map(edge => ({ ...edge }));
+
+        let restored = false;
+        if (!options.skipRestore) {
+          restored = restoreState();
+        } else {
+          applyGridPreferences();
+        }
+
+        if (!options.skipRender) {
+          renderNodes();
+          applyTransform();
+          updateEdges();
+        }
+
+        if (!options.skipPersist) {
+          persistState();
+        }
+
+        updatePresetControlValues();
+        return restored;
+      }
+
+      function buildStorageKey(presetKey, orgKey) {
+        const presetPart = compactKey(presetKey || 'default') || 'default';
+        const orgPart = compactKey(orgKey || 'any') || 'any';
+        return `${STORAGE_KEY_BASE}:${presetPart}:${orgPart}`;
+      }
+
+      function setupPresetSystem() {
+        populatePresetOptions();
+        const initial = resolveInitialSelection();
+        applyPreset(initial.presetKey, initial.orgKey, { skipRender: true, skipPersist: true });
+      }
+
+      function populatePresetOptions() {
+        if (!presetSelect) return;
+        const previous = presetSelect.value;
+        presetSelect.innerHTML = '';
+        Object.keys(PRESETS).forEach(key => {
+          const option = document.createElement('option');
+          option.value = key;
+          option.textContent = getLocaleString(`map.presets.options.${key}`) || key;
+          presetSelect.appendChild(option);
+        });
+        if (previous && Array.from(presetSelect.options).some(option => option.value === previous)) {
+          presetSelect.value = previous;
+        }
+      }
+
+      function populateOrgOptions(presetKey) {
+        if (!orgSelect) return;
+        const preset = PRESETS[presetKey];
+        const previous = orgSelect.value;
+        orgSelect.innerHTML = '';
+        if (!preset) return;
+        Object.keys(preset.orgs || {}).forEach(key => {
+          const option = document.createElement('option');
+          option.value = key;
+          option.textContent = getLocaleString(`map.presets.orgOptions.${key}`) || key;
+          orgSelect.appendChild(option);
+        });
+        if (previous && Array.from(orgSelect.options).some(option => option.value === previous)) {
+          orgSelect.value = previous;
+        }
+      }
+
+      function updatePresetControlValues() {
+        if (presetSelect) {
+          if (!Array.from(presetSelect.options).some(option => option.value === activePresetKey)) {
+            populatePresetOptions();
+          }
+          presetSelect.value = activePresetKey;
+        }
+        if (orgSelect) {
+          populateOrgOptions(activePresetKey);
+          if (Array.from(orgSelect.options).some(option => option.value === activeOrgKey)) {
+            orgSelect.value = activeOrgKey;
+          } else {
+            orgSelect.value = getDefaultOrgKey(activePresetKey);
+          }
+        }
+        if (orgControl) {
+          orgControl.classList.toggle('disabled', !orgSelect || orgSelect.options.length <= 1);
+        }
+      }
+
+      function resolveInitialSelection() {
+        const params = new URLSearchParams(window.location.search);
+        const topicValue = getParamCaseInsensitive(params, 'topic', 'preset', 'schema', 'module');
+        const orgValue = getParamCaseInsensitive(params, 'org', 'organism', 'species');
+        let presetKey = matchPreset(topicValue) || matchPreset(getLocaleString('page.header.title')) || activePresetKey;
+        if (!PRESETS[presetKey]) {
+          presetKey = 'tssMini';
+        }
+        let orgKey = matchOrg(orgValue) || activeOrgKey;
+        if (!PRESETS[presetKey]?.orgs?.[orgKey]) {
+          orgKey = getDefaultOrgKey(presetKey);
+        }
+        return { presetKey, orgKey };
+      }
+
+      function getParamCaseInsensitive(params, ...names) {
+        for (const name of names) {
+          if (!name) continue;
+          if (params.has(name)) return params.get(name);
+          const lower = name.toLowerCase();
+          if (params.has(lower)) return params.get(lower);
+          const upper = name.toUpperCase();
+          if (params.has(upper)) return params.get(upper);
+        }
+        return null;
+      }
+
+      function matchPreset(value) {
+        const normalized = normalizeForMatch(value);
+        if (!normalized) return null;
+        for (const [key, preset] of Object.entries(PRESETS)) {
+          if (valueMatches(normalized, key)) return key;
+          if (preset.aliases?.some(alias => valueMatches(normalized, alias))) return key;
+          if (preset.topicKeywords?.some(keyword => includesMatch(normalized, keyword))) return key;
+        }
+        return null;
+      }
+
+      function matchOrg(value) {
+        const normalized = normalizeForMatch(value);
+        if (!normalized) return null;
+        for (const [key, aliases] of Object.entries(ORG_ALIASES)) {
+          if (valueMatches(normalized, key)) return key;
+          if (aliases.some(alias => valueMatches(normalized, alias))) return key;
+        }
+        return null;
+      }
+
+      function getDefaultOrgKey(presetKey) {
+        const preset = PRESETS[presetKey];
+        if (!preset || !preset.orgs) return 'eukaryote';
+        if (preset.orgs.eukaryote) return 'eukaryote';
+        const keys = Object.keys(preset.orgs);
+        return keys.length ? keys[0] : 'eukaryote';
+      }
+
+      function normalizeForMatch(value) {
+        return typeof value === 'string' ? value.toLowerCase().trim() : '';
+      }
+
+      function compactKey(value) {
+        return normalizeForMatch(value).replace(/[^a-z0-9+]+/g, '');
+      }
+
+      function valueMatches(value, candidate) {
+        const normalizedCandidate = normalizeForMatch(candidate);
+        if (!normalizedCandidate) return false;
+        return value === normalizedCandidate || compactKey(value) === compactKey(candidate);
+      }
+
+      function includesMatch(value, candidate) {
+        const normalizedCandidate = normalizeForMatch(candidate);
+        if (!normalizedCandidate) return false;
+        return value.includes(normalizedCandidate) || compactKey(value).includes(compactKey(candidate));
+      }
+
       function applyStaticText() {
         document.title = getLocaleString('page.title');
 
@@ -1843,6 +3794,12 @@
         const snapLabelText = document.getElementById('snap-label-text');
         if (snapLabelText) snapLabelText.textContent = getLocaleString('map.buttons.snap');
         if (resetOverlapButton) resetOverlapButton.textContent = getLocaleString('map.buttons.resetOverlap');
+        const presetLabel = document.getElementById('preset-select-label');
+        if (presetLabel) presetLabel.textContent = getLocaleString('map.presets.presetLabel');
+        if (presetSelect) presetSelect.setAttribute('aria-label', getLocaleString('map.presets.presetAria'));
+        const orgLabel = document.getElementById('org-select-label');
+        if (orgLabel) orgLabel.textContent = getLocaleString('map.presets.orgLabel');
+        if (orgSelect) orgSelect.setAttribute('aria-label', getLocaleString('map.presets.orgAria'));
 
         if (mapCanvas) mapCanvas.setAttribute('aria-label', getLocaleString('map.canvasAria'));
         const axisLabel = document.getElementById('axis-label');
@@ -2342,22 +4299,27 @@
       }
 
       function restoreState() {
+        let restored = false;
+        state.nodes = new Map(presetNodes.map(node => [node.id, cloneNode(node)]));
+        state.edges = presetEdges.map(edge => ({ ...edge }));
+        gridVisible = true;
+        gridSnapEnabled = true;
         try {
-          const storedRaw = localStorage.getItem(STORAGE_KEY);
+          const storedRaw = storageKey ? localStorage.getItem(storageKey) : null;
           if (!storedRaw) {
-            gridVisible = true;
-            gridSnapEnabled = true;
-            return;
+            applyGridPreferences();
+            return restored;
           }
           const stored = JSON.parse(storedRaw);
           if (Array.isArray(stored.nodes)) {
-            const merged = new Map(BASE_NODES.map(node => [node.id, cloneNode(node)]));
+            const merged = new Map(state.nodes);
             stored.nodes.forEach(raw => {
               if (!raw || !raw.id) return;
-              const base = merged.get(raw.id) || BASE_NODES.find(node => node.id === raw.id) || raw;
+              const base = merged.get(raw.id) || presetNodes.find(node => node.id === raw.id) || raw;
               merged.set(raw.id, cloneNode(base, raw));
             });
             state.nodes = merged;
+            restored = true;
           }
           if (Array.isArray(stored.edges) && stored.edges.length) {
             state.edges = stored.edges.map(edge => ({
@@ -2369,6 +4331,7 @@
               label: edge.label || '',
               markers: edge.markers || null
             }));
+            restored = true;
           }
           if (stored.transform) {
             scale = clamp(Number(stored.transform.scale) || 1, 0.5, 2.5);
@@ -2376,25 +4339,35 @@
               x: Number.isFinite(Number(stored.transform.pan?.x)) ? Number(stored.transform.pan.x) : 0,
               y: Number.isFinite(Number(stored.transform.pan?.y)) ? Number(stored.transform.pan.y) : 0
             };
+            restored = true;
           }
           if (stored.preferences) {
-            gridVisible = stored.preferences.gridVisible ?? true;
-            gridSnapEnabled = stored.preferences.gridSnap ?? true;
+            gridVisible = stored.preferences.gridVisible ?? gridVisible;
+            gridSnapEnabled = stored.preferences.gridSnap ?? gridSnapEnabled;
           }
-          mapCanvas.classList.toggle('no-grid', !gridVisible);
-          toggleGridButton.classList.toggle('active', gridVisible);
-          toggleGridButton.setAttribute('aria-pressed', String(gridVisible));
-          snapCheckbox.checked = gridSnapEnabled;
         } catch (error) {
           console.warn(getLocaleString('messages.stateReset'), error);
-          localStorage.removeItem(STORAGE_KEY);
+          if (storageKey) {
+            localStorage.removeItem(storageKey);
+          }
           gridVisible = true;
           gridSnapEnabled = true;
         }
+        applyGridPreferences();
+        return restored;
+      }
+
+      function applyGridPreferences() {
+        mapCanvas.classList.toggle('no-grid', !gridVisible);
+        toggleGridButton.classList.toggle('active', gridVisible);
+        toggleGridButton.setAttribute('aria-pressed', String(gridVisible));
+        snapCheckbox.checked = gridSnapEnabled;
       }
 
       function exportState() {
         return {
+          preset: activePresetKey,
+          org: activeOrgKey,
           nodes: Array.from(state.nodes.values()).map(node => ({
             id: node.id,
             label: node.label,
@@ -2414,9 +4387,10 @@
       }
 
       function persistState() {
+        if (!storageKey) return;
         try {
           const payload = exportState();
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+          localStorage.setItem(storageKey, JSON.stringify(payload));
         } catch (error) {
           console.warn(getLocaleString('messages.saveError'), error);
         }
@@ -2426,13 +4400,20 @@
         if (!payload || !Array.isArray(payload.nodes)) {
           throw new Error(getLocaleString('messages.missingNodes'));
         }
-        const merged = new Map(BASE_NODES.map(node => [node.id, cloneNode(node)]));
+        if (payload.preset && payload.org && (payload.preset !== activePresetKey || payload.org !== activeOrgKey)) {
+          applyPreset(payload.preset, payload.org, { skipRender: true, skipPersist: true, skipRestore: true });
+        }
+        state.nodes = new Map(presetNodes.map(node => [node.id, cloneNode(node)]));
+        state.edges = presetEdges.map(edge => ({ ...edge }));
+
+        const merged = new Map(state.nodes);
         payload.nodes.forEach(raw => {
           if (!raw || !raw.id) return;
-          const base = merged.get(raw.id) || BASE_NODES.find(node => node.id === raw.id) || raw;
+          const base = merged.get(raw.id) || presetNodes.find(node => node.id === raw.id) || raw;
           merged.set(raw.id, cloneNode(base, raw));
         });
         state.nodes = merged;
+
         if (Array.isArray(payload.edges) && payload.edges.length) {
           state.edges = payload.edges.map(edge => ({
             id: edge.id,
@@ -2444,8 +4425,9 @@
             markers: edge.markers || null
           }));
         } else {
-          state.edges = BASE_EDGES.map(edge => ({ ...edge }));
+          state.edges = presetEdges.map(edge => ({ ...edge }));
         }
+
         if (payload.transform) {
           scale = clamp(Number(payload.transform.scale) || 1, 0.5, 2.5);
           pan = {
@@ -2456,11 +4438,8 @@
         if (payload.preferences) {
           gridVisible = payload.preferences.gridVisible ?? gridVisible;
           gridSnapEnabled = payload.preferences.gridSnap ?? gridSnapEnabled;
-          mapCanvas.classList.toggle('no-grid', !gridVisible);
-          toggleGridButton.classList.toggle('active', gridVisible);
-          toggleGridButton.setAttribute('aria-pressed', String(gridVisible));
-          snapCheckbox.checked = gridSnapEnabled;
         }
+        applyGridPreferences();
         applyTransform();
       }
 
