@@ -4053,6 +4053,7 @@
       let gridVisible = true;
       let isPanning = false;
       let panPointerId = null;
+      let initialTransformRestored = false;
 
       const mapCanvas = document.getElementById('map-canvas');
       const mapViewport = document.getElementById('map-viewport');
@@ -4083,7 +4084,11 @@
 
       function init() {
         renderNodes();
-        applyTransform();
+        if (initialTransformRestored) {
+          applyTransform();
+        } else {
+          fitToView();
+        }
         updateEdges();
         wireControls();
       }
@@ -4249,7 +4254,11 @@
 
         if (!options.skipRender) {
           renderNodes();
-          applyTransform();
+          if (restored || options.preserveTransform) {
+            applyTransform();
+          } else {
+            fitToView();
+          }
           updateEdges();
         }
 
@@ -4277,7 +4286,7 @@
       function setupPresetSystem() {
         populatePresetOptions();
         const initial = resolveInitialSelection();
-        applyPreset(initial.presetKey, initial.orgKey, { skipRender: true, skipPersist: true });
+        initialTransformRestored = applyPreset(initial.presetKey, initial.orgKey, { skipRender: true, skipPersist: true });
       }
 
       function populatePresetOptions() {
