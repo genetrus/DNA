@@ -520,17 +520,6 @@
       background: linear-gradient(90deg, #1d4ed8, #9333ea);
       position: relative;
     }
-    .legend-item[data-type="strand"] .legend-swatch::after {
-      content: '5′→3′';
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 6pt;
-      color: #ffffff;
-      font-weight: 600;
-    }
     .legend-item[data-type="frame"] .legend-swatch {
       background: transparent;
       border: 2px dashed rgba(29, 78, 216, 0.7);
@@ -981,14 +970,14 @@
         }
       },
       "canvasAria": "Рабочая зона",
-      "axisLabel": "Геном (5′ → 3′)",
+      "axisLabel": "Кодирующая (5′→3′) / матричная (3′→5′)",
       "instructions": "Используйте мышь или стрелки для перемещения узлов. Колесо мыши с зажатой клавишей Ctrl управляет масштабом, простое прокручивание сдвигает поле. Перетаскивание удерживает элементы в пределах сетки и автоматически перерассчитывает связи.",
       "legendAria": "Условные обозначения",
       "legend": {
         "polii": "Полимераза II и общие факторы",
         "chromatin": "Хроматин и промоторная ДНК",
         "rna": "РНК, побег и пауза",
-        "strand": "Направленность цепи (5′→3′ / 3′→5′)",
+        "strand": "Кодирующая (5′→3′) / матричная (3′→5′)",
         "frame": "Окно координат (frame, сборка hg38)"
       }
     },
@@ -1079,7 +1068,7 @@
             "Поле <strong>type</strong> принимает роли: DNA, RNA, Protein, Promoter, Enhancer, TSS, TF, Mediator и др.",
             "Геометрия задаётся в миллиметрах A4: координаты (x, y) и размеры (w, h) относительно зоны сетки.",
             "Уровень advanced добавляет <code>frame</code>, <code>coordinates</code>, <code>strand</code> и <code>recognitionSites</code> для описания геномного окна, ориентации и сайтов узнавания.",
-            "Доп. данные (<code>data</code>) включают метки 5′→3′, модификации (H3K4me3) и состояние комплекса.",
+            "Доп. данные (<code>data</code>) включают ориентацию цепи, модификации (H3K4me3) и состояние комплекса.",
             "Слои доступны через <code>layer</code> и <code>zIndex</code> — используют стандарт «process» для Pol II."
           ],
           "callout": "Рекомендация: хранить идентификаторы в формате <code>promoter:tata</code>, <code>protein:tf2h</code> для совместимости с экспортом.",
@@ -1757,14 +1746,14 @@
         }
       },
       "canvasAria": "Workspace",
-      "axisLabel": "Genome (5′ → 3′)",
+      "axisLabel": "Coding strand (5′→3′) / template (3′→5′)",
       "instructions": "Use the mouse or arrow keys to move nodes. Scroll with Ctrl adjusts zoom; plain scrolling pans the field. Dragging keeps elements snapped to the grid and recomputes connections.",
       "legendAria": "Legend",
       "legend": {
         "polii": "Pol II and general factors",
         "chromatin": "Chromatin and promoter DNA",
         "rna": "RNA, escape and pause",
-        "strand": "Strand orientation (5′→3′ / 3′→5′)",
+        "strand": "Coding (5′→3′) / template (3′→5′)",
         "frame": "Coordinate frame / genomic window"
       }
     },
@@ -1855,7 +1844,7 @@
             "Field <strong>type</strong> covers roles: DNA, RNA, Protein, Promoter, Enhancer, TSS, TF, Mediator, etc.",
             "Geometry is in A4 millimetres: coordinates (x, y) and size (w, h) within the grid area.",
             "Advanced level introduces <code>frame</code>, <code>coordinates</code>, <code>strand</code> and <code>recognitionSites</code> for genomic windows, orientation and motif metadata.",
-            "Extra <code>data</code> stores 5′→3′ marks, modifications (H3K4me3) and complex states.",
+            "Extra <code>data</code> stores strand orientation, modifications (H3K4me3) and complex states.",
             "<code>layer</code> and <code>zIndex</code> follow the Pol II “process” standard."
           ],
           "callout": "Recommendation: keep identifiers like <code>promoter:tata</code>, <code>protein:tf2h</code> for export compatibility.",
@@ -2533,14 +2522,14 @@
         }
       },
       "canvasAria": "Arbeitsbereich",
-      "axisLabel": "Genom (5′ → 3′)",
+      "axisLabel": "Kodierstrang (5′→3′) / Matrize (3′→5′)",
       "instructions": "Verwenden Sie Maus oder Pfeiltasten, um Knoten zu verschieben. Strg+Scrollen zoomt, normales Scrollen verschiebt die Ansicht. Ziehen hält Elemente im Raster und berechnet Verbindungen neu.",
       "legendAria": "Legende",
       "legend": {
         "polii": "Pol II und allgemeine Faktoren",
         "chromatin": "Chromatin und Promotor-DNA",
         "rna": "RNA, Escape und Pause",
-        "strand": "Strangrichtung (5′→3′ / 3′→5′)",
+        "strand": "Kodierend (5′→3′) / Matrize (3′→5′)",
         "frame": "Koordinatenrahmen / Genomfenster"
       }
     },
@@ -2631,7 +2620,7 @@
             "Feld <strong>type</strong> umfasst Rollen wie DNA, RNA, Protein, Promoter, Enhancer, TSS, TF, Mediator usw.",
             "Geometrie in A4-Millimetern: Koordinaten (x, y) und Größen (w, h) relativ zum Rasterbereich.",
             "Im Advanced-Level ergänzen <code>frame</code>, <code>coordinates</code>, <code>strand</code> und <code>recognitionSites</code> das genombasierte Fenster, die Orientierung und Erkennungsmotive.",
-            "Zusätzliche <code>data</code> enthalten 5′→3′-Marken, Modifikationen (H3K4me3) und Komplexzustände.",
+            "Zusätzliche <code>data</code> enthalten Strangrichtung, Modifikationen (H3K4me3) und Komplexzustände.",
             "<code>layer</code> und <code>zIndex</code> folgen dem Pol-II-Standard „process“."
           ],
           "callout": "Empfehlung: IDs wie <code>promoter:tata</code>, <code>protein:tf2h</code> für Exportkompatibilität verwenden.",
@@ -3437,468 +3426,652 @@
       let presetEdges = [];
       let edgeRenderPending = false;
 
-      const NODE_TEMPLATES = [
-  {
-    "id": "node:chromatin",
-    "key": "chromatin",
-    "layer": "chromatin",
-    "x": 48,
-    "y": 216,
-    "width": 216,
-    "height": 132,
-    "frame": {
-      "type": "genomic",
-      "assembly": "GRCh38",
-      "chromosome": "chr17",
-      "locus": "POLR2A promoter window",
-      "reference": "chr17:74,617,320-74,617,520"
-    },
-    "coordinates": {
-      "start": -45,
-      "end": 60,
-      "unit": "bp",
-      "reference": "+1 = POLR2A TSS (hg38)",
-      "confidence": 0.92
-    },
-    "strand": "plus",
-    "recognitionSites": [
-      {
-        "name": "TATA-box",
-        "start": -31,
-        "end": -24,
-        "sequence": "TATAWAWR",
-        "strand": "plus",
-        "evidence": "TBP ChIP-seq (ENCODE)",
-        "notes": "Core promoter motif"
-      },
-      {
-        "name": "Inr",
-        "start": -2,
-        "end": 4,
-        "sequence": "YYANWYY",
-        "strand": "plus",
-        "evidence": "CAGE +1 peak",
-        "notes": "Defines transcription start"
-      }
-    ],
-    "aliases": ["POLR2A promoter", "Core promoter window"],
-    "timeline": { "phase": "assembly", "order": 1, "start": -45, "end": 4, "unit": "bp" },
-    "evidence": ["Cryo-EM PIC (PDB 7E8S)", "ENCODE TFIID ChIP-seq"],
-    "references": ["https://doi.org/10.1038/s41594-021-00606-2"],
-    "confidence": 0.9
-  },
-  {
-    "id": "node:mediator",
-    "key": "mediator",
-    "layer": "factors",
-    "x": 288,
-    "y": 192,
-    "width": 216,
-    "height": 144,
-    "frame": {
-      "type": "interaction",
-      "reference": "Mediator–PIC scaffold",
-      "notes": "Head/Middle modules contacting TBP and Pol II"
-    },
-    "coordinates": {
-      "start": -35,
-      "end": 12,
-      "unit": "bp",
-      "reference": "Relative to POLR2A +1",
-      "confidence": 0.88
-    },
-    "strand": "plus",
-    "recognitionSites": [
-      {
-        "name": "TFIID–Mediator interface",
-        "start": -35,
-        "end": -10,
-        "sequence": "TAF1/Med17",
-        "strand": "plus",
-        "evidence": "Crosslinking MS",
-        "notes": "Stabilises PIC assembly"
-      },
-      {
-        "name": "Activator relay",
-        "start": -200,
-        "end": -60,
-        "sequence": "Mediator tail",
-        "strand": "plus",
-        "evidence": "ChIA-PET loops",
-        "notes": "Connects enhancer inputs"
-      }
-    ],
-    "aliases": ["Mediator + GTF ensemble"],
-    "timeline": { "phase": "assembly", "order": 2, "start": -35, "end": 12, "unit": "bp" },
-    "evidence": ["Mediator cryo-EM (PDB 7ECC)", "Mediator-TFIID CLMS"],
-    "references": ["https://doi.org/10.1038/s41467-022-28438-3"],
-    "confidence": 0.85
-  },
-  {
-    "id": "node:polii",
-    "key": "polii",
-    "layer": "factors",
-    "x": 528,
-    "y": 192,
-    "width": 216,
-    "height": 156,
-    "frame": {
-      "type": "protein",
-      "reference": "Pol II–TFIIF/TFIIE/H open complex",
-      "notes": "Clamp closed on template"
-    },
-    "coordinates": {
-      "start": -3,
-      "end": 35,
-      "unit": "bp",
-      "reference": "Template strand relative to +1",
-      "confidence": 0.88
-    },
-    "strand": "plus",
-    "recognitionSites": [
-      {
-        "name": "Active site cleft",
-        "start": 1,
-        "end": 9,
-        "sequence": "RNA:DNA hybrid",
-        "strand": "plus",
-        "evidence": "Run-on assays",
-        "notes": "Abortive products engage"
-      },
-      {
-        "name": "TFIIB reader",
-        "start": -3,
-        "end": 5,
-        "sequence": "B-finger",
-        "strand": "plus",
-        "evidence": "Cryo-EM densities",
-        "notes": "Guides +1 alignment"
-      }
-    ],
-    "aliases": ["Pol II-TFIIF-TFIIE/H"],
-    "timeline": { "phase": "isomerization", "order": 3, "start": -3, "end": 12, "unit": "bp" },
-    "evidence": ["TFIIE/TFIIH PIC (PDB 7E8S)", "In vitro run-on assays"],
-    "references": ["https://doi.org/10.1126/science.abg3075"],
-    "confidence": 0.88
-  },
-  {
-    "id": "node:escape",
-    "key": "escape",
-    "layer": "rna",
-    "x": 768,
-    "y": 252,
-    "width": 192,
-    "height": 144,
-    "frame": {
-      "type": "transcript",
-      "reference": "Promoter-proximal RNA",
-      "notes": "Paused 20–60 nt"
-    },
-    "coordinates": {
-      "start": 10,
-      "end": 60,
-      "unit": "nt",
-      "reference": "Nascent RNA length",
-      "confidence": 0.83
-    },
-    "strand": "plus",
-    "recognitionSites": [
-      {
-        "name": "Pause element",
-        "start": 20,
-        "end": 40,
-        "sequence": "G-rich pause",
-        "strand": "plus",
-        "evidence": "NET-seq",
-        "notes": "NELF/DSIF engagement"
-      }
-    ],
-    "aliases": ["Promoter escape window"],
-    "timeline": { "phase": "escape", "order": 4, "start": 10, "end": 60, "unit": "nt" },
-    "evidence": ["NET-seq pause maps", "P-TEFb release assays"],
-    "references": ["https://doi.org/10.1038/nature14290"],
-    "confidence": 0.82
-  },
-  {
-    "id": "node:enhancer",
-    "key": "enhancer",
-    "layer": "annotations",
-    "x": 288,
-    "y": 48,
-    "width": 216,
-    "height": 120,
-    "frame": {
-      "type": "genomic",
-      "assembly": "GRCh38",
-      "chromosome": "chr17",
-      "locus": "Upstream enhancer cluster",
-      "reference": "chr17:74,615,000-74,616,200"
-    },
-    "coordinates": {
-      "start": -2000,
-      "end": -200,
-      "unit": "bp",
-      "reference": "Relative to POLR2A +1",
-      "confidence": 0.7
-    },
-    "strand": "bidirectional",
-    "recognitionSites": [
-      {
-        "name": "Activator hub",
-        "start": -1800,
-        "end": -1500,
-        "sequence": "AP-1/ETS",
-        "strand": "both",
-        "evidence": "ATAC-seq peaks",
-        "notes": "Mediator tail recruitment"
-      },
-      {
-        "name": "Cohesin anchor",
-        "start": -600,
-        "end": -400,
-        "sequence": "CTCF",
-        "strand": "both",
-        "evidence": "ChIA-PET",
-        "notes": "Loop stabilisation"
-      }
-    ],
-    "aliases": ["Enhancer loop cluster"],
-    "timeline": { "phase": "assembly", "order": 0, "start": -2000, "end": -200, "unit": "bp" },
-    "evidence": ["ChIA-PET Mediator loops", "ATAC-seq accessible chromatin"],
-    "references": ["https://doi.org/10.1038/s41586-018-0173-5"],
-    "confidence": 0.75
-  },
-  {
-    "id": "node:ptefb",
-    "key": "ptefb",
-    "layer": "annotations",
-    "x": 768,
-    "y": 48,
-    "width": 192,
-    "height": 120,
-    "frame": {
-      "type": "regulatory",
-      "reference": "P-TEFb pause-release module",
-      "notes": "BRD4/SEC recruitment"
-    },
-    "coordinates": {
-      "start": 20,
-      "end": 120,
-      "unit": "bp",
-      "reference": "Pause-release window",
-      "confidence": 0.78
-    },
-    "strand": "plus",
-    "recognitionSites": [
-      {
-        "name": "NELF release",
-        "start": 20,
-        "end": 45,
-        "sequence": "NELF-A interface",
-        "strand": "plus",
-        "evidence": "P-TEFb ChIP",
-        "notes": "CDK9 phosphorylation"
-      },
-      {
-        "name": "DSIF Ser2 phosphorylation",
-        "start": 45,
-        "end": 80,
-        "sequence": "Spt5 repeats",
-        "strand": "plus",
-        "evidence": "Ser2P mapping",
-        "notes": "Transitions into elongation"
-      }
-    ],
-    "aliases": ["P-TEFb activation"],
-    "timeline": { "phase": "escape", "order": 5, "start": 20, "end": 120, "unit": "bp" },
-    "evidence": ["P-TEFb ChIP-seq", "BRD4 dependency assays"],
-    "references": ["https://doi.org/10.1038/nature14290"],
-    "confidence": 0.8
-  }
-];
-      const EDGE_TEMPLATES = [
-  {
-    "id": "edge:chromatin-mediator",
-    "key": "chromatinMediator",
-    "from": "node:chromatin",
-    "to": "node:mediator",
-    "kind": "flow",
-    "router": "orthogonal",
-    "strand": "plus",
-    "frame": {
-      "type": "interaction",
-      "reference": "TBP–Mediator handshake"
-    },
-    "coordinates": {
-      "start": -35,
-      "end": -10,
-      "unit": "bp",
-      "reference": "POLR2A core promoter",
-      "confidence": 0.86
-    },
-    "recognitionSites": [
-      {
-        "name": "TBP–TAF1 contact",
-        "start": -31,
-        "end": -24,
-        "sequence": "TATA",
-        "strand": "plus",
-        "evidence": "Cryo-EM PIC",
-        "notes": "Mediator head engages TBP"
-      }
-    ],
-    "timeline": { "phase": "assembly", "order": 1 },
-    "evidence": ["Mediator recruitment assays"],
-    "references": ["https://doi.org/10.1038/s41467-022-28438-3"],
-    "confidence": 0.85
-  },
-  {
-    "id": "edge:mediator-polii",
-    "key": "mediatorPolii",
-    "from": "node:mediator",
-    "to": "node:polii",
-    "kind": "flow",
-    "router": "orthogonal",
-    "strand": "plus",
-    "frame": {
-      "type": "interaction",
-      "reference": "Mediator to Pol II core"
-    },
-    "coordinates": {
-      "start": -12,
-      "end": 5,
-      "unit": "bp",
-      "reference": "Template strand",
-      "confidence": 0.84
-    },
-    "recognitionSites": [
-      {
-        "name": "Med14 latch",
-        "start": -12,
-        "end": -4,
-        "sequence": "Med14 loop",
-        "strand": "plus",
-        "evidence": "Cryo-EM",
-        "notes": "Stabilises closed clamp"
-      }
-    ],
-    "timeline": { "phase": "assembly", "order": 2 },
-    "evidence": ["Mediator–Pol II biochemical reconstitution"],
-    "references": ["https://doi.org/10.1126/science.abf6735"],
-    "confidence": 0.84
-  },
-  {
-    "id": "edge:polii-escape",
-    "key": "poliiEscape",
-    "from": "node:polii",
-    "to": "node:escape",
-    "kind": "flow",
-    "router": "orthogonal",
-    "strand": "plus",
-    "frame": {
-      "type": "interaction",
-      "reference": "Catalysis to promoter escape"
-    },
-    "coordinates": {
-      "start": 1,
-      "end": 25,
-      "unit": "nt",
-      "reference": "Nascent RNA length",
-      "confidence": 0.82
-    },
-    "recognitionSites": [
-      {
-        "name": "Early RNA hybrid",
-        "start": 1,
-        "end": 9,
-        "sequence": "rAUGG",
-        "strand": "plus",
-        "evidence": "Abortive transcripts",
-        "notes": "Determines escape efficiency"
-      }
-    ],
-    "timeline": { "phase": "initiation", "order": 3 },
-    "evidence": ["Abortive transcription assays"],
-    "references": ["https://doi.org/10.1038/nature14290"],
-    "confidence": 0.82
-  },
-  {
-    "id": "edge:enhancer-mediator",
-    "key": "enhancerMediator",
-    "from": "node:enhancer",
-    "to": "node:mediator",
-    "kind": "regulation",
-    "router": "orthogonal",
-    "strand": "bidirectional",
-    "frame": {
-      "type": "interaction",
-      "reference": "Enhancer loop delivery"
-    },
-    "coordinates": {
-      "start": -2000,
-      "end": -200,
-      "unit": "bp",
-      "reference": "Enhancer span",
-      "confidence": 0.72
-    },
-    "recognitionSites": [
-      {
-        "name": "Mediator tail hub",
-        "start": -900,
-        "end": -450,
-        "sequence": "Tail modules",
-        "strand": "both",
-        "evidence": "Mediator ChIA-PET",
-        "notes": "Bridges enhancer to core"
-      }
-    ],
-    "markers": {
-      "end": "arrow-regulation"
-    },
-    "timeline": { "phase": "assembly", "order": 0 },
-    "evidence": ["Enhancer loop capture"],
-    "references": ["https://doi.org/10.1038/s41586-018-0173-5"],
-    "confidence": 0.75
-  },
-  {
-    "id": "edge:ptefb-escape",
-    "key": "ptefbEscape",
-    "from": "node:ptefb",
-    "to": "node:escape",
-    "kind": "regulation",
-    "router": "orthogonal",
-    "strand": "plus",
-    "frame": {
-      "type": "interaction",
-      "reference": "P-TEFb pause release"
-    },
-    "coordinates": {
-      "start": 20,
-      "end": 60,
-      "unit": "nt",
-      "reference": "Pause window",
-      "confidence": 0.8
-    },
-    "recognitionSites": [
-      {
-        "name": "Ser2 CTD phosphorylation",
-        "start": 20,
-        "end": 60,
-        "sequence": "YS2P repeats",
-        "strand": "plus",
-        "evidence": "ChIP-seq Ser2P",
-        "notes": "Releases DSIF/NELF"
-      }
-    ],
-    "markers": {
-      "end": "arrow-regulation"
-    },
-    "timeline": { "phase": "escape", "order": 5 },
-    "evidence": ["P-TEFb kinase assays"],
-    "references": ["https://doi.org/10.1038/nature14290"],
-    "confidence": 0.8
-  }
-];
+            const NODE_TEMPLATES = [
+        {
+          "id": "node:chromatin",
+          "label": "Промоторная ДНК и хроматин",
+          "type": "Промоторная ДНК",
+          "layer": "chromatin",
+          "x": 0,
+          "y": 216,
+          "width": 192,
+          "height": 132,
+          "notes": [
+            "SWI/SNF и HAT открывают ядро промотора, сдвигая нуклеосом назад.",
+            "H3K4me3 и ацетил-H3 усиливают признание цепи факторами TFIID."
+          ],
+          "z": 10,
+          "frame": {
+            "type": "genomic",
+            "assembly": "GRCh38",
+            "chromosome": "chr17",
+            "locus": "Промоторное окно",
+            "reference": "hg38, относительные координаты от +1"
+          },
+          "coordinates": {
+            "start": -60,
+            "end": 40,
+            "unit": "bp",
+            "reference": "относительно +1 (hg38)",
+            "confidence": 0.92
+          },
+          "recognitionSites": [
+            {
+              "name": "BREu",
+              "start": -37,
+              "end": -32,
+              "sequence": "SSRCGCC",
+              "strand": "plus",
+              "evidence": "TFIIB ChIP-seq",
+              "notes": "TFIIB задаёт ориентацию"
+            },
+            {
+              "name": "TATA-бокс",
+              "start": -31,
+              "end": -24,
+              "sequence": "TATAWAAR",
+              "strand": "plus",
+              "evidence": "ChIP-seq TBP (ENCODE)",
+              "notes": "Связывает TBP"
+            },
+            {
+              "name": "BREd",
+              "start": -23,
+              "end": -17,
+              "sequence": "RTDKKKK",
+              "strand": "plus",
+              "evidence": "TFIIB crosslink",
+              "notes": "Взаимодействие с читающим пальцем TFIIB"
+            },
+            {
+              "name": "Inr",
+              "start": -2,
+              "end": 4,
+              "sequence": "YYANWYY",
+              "strand": "plus",
+              "evidence": "CAGE +1 пик",
+              "notes": "Определяет старт"
+            },
+            {
+              "name": "MTE",
+              "start": 18,
+              "end": 27,
+              "sequence": "CSARCSSAAC",
+              "strand": "plus",
+              "evidence": "TFIID footprint",
+              "notes": "TAF4/6 укрепляют канал"
+            },
+            {
+              "name": "DPE",
+              "start": 28,
+              "end": 33,
+              "sequence": "RGWYV",
+              "strand": "plus",
+              "evidence": "TFIID ChIP-nexus",
+              "notes": "Контакт с TAF2/6/9"
+            }
+          ],
+          "aliases": [
+            "Ядро корового промотора"
+          ],
+          "timeline": {
+            "phase": "assembly",
+            "order": 1,
+            "start": -60,
+            "end": 33,
+            "unit": "bp"
+          },
+          "evidence": [
+            "Cryo-EM PIC (PDB 7E8S)",
+            "ChIP-seq TFIID/TBP"
+          ],
+          "references": [
+            "https://doi.org/10.1038/s41594-021-00606-2"
+          ],
+          "confidence": 0.9,
+          "autoCorrections": []
+        },
+        {
+          "id": "node:mediator",
+          "label": "Mediator + общие факторы",
+          "type": "Mediator/TFIID",
+          "layer": "factors",
+          "x": 204,
+          "y": 192,
+          "width": 192,
+          "height": 144,
+          "notes": [
+            "TFIID-TBP, TFIIA и TFIIB фиксируют +1 позицию.",
+            "Хвост и голова Mediator интегрируют сигналы энхансеров."
+          ],
+          "z": 20,
+          "frame": {
+            "type": "interaction",
+            "reference": "Матрица Mediator–PIC",
+            "notes": "Head/Middle модули связывают TBP и Pol II"
+          },
+          "coordinates": {
+            "start": -35,
+            "end": 12,
+            "unit": "bp",
+            "reference": "относительно +1 (hg38)",
+            "confidence": 0.88
+          },
+          "recognitionSites": [
+            {
+              "name": "TFIID–Mediator контакт",
+              "start": -35,
+              "end": -10,
+              "sequence": "Med14/17/18 ↔ TAF1/2",
+              "evidence": "Crosslinking MS",
+              "notes": "Сцепка головы Mediator с TFIID"
+            },
+            {
+              "name": "Хвост Mediator",
+              "start": -200,
+              "end": -60,
+              "sequence": "Связь с энхансерами",
+              "evidence": "ChIA-PET loops",
+              "notes": "Передаёт сигналы в PIC"
+            }
+          ],
+          "aliases": [
+            "Mediator + общие факторы"
+          ],
+          "timeline": {
+            "phase": "assembly",
+            "order": 2,
+            "start": -35,
+            "end": 12,
+            "unit": "bp"
+          },
+          "evidence": [
+            "Mediator cryo-EM (PDB 7ECC)",
+            "Mediator-TFIID CLMS"
+          ],
+          "references": [
+            "https://doi.org/10.1038/s41467-022-28438-3"
+          ],
+          "confidence": 0.85,
+          "autoCorrections": []
+        },
+        {
+          "id": "node:polii",
+          "label": "Pol II–TFIIF ядро",
+          "type": "Каталитический центр Pol II",
+          "layer": "factors",
+          "x": 408,
+          "y": 192,
+          "width": 192,
+          "height": 156,
+          "notes": [
+            "TFIIE координирует загрузку TFIIH; XPB — ATP-зависимая транслоказа, открывающая пузырь ~12–14 п.н. (-9 … +3).",
+            "Pol II движется по матричной 3′→5′, синтез РНК идёт 5′→3′.",
+            "CDK7 (CAK) фосфорилирует CTD Ser5, рекрутируя кэпирующий комплекс."
+          ],
+          "z": 20,
+          "frame": {
+            "type": "protein",
+            "reference": "Открытый комплекс Pol II–TFIIF/TFIIE/H",
+            "notes": "Clamp closed on template"
+          },
+          "coordinates": {
+            "start": -3,
+            "end": 35,
+            "unit": "bp",
+            "reference": "относительно +1 (hg38)",
+            "confidence": 0.88
+          },
+          "recognitionSites": [
+            {
+              "name": "Active site cleft",
+              "start": 1,
+              "end": 9,
+              "sequence": "RNA:DNA hybrid (8–9 нт)",
+              "evidence": "Run-on assays",
+              "notes": "Стабилизирует начало синтеза"
+            },
+            {
+              "name": "TFIIB reader",
+              "start": -3,
+              "end": 5,
+              "sequence": "B-finger",
+              "evidence": "Cryo-EM densities",
+              "notes": "Направляет +1 в канал"
+            }
+          ],
+          "aliases": [
+            "Pol II-TFIIF-TFIIE/H"
+          ],
+          "timeline": {
+            "phase": "isomerization",
+            "order": 3,
+            "start": -3,
+            "end": 12,
+            "unit": "bp"
+          },
+          "evidence": [
+            "TFIIE/TFIIH PIC (PDB 7E8S)",
+            "In vitro run-on assays"
+          ],
+          "references": [
+            "https://doi.org/10.1126/science.abg3075"
+          ],
+          "confidence": 0.88,
+          "autoCorrections": []
+        },
+        {
+          "id": "node:escape",
+          "label": "Промоторный побег и пауза",
+          "type": "Промотор-проксимальная пауза",
+          "layer": "rna",
+          "x": 612,
+          "y": 252,
+          "width": 192,
+          "height": 144,
+          "notes": [
+            "Наступающая РНК достигает 20–60 нт; окно освобождения P-TEFb — 20–120 нт.",
+            "DSIF/NELF удерживают Pol II, пока Mediator сдвигается вдоль дНК."
+          ],
+          "z": 30,
+          "frame": {
+            "type": "transcript",
+            "reference": "Промотор-проксимальная РНК",
+            "notes": "Pause 20–60 нт"
+          },
+          "coordinates": {
+            "start": 20,
+            "end": 60,
+            "unit": "nt",
+            "reference": "длина наступающей РНК",
+            "confidence": 0.83
+          },
+          "recognitionSites": [
+            {
+              "name": "Элемент паузы",
+              "start": 20,
+              "end": 40,
+              "sequence": "G-насыщенные мотивы",
+              "evidence": "NET-seq",
+              "notes": "NELF/DSIF держат кламп"
+            }
+          ],
+          "aliases": [
+            "Окно паузы"
+          ],
+          "timeline": {
+            "phase": "escape",
+            "order": 4,
+            "start": 20,
+            "end": 60,
+            "unit": "nt"
+          },
+          "evidence": [
+            "NET-seq pause maps",
+            "P-TEFb release assays"
+          ],
+          "references": [
+            "https://doi.org/10.1038/nature14290"
+          ],
+          "confidence": 0.82,
+          "autoCorrections": []
+        },
+        {
+          "id": "node:enhancer",
+          "label": "Энхансерные петли",
+          "type": "Энхансер",
+          "layer": "annotations",
+          "x": 0,
+          "y": 48,
+          "width": 192,
+          "height": 120,
+          "notes": [
+            "Активаторы и Mediator Tail формируют петлю, вовлекая Cohesin.",
+            "Reader-комплексы хроматина удерживают гистоновые метки.",
+            "CTCF спариваются (→/←) и якорят кохезиновые петли."
+          ],
+          "z": 40,
+          "frame": {
+            "type": "genomic",
+            "assembly": "GRCh38",
+            "chromosome": "chr17",
+            "locus": "Upstream enhancer cluster",
+            "reference": "Верхний кластер энхансеров"
+          },
+          "coordinates": {
+            "start": -2000,
+            "end": -200,
+            "unit": "bp",
+            "reference": "относительно +1 (hg38)",
+            "confidence": 0.7
+          },
+          "recognitionSites": [
+            {
+              "name": "Активаторный кластер",
+              "start": -1800,
+              "end": -1500,
+              "sequence": "AP-1/ETS, ~0.2–2 кб upstream",
+              "evidence": "ATAC-seq peaks",
+              "notes": "Хвост Mediator рекрутирует активаторы"
+            },
+            {
+              "name": "Якоря Cohesin",
+              "start": -600,
+              "end": -400,
+              "sequence": "CTCF → / ←",
+              "evidence": "ChIA-PET",
+              "notes": "Стабилизируют петлю"
+            }
+          ],
+          "aliases": [
+            "Энхансерное окно"
+          ],
+          "timeline": {
+            "phase": "assembly",
+            "order": 0,
+            "start": -2000,
+            "end": -200,
+            "unit": "bp"
+          },
+          "evidence": [
+            "ChIA-PET Mediator loops",
+            "ATAC-seq accessible chromatin"
+          ],
+          "references": [
+            "https://doi.org/10.1038/s41586-018-0173-5"
+          ],
+          "confidence": 0.75,
+          "autoCorrections": []
+        },
+        {
+          "id": "node:ptefb",
+          "label": "P-TEFb / сигналы освобождения",
+          "type": "Регуляция",
+          "layer": "annotations",
+          "x": 816,
+          "y": 48,
+          "width": 144,
+          "height": 120,
+          "notes": [
+            "CDK9/CycT активируются через BRD4/SEC и сигналы стресс-ответа.",
+            "CDK9/CycT фосфорилируют Spt5 (DSIF), NELF и CTD Ser2; NELF диссоциирует, DSIF становится позитивным фактором.",
+            "Пик CTD Ser2-P усиливается дальше по транскрипту."
+          ],
+          "z": 40,
+          "frame": {
+            "type": "regulatory",
+            "reference": "Модуль освобождения P-TEFb",
+            "notes": "BRD4/SEC recruitment"
+          },
+          "coordinates": {
+            "start": 20,
+            "end": 120,
+            "unit": "bp",
+            "reference": "окно освобождения",
+            "confidence": 0.78
+          },
+          "recognitionSites": [
+            {
+              "name": "Фосфориляция NELF",
+              "start": 20,
+              "end": 45,
+              "sequence": "CDK9/CycT → NELF",
+              "evidence": "P-TEFb ChIP",
+              "notes": "NELF уходит с комплекса"
+            },
+            {
+              "name": "Фосфориляция DSIF/CTD",
+              "start": 45,
+              "end": 80,
+              "sequence": "Spt5 repeats, CTD Ser2",
+              "evidence": "Ser2P mapping",
+              "notes": "Pol II входит в элонгацию"
+            }
+          ],
+          "aliases": [
+            "P-TEFb activation"
+          ],
+          "timeline": {
+            "phase": "escape",
+            "order": 5,
+            "start": 20,
+            "end": 120,
+            "unit": "bp"
+          },
+          "evidence": [
+            "P-TEFb ChIP-seq",
+            "BRD4 dependency assays"
+          ],
+          "references": [
+            "https://doi.org/10.1038/nature14290"
+          ],
+          "confidence": 0.8,
+          "autoCorrections": []
+        }
+      ];
+            const EDGE_TEMPLATES = [
+        {
+          "id": "edge:chromatin-mediator",
+          "from": "node:chromatin",
+          "to": "node:mediator",
+          "kind": "flow",
+          "router": "orthogonal",
+          "label": "рекрутирует",
+          "markers": null,
+          "frame": {
+            "type": "interaction",
+            "reference": "Сцепка TBP–Mediator"
+          },
+          "coordinates": {
+            "start": -35,
+            "end": -10,
+            "unit": "bp",
+            "reference": "относительно +1 (hg38)",
+            "confidence": 0.86
+          },
+          "strand": null,
+          "recognitionSites": [
+            {
+              "name": "Контакт TBP–TAF1",
+              "start": -31,
+              "end": -24,
+              "sequence": "TATAWAAR",
+              "strand": "plus",
+              "evidence": "Cryo-EM PIC",
+              "notes": "Голова Mediator стабилизирует TBP"
+            }
+          ],
+          "timeline": {
+            "phase": "assembly",
+            "order": 1
+          },
+          "evidence": [
+            "Mediator recruitment assays"
+          ],
+          "references": [
+            "https://doi.org/10.1038/s41467-022-28438-3"
+          ],
+          "confidence": 0.85,
+          "autoCorrections": []
+        },
+        {
+          "id": "edge:mediator-polii",
+          "from": "node:mediator",
+          "to": "node:polii",
+          "kind": "flow",
+          "router": "orthogonal",
+          "label": "собирает PIC",
+          "markers": null,
+          "frame": {
+            "type": "interaction",
+            "reference": "Связь Mediator с ядром Pol II"
+          },
+          "coordinates": {
+            "start": -12,
+            "end": 5,
+            "unit": "bp",
+            "reference": "относительно +1 (hg38)",
+            "confidence": 0.84
+          },
+          "strand": null,
+          "recognitionSites": [
+            {
+              "name": "Захват Med14",
+              "start": -12,
+              "end": -4,
+              "sequence": "Med14 контакт",
+              "evidence": "Cryo-EM",
+              "notes": "Закрывает кламп Pol II"
+            }
+          ],
+          "timeline": {
+            "phase": "assembly",
+            "order": 2
+          },
+          "evidence": [
+            "Mediator–Pol II biochemical reconstitution"
+          ],
+          "references": [
+            "https://doi.org/10.1126/science.abf6735"
+          ],
+          "confidence": 0.84,
+          "autoCorrections": []
+        },
+        {
+          "id": "edge:polii-escape",
+          "from": "node:polii",
+          "to": "node:escape",
+          "kind": "flow",
+          "router": "orthogonal",
+          "label": "инициирует транскрипцию",
+          "markers": null,
+          "frame": {
+            "type": "interaction",
+            "reference": "Катализ → побег с промотора"
+          },
+          "coordinates": {
+            "start": 1,
+            "end": 25,
+            "unit": "nt",
+            "reference": "длина нарастающей РНК",
+            "confidence": 0.82
+          },
+          "strand": null,
+          "recognitionSites": [
+            {
+              "name": "Ранний гибрид РНК",
+              "start": 1,
+              "end": 9,
+              "sequence": "DSIF/NELF удержание",
+              "evidence": "Abortive transcripts",
+              "notes": "Поддерживает паузу"
+            }
+          ],
+          "timeline": {
+            "phase": "initiation",
+            "order": 3
+          },
+          "evidence": [
+            "Abortive transcription assays"
+          ],
+          "references": [
+            "https://doi.org/10.1038/nature14290"
+          ],
+          "confidence": 0.82,
+          "autoCorrections": []
+        },
+        {
+          "id": "edge:enhancer-mediator",
+          "from": "node:enhancer",
+          "to": "node:mediator",
+          "kind": "regulation",
+          "router": "orthogonal",
+          "label": "активирует",
+          "markers": {
+            "end": "arrow-regulation"
+          },
+          "frame": {
+            "type": "interaction",
+            "reference": "Передача сигнала энхансера"
+          },
+          "coordinates": {
+            "start": -2000,
+            "end": -200,
+            "unit": "bp",
+            "reference": "относительно +1 (hg38)",
+            "confidence": 0.72
+          },
+          "strand": null,
+          "recognitionSites": [
+            {
+              "name": "Узел хвоста Mediator",
+              "start": -900,
+              "end": -450,
+              "sequence": "Хвост Mediator",
+              "evidence": "Mediator ChIA-PET",
+              "notes": "Передаёт сигнал от петли"
+            }
+          ],
+          "timeline": {
+            "phase": "assembly",
+            "order": 0
+          },
+          "evidence": [
+            "Enhancer loop capture"
+          ],
+          "references": [
+            "https://doi.org/10.1038/s41586-018-0173-5"
+          ],
+          "confidence": 0.75,
+          "autoCorrections": []
+        },
+        {
+          "id": "edge:escape-ptefb",
+          "from": "node:escape",
+          "to": "node:ptefb",
+          "kind": "regulation",
+          "router": "orthogonal",
+          "label": "освобождает паузу",
+          "markers": {
+            "end": "arrow-regulation"
+          },
+          "frame": {
+            "type": "interaction",
+            "reference": "Освобождение паузы P-TEFb"
+          },
+          "coordinates": {
+            "start": 20,
+            "end": 60,
+            "unit": "nt",
+            "reference": "окно освобождения",
+            "confidence": 0.8
+          },
+          "strand": null,
+          "recognitionSites": [
+            {
+              "name": "Рекрут P-TEFb",
+              "start": 20,
+              "end": 60,
+              "sequence": "Пауза к P-TEFb",
+              "evidence": "ChIP-seq Ser2P",
+              "notes": "BRD4/SEC привлекают P-TEFb"
+            }
+          ],
+          "timeline": {
+            "phase": "escape",
+            "order": 5
+          },
+          "evidence": [
+            "P-TEFb kinase assays"
+          ],
+          "references": [
+            "https://doi.org/10.1038/nature14290"
+          ],
+          "confidence": 0.8,
+          "autoCorrections": [],
+          "key": "escapePtefb"
+        }
+      ];
 
       const PRESET_VARIANTS = {
         'tssMini.prokaryote': {
