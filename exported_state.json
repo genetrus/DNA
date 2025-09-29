@@ -1,0 +1,642 @@
+{
+    "preset": "tssMini",
+    "org": "eukaryote",
+    "nodes": [
+        {
+            "id": "node:chromatin",
+            "label": "\u0425\u0440\u043e\u043c\u0430\u0442\u0438\u043d \u0440\u0435\u043c\u043e\u0434\u0435\u043b\u0438\u0440\u043e\u0432\u0430\u043d",
+            "type": "Chromatin",
+            "layer": "chromatin",
+            "x": 48,
+            "y": 216,
+            "width": 216,
+            "height": 132,
+            "notes": [
+                "SWI/SNF \u0438 HAT \u043e\u0442\u043a\u0440\u044b\u0432\u0430\u044e\u0442 TATA-\u0431\u043e\u043a\u0441 \u0438 \u0441\u043d\u0438\u043c\u0430\u044e\u0442 \u043d\u0443\u043a\u043b\u0435\u043e\u0441\u043e\u043c\u044b.",
+                "H3K4me3 / \u0430\u0446\u0435\u0442\u0438\u043b-H3 \u043f\u043e\u0432\u044b\u0448\u0430\u044e\u0442 \u0430\u0444\u0444\u0438\u043d\u043d\u043e\u0441\u0442\u044c TFIID."
+            ],
+            "z": 10,
+            "frame": {
+                "type": "genomic",
+                "assembly": "GRCh38",
+                "chromosome": "chr17",
+                "locus": "POLR2A promoter window",
+                "reference": "chr17:74,617,320-74,617,520"
+            },
+            "coordinates": {
+                "start": -45,
+                "end": 60,
+                "unit": "bp",
+                "reference": "+1 = POLR2A TSS (hg38)",
+                "confidence": 0.92
+            },
+            "strand": "plus",
+            "recognitionSites": [
+                {
+                    "name": "TATA-box",
+                    "start": -31,
+                    "end": -24,
+                    "sequence": "TATAWAWR",
+                    "strand": "plus",
+                    "evidence": "TBP ChIP-seq (ENCODE)",
+                    "notes": "Core promoter motif"
+                },
+                {
+                    "name": "Inr",
+                    "start": -2,
+                    "end": 4,
+                    "sequence": "YYANWYY",
+                    "strand": "plus",
+                    "evidence": "CAGE +1 peak",
+                    "notes": "Defines transcription start"
+                }
+            ],
+            "aliases": [
+                "POLR2A promoter",
+                "Core promoter window"
+            ],
+            "timeline": {
+                "phase": "assembly",
+                "order": 1,
+                "start": -45,
+                "end": 4,
+                "unit": "bp"
+            },
+            "evidence": [
+                "Cryo-EM PIC (PDB 7E8S)",
+                "ENCODE TFIID ChIP-seq"
+            ],
+            "references": [
+                "https://doi.org/10.1038/s41594-021-00606-2"
+            ],
+            "confidence": 0.9,
+            "autoCorrections": []
+        },
+        {
+            "id": "node:mediator",
+            "label": "Mediator + \u043e\u0431\u0449\u0438\u0435 \u0444\u0430\u043a\u0442\u043e\u0440\u044b",
+            "type": "Mediator complex",
+            "layer": "factors",
+            "x": 288,
+            "y": 192,
+            "width": 216,
+            "height": 144,
+            "notes": [
+                "TFIID-TBP, TFIIA \u0438 TFIIB \u0444\u0438\u043a\u0441\u0438\u0440\u0443\u044e\u0442 +1 \u043f\u043e\u0437\u0438\u0446\u0438\u044e.",
+                "Tail/Head \u043c\u043e\u0434\u0443\u043b\u0438 \u0438\u043d\u0442\u0435\u0433\u0440\u0438\u0440\u0443\u044e\u0442 \u0441\u0438\u0433\u043d\u0430\u043b\u044b \u044d\u043d\u0445\u0430\u043d\u0441\u0435\u0440\u043e\u0432."
+            ],
+            "z": 20,
+            "frame": {
+                "type": "interaction",
+                "reference": "Mediator\u2013PIC scaffold",
+                "notes": "Head/Middle modules contacting TBP and Pol II"
+            },
+            "coordinates": {
+                "start": -35,
+                "end": 12,
+                "unit": "bp",
+                "reference": "Relative to POLR2A +1",
+                "confidence": 0.88
+            },
+            "strand": "plus",
+            "recognitionSites": [
+                {
+                    "name": "TFIID\u2013Mediator interface",
+                    "start": -35,
+                    "end": -10,
+                    "sequence": "TAF1/Med17",
+                    "strand": "plus",
+                    "evidence": "Crosslinking MS",
+                    "notes": "Stabilises PIC assembly"
+                },
+                {
+                    "name": "Activator relay",
+                    "start": -200,
+                    "end": -60,
+                    "sequence": "Mediator tail",
+                    "strand": "plus",
+                    "evidence": "ChIA-PET loops",
+                    "notes": "Connects enhancer inputs"
+                }
+            ],
+            "aliases": [
+                "Mediator + GTF ensemble"
+            ],
+            "timeline": {
+                "phase": "assembly",
+                "order": 2,
+                "start": -35,
+                "end": 12,
+                "unit": "bp"
+            },
+            "evidence": [
+                "Mediator cryo-EM (PDB 7ECC)",
+                "Mediator-TFIID CLMS"
+            ],
+            "references": [
+                "https://doi.org/10.1038/s41467-022-28438-3"
+            ],
+            "confidence": 0.85,
+            "autoCorrections": []
+        },
+        {
+            "id": "node:polii",
+            "label": "Pol II\u2013TFIIF \u044f\u0434\u0440\u043e",
+            "type": "Pol II core",
+            "layer": "factors",
+            "x": 528,
+            "y": 192,
+            "width": 216,
+            "height": 156,
+            "notes": [
+                "TFIIE \u043a\u043e\u043e\u0440\u0434\u0438\u043d\u0438\u0440\u0443\u0435\u0442 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0443 TFIIH; XPB \u0440\u0430\u0441\u043a\u0440\u044b\u0432\u0430\u0435\u0442 \u043f\u0443\u0437\u044b\u0440\u044c (-9/+2).",
+                "CDK7 (CAK) \u0444\u043e\u0441\u0444\u043e\u0440\u0438\u043b\u0438\u0440\u0443\u0435\u0442 CTD Ser5, \u0440\u0435\u043a\u0440\u0443\u0442\u0438\u0440\u0443\u0435\u0442 \u043a\u044d\u043f\u0438\u0440\u0443\u044e\u0449\u0438\u0439 \u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0441."
+            ],
+            "z": 20,
+            "frame": {
+                "type": "protein",
+                "reference": "Pol II\u2013TFIIF/TFIIE/H open complex",
+                "notes": "Clamp closed on template"
+            },
+            "coordinates": {
+                "start": -3,
+                "end": 35,
+                "unit": "bp",
+                "reference": "Template strand relative to +1",
+                "confidence": 0.88
+            },
+            "strand": "plus",
+            "recognitionSites": [
+                {
+                    "name": "Active site cleft",
+                    "start": 1,
+                    "end": 9,
+                    "sequence": "RNA:DNA hybrid",
+                    "strand": "plus",
+                    "evidence": "Run-on assays",
+                    "notes": "Abortive products engage"
+                },
+                {
+                    "name": "TFIIB reader",
+                    "start": -3,
+                    "end": 5,
+                    "sequence": "B-finger",
+                    "strand": "plus",
+                    "evidence": "Cryo-EM densities",
+                    "notes": "Guides +1 alignment"
+                }
+            ],
+            "aliases": [
+                "Pol II-TFIIF-TFIIE/H"
+            ],
+            "timeline": {
+                "phase": "isomerization",
+                "order": 3,
+                "start": -3,
+                "end": 12,
+                "unit": "bp"
+            },
+            "evidence": [
+                "TFIIE/TFIIH PIC (PDB 7E8S)",
+                "In vitro run-on assays"
+            ],
+            "references": [
+                "https://doi.org/10.1126/science.abg3075"
+            ],
+            "confidence": 0.88,
+            "autoCorrections": []
+        },
+        {
+            "id": "node:escape",
+            "label": "\u041f\u0440\u043e\u043c\u043e\u0442\u043e\u0440\u043d\u044b\u0439 \u043f\u043e\u0431\u0435\u0433 \u0438 \u043f\u0430\u0443\u0437\u0430",
+            "type": "RNA transition",
+            "layer": "rna",
+            "x": 768,
+            "y": 252,
+            "width": 192,
+            "height": 144,
+            "notes": [
+                "\u0413\u0438\u0431\u0440\u0438\u0434 \u0414\u041d\u041a\u2013\u0420\u041d\u041a \u0441\u0442\u0430\u0431\u0438\u043b\u0438\u0437\u0438\u0440\u0443\u0435\u0442\u0441\u044f (~8\u20139 \u043d\u0442), Mediator \u043e\u0442\u0445\u043e\u0434\u0438\u0442.",
+                "DSIF/NELF \u0443\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u044e\u0442 Pol II \u043d\u0430 +20/+60 \u0434\u043e \u0430\u043a\u0442\u0438\u0432\u0430\u0446\u0438\u0438 P-TEFb."
+            ],
+            "z": 30,
+            "frame": {
+                "type": "transcript",
+                "reference": "Promoter-proximal RNA",
+                "notes": "Paused 20\u201360 nt"
+            },
+            "coordinates": {
+                "start": 10,
+                "end": 60,
+                "unit": "nt",
+                "reference": "Nascent RNA length",
+                "confidence": 0.83
+            },
+            "strand": "plus",
+            "recognitionSites": [
+                {
+                    "name": "Pause element",
+                    "start": 20,
+                    "end": 40,
+                    "sequence": "G-rich pause",
+                    "strand": "plus",
+                    "evidence": "NET-seq",
+                    "notes": "NELF/DSIF engagement"
+                }
+            ],
+            "aliases": [
+                "Promoter escape window"
+            ],
+            "timeline": {
+                "phase": "escape",
+                "order": 4,
+                "start": 10,
+                "end": 60,
+                "unit": "nt"
+            },
+            "evidence": [
+                "NET-seq pause maps",
+                "P-TEFb release assays"
+            ],
+            "references": [
+                "https://doi.org/10.1038/nature14290"
+            ],
+            "confidence": 0.82,
+            "autoCorrections": []
+        },
+        {
+            "id": "node:enhancer",
+            "label": "\u042d\u043d\u0445\u0430\u043d\u0441\u0435\u0440\u043d\u044b\u0435 \u043f\u0435\u0442\u043b\u0438",
+            "type": "Enhancer",
+            "layer": "annotations",
+            "x": 288,
+            "y": 48,
+            "width": 216,
+            "height": 120,
+            "notes": [
+                "\u0410\u043a\u0442\u0438\u0432\u0430\u0442\u043e\u0440\u044b \u0438 Mediator Tail \u0444\u043e\u0440\u043c\u0438\u0440\u0443\u044e\u0442 \u043f\u0435\u0442\u043b\u044e, \u0432\u043e\u0432\u043b\u0435\u043a\u0430\u044f Cohesin.",
+                "Chromatin reader-\u043a\u043e\u043c\u043f\u043b\u0435\u043a\u0441\u044b \u0443\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u044e\u0442 \u0433\u0438\u0441\u0442\u043e\u043d\u043e\u0432\u044b\u0435 \u043c\u0435\u0442\u043a\u0438.",
+                "\u0410\u0432\u0442\u043e\u0438\u0441\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e: recognitionSites.strand\u2192bidirectional, recognitionSites.strand\u2192bidirectional"
+            ],
+            "z": 40,
+            "frame": {
+                "type": "genomic",
+                "assembly": "GRCh38",
+                "chromosome": "chr17",
+                "locus": "Upstream enhancer cluster",
+                "reference": "chr17:74,615,000-74,616,200"
+            },
+            "coordinates": {
+                "start": -2000,
+                "end": -200,
+                "unit": "bp",
+                "reference": "Relative to POLR2A +1",
+                "confidence": 0.7
+            },
+            "strand": "bidirectional",
+            "recognitionSites": [
+                {
+                    "name": "Activator hub",
+                    "start": -1800,
+                    "end": -1500,
+                    "sequence": "AP-1/ETS",
+                    "strand": "bidirectional",
+                    "evidence": "ATAC-seq peaks",
+                    "notes": "Mediator tail recruitment"
+                },
+                {
+                    "name": "Cohesin anchor",
+                    "start": -600,
+                    "end": -400,
+                    "sequence": "CTCF",
+                    "strand": "bidirectional",
+                    "evidence": "ChIA-PET",
+                    "notes": "Loop stabilisation"
+                }
+            ],
+            "aliases": [
+                "Enhancer loop cluster"
+            ],
+            "timeline": {
+                "phase": "assembly",
+                "order": 0,
+                "start": -2000,
+                "end": -200,
+                "unit": "bp"
+            },
+            "evidence": [
+                "ChIA-PET Mediator loops",
+                "ATAC-seq accessible chromatin"
+            ],
+            "references": [
+                "https://doi.org/10.1038/s41586-018-0173-5"
+            ],
+            "confidence": 0.75,
+            "autoCorrections": []
+        },
+        {
+            "id": "node:ptefb",
+            "label": "P-TEFb / \u0441\u0438\u0433\u043d\u0430\u043b\u044b \u043e\u0441\u0432\u043e\u0431\u043e\u0436\u0434\u0435\u043d\u0438\u044f",
+            "type": "Regulation",
+            "layer": "annotations",
+            "x": 768,
+            "y": 48,
+            "width": 192,
+            "height": 120,
+            "notes": [
+                "CDK9/CycT \u0430\u043a\u0442\u0438\u0432\u0438\u0440\u0443\u044e\u0442\u0441\u044f \u0447\u0435\u0440\u0435\u0437 BRD4/SEC \u0438 \u0441\u0438\u0433\u043d\u0430\u043b\u044b \u0441\u0442\u0440\u0435\u0441\u0441-\u043e\u0442\u0432\u0435\u0442\u0430.",
+                "\u0424\u043e\u0441\u0444\u043e\u0440\u0438\u043b\u0438\u0440\u0443\u044e\u0442 DSIF, NELF \u0438 CTD Ser2, \u043f\u0435\u0440\u0435\u0432\u043e\u0434\u044f \u0432 \u043f\u0440\u043e\u0434\u0443\u043a\u0442\u0438\u0432\u043d\u0443\u044e \u044d\u043b\u043e\u043d\u0433\u0430\u0446\u0438\u044e."
+            ],
+            "z": 40,
+            "frame": {
+                "type": "regulatory",
+                "reference": "P-TEFb pause-release module",
+                "notes": "BRD4/SEC recruitment"
+            },
+            "coordinates": {
+                "start": 20,
+                "end": 120,
+                "unit": "bp",
+                "reference": "Pause-release window",
+                "confidence": 0.78
+            },
+            "strand": "plus",
+            "recognitionSites": [
+                {
+                    "name": "NELF release",
+                    "start": 20,
+                    "end": 45,
+                    "sequence": "NELF-A interface",
+                    "strand": "plus",
+                    "evidence": "P-TEFb ChIP",
+                    "notes": "CDK9 phosphorylation"
+                },
+                {
+                    "name": "DSIF Ser2 phosphorylation",
+                    "start": 45,
+                    "end": 80,
+                    "sequence": "Spt5 repeats",
+                    "strand": "plus",
+                    "evidence": "Ser2P mapping",
+                    "notes": "Transitions into elongation"
+                }
+            ],
+            "aliases": [
+                "P-TEFb activation"
+            ],
+            "timeline": {
+                "phase": "escape",
+                "order": 5,
+                "start": 20,
+                "end": 120,
+                "unit": "bp"
+            },
+            "evidence": [
+                "P-TEFb ChIP-seq",
+                "BRD4 dependency assays"
+            ],
+            "references": [
+                "https://doi.org/10.1038/nature14290"
+            ],
+            "confidence": 0.8,
+            "autoCorrections": []
+        }
+    ],
+    "edges": [
+        {
+            "id": "edge:chromatin-mediator",
+            "from": "node:chromatin",
+            "to": "node:mediator",
+            "kind": "flow",
+            "router": "orthogonal",
+            "label": "\u0440\u0435\u043a\u0440\u0443\u0442\u0438\u0440\u0443\u0435\u0442",
+            "markers": null,
+            "frame": {
+                "type": "interaction",
+                "reference": "TBP\u2013Mediator handshake"
+            },
+            "coordinates": {
+                "start": -35,
+                "end": -10,
+                "unit": "bp",
+                "reference": "POLR2A core promoter",
+                "confidence": 0.86
+            },
+            "strand": "plus",
+            "recognitionSites": [
+                {
+                    "name": "TBP\u2013TAF1 contact",
+                    "start": -31,
+                    "end": -24,
+                    "sequence": "TATA",
+                    "strand": "plus",
+                    "evidence": "Cryo-EM PIC",
+                    "notes": "Mediator head engages TBP"
+                }
+            ],
+            "timeline": {
+                "phase": "assembly",
+                "order": 1
+            },
+            "evidence": [
+                "Mediator recruitment assays"
+            ],
+            "references": [
+                "https://doi.org/10.1038/s41467-022-28438-3"
+            ],
+            "confidence": 0.85,
+            "autoCorrections": []
+        },
+        {
+            "id": "edge:mediator-polii",
+            "from": "node:mediator",
+            "to": "node:polii",
+            "kind": "flow",
+            "router": "orthogonal",
+            "label": "\u0441\u043e\u0431\u0438\u0440\u0430\u0435\u0442 PIC",
+            "markers": null,
+            "frame": {
+                "type": "interaction",
+                "reference": "Mediator to Pol II core"
+            },
+            "coordinates": {
+                "start": -12,
+                "end": 5,
+                "unit": "bp",
+                "reference": "Template strand",
+                "confidence": 0.84
+            },
+            "strand": "plus",
+            "recognitionSites": [
+                {
+                    "name": "Med14 latch",
+                    "start": -12,
+                    "end": -4,
+                    "sequence": "Med14 loop",
+                    "strand": "plus",
+                    "evidence": "Cryo-EM",
+                    "notes": "Stabilises closed clamp"
+                }
+            ],
+            "timeline": {
+                "phase": "assembly",
+                "order": 2
+            },
+            "evidence": [
+                "Mediator\u2013Pol II biochemical reconstitution"
+            ],
+            "references": [
+                "https://doi.org/10.1126/science.abf6735"
+            ],
+            "confidence": 0.84,
+            "autoCorrections": []
+        },
+        {
+            "id": "edge:polii-escape",
+            "from": "node:polii",
+            "to": "node:escape",
+            "kind": "flow",
+            "router": "orthogonal",
+            "label": "\u0438\u043d\u0438\u0446\u0438\u0438\u0440\u0443\u0435\u0442 \u0442\u0440\u0430\u043d\u0441\u043a\u0440\u0438\u043f\u0446\u0438\u044e",
+            "markers": null,
+            "frame": {
+                "type": "interaction",
+                "reference": "Catalysis to promoter escape"
+            },
+            "coordinates": {
+                "start": 1,
+                "end": 25,
+                "unit": "nt",
+                "reference": "Nascent RNA length",
+                "confidence": 0.82
+            },
+            "strand": "plus",
+            "recognitionSites": [
+                {
+                    "name": "Early RNA hybrid",
+                    "start": 1,
+                    "end": 9,
+                    "sequence": "rAUGG",
+                    "strand": "plus",
+                    "evidence": "Abortive transcripts",
+                    "notes": "Determines escape efficiency"
+                }
+            ],
+            "timeline": {
+                "phase": "initiation",
+                "order": 3
+            },
+            "evidence": [
+                "Abortive transcription assays"
+            ],
+            "references": [
+                "https://doi.org/10.1038/nature14290"
+            ],
+            "confidence": 0.82,
+            "autoCorrections": []
+        },
+        {
+            "id": "edge:enhancer-mediator",
+            "from": "node:enhancer",
+            "to": "node:mediator",
+            "kind": "regulation",
+            "router": "orthogonal",
+            "label": "\u0430\u043a\u0442\u0438\u0432\u0438\u0440\u0443\u0435\u0442",
+            "markers": {
+                "end": "arrow-regulation"
+            },
+            "frame": {
+                "type": "interaction",
+                "reference": "Enhancer loop delivery"
+            },
+            "coordinates": {
+                "start": -2000,
+                "end": -200,
+                "unit": "bp",
+                "reference": "Enhancer span",
+                "confidence": 0.72
+            },
+            "strand": "bidirectional",
+            "recognitionSites": [
+                {
+                    "name": "Mediator tail hub",
+                    "start": -900,
+                    "end": -450,
+                    "sequence": "Tail modules",
+                    "strand": "bidirectional",
+                    "evidence": "Mediator ChIA-PET",
+                    "notes": "Bridges enhancer to core"
+                }
+            ],
+            "timeline": {
+                "phase": "assembly",
+                "order": 0
+            },
+            "evidence": [
+                "Enhancer loop capture"
+            ],
+            "references": [
+                "https://doi.org/10.1038/s41586-018-0173-5"
+            ],
+            "confidence": 0.75,
+            "autoCorrections": []
+        },
+        {
+            "id": "edge:ptefb-escape",
+            "from": "node:ptefb",
+            "to": "node:escape",
+            "kind": "regulation",
+            "router": "orthogonal",
+            "label": "\u043e\u0441\u0432\u043e\u0431\u043e\u0436\u0434\u0430\u0435\u0442 \u043f\u0430\u0443\u0437\u0443",
+            "markers": {
+                "end": "arrow-regulation"
+            },
+            "frame": {
+                "type": "interaction",
+                "reference": "P-TEFb pause release"
+            },
+            "coordinates": {
+                "start": 20,
+                "end": 60,
+                "unit": "nt",
+                "reference": "Pause window",
+                "confidence": 0.8
+            },
+            "strand": "plus",
+            "recognitionSites": [
+                {
+                    "name": "Ser2 CTD phosphorylation",
+                    "start": 20,
+                    "end": 60,
+                    "sequence": "YS2P repeats",
+                    "strand": "plus",
+                    "evidence": "ChIP-seq Ser2P",
+                    "notes": "Releases DSIF/NELF"
+                }
+            ],
+            "timeline": {
+                "phase": "escape",
+                "order": 5
+            },
+            "evidence": [
+                "P-TEFb kinase assays"
+            ],
+            "references": [
+                "https://doi.org/10.1038/nature14290"
+            ],
+            "confidence": 0.8,
+            "autoCorrections": []
+        }
+    ],
+    "transform": {
+        "scale": 0.5,
+        "pan": {
+            "x": -15.734375,
+            "y": -68.15625
+        }
+    },
+    "preferences": {
+        "gridVisible": true,
+        "gridSnap": true
+    }
+}

@@ -5,7 +5,7 @@
   "description": "Schema v1.1 for A4-oriented biological pathway diagrams with node/edge grammar.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["metadata", "nodes", "edges"],
+  "required": ["nodes", "edges"],
   "properties": {
     "metadata": {
       "type": "object",
@@ -115,6 +115,14 @@
         }
       }
     },
+    "preset": {
+      "type": "string",
+      "description": "Active preset identifier used for localized export."
+    },
+    "org": {
+      "type": "string",
+      "description": "Active organism key used for localized export."
+    },
     "nodes": {
       "type": "array",
       "minItems": 1,
@@ -126,6 +134,27 @@
       "minItems": 0,
       "items": {"$ref": "#/definitions/edge"},
       "uniqueItems": true
+    },
+    "transform": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scale": {"type": "number", "minimum": 0},
+        "pan": {
+          "anyOf": [
+            {"$ref": "#/definitions/point"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "preferences": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "gridVisible": {"type": "boolean"},
+        "gridSnap": {"type": "boolean"}
+      }
     }
   },
   "definitions": {
@@ -198,7 +227,7 @@
     },
     "strand": {
       "type": "string",
-      "enum": ["plus", "minus", "bidirectional", "unknown"]
+      "enum": ["plus", "minus", "bidirectional", "unknown", "both"]
     },
     "recognitionSite": {
       "type": "object",
@@ -211,7 +240,7 @@
         "sequence": {"type": "string"},
         "strand": {
           "type": "string",
-          "enum": ["plus", "minus", "both"],
+          "enum": ["plus", "minus", "bidirectional", "unknown", "both"],
           "default": "plus"
         },
         "evidence": {"type": "string"},
@@ -233,79 +262,80 @@
       "type": "array",
       "items": {"type": "string"}
     },
+    "markers": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "start": {
+          "type": "string",
+          "enum": ["arrow-flow", "arrow-regulation", "tee-regulation"]
+        },
+        "end": {
+          "type": "string",
+          "enum": ["arrow-flow", "arrow-regulation", "tee-regulation"]
+        }
+      }
+    },
     "node": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type", "bounds"],
+      "required": ["id", "type", "x", "y", "width", "height"],
       "properties": {
         "id": {"type": "string"},
-        "type": {
+        "label": {"type": "string"},
+        "type": {"type": "string"},
+        "layer": {
           "type": "string",
-          "enum": [
-            "DNA",
-            "RNA",
-            "Protein",
-            "Enzyme",
-            "Promoter",
-            "Enhancer",
-            "Silencer",
-            "Insulator",
-            "Gene",
-            "Exon",
-            "Intron",
-            "UTR5",
-            "UTR3",
-            "TSS",
-            "TATA",
-            "PolyA",
-            "Ribosome",
-            "tRNA",
-            "TranscriptionFactor",
-            "PolII",
-            "Mediator",
-            "CTD",
-            "Spliceosome",
-            "Other"
+          "enum": ["chromatin", "factors", "rna", "annotations"]
+        },
+        "x": {"type": "number"},
+        "y": {"type": "number"},
+        "width": {"type": "number", "minimum": 0},
+        "height": {"type": "number", "minimum": 0},
+        "z": {"type": "number"},
+        "notes": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "autoCorrections": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "frame": {
+          "anyOf": [
+            {"$ref": "#/definitions/frame"},
+            {"type": "null"}
           ]
         },
-        "bounds": {"$ref": "#/definitions/bounds"},
-        "label": {"$ref": "#/definitions/label"},
-        "role": {
-          "type": "string",
-          "enum": ["template", "transcript", "product", "regulator", "machinery", "context"]
+        "coordinates": {
+          "anyOf": [
+            {"$ref": "#/definitions/coordinateSpan"},
+            {"type": "null"}
+          ]
         },
-        "orientation": {
-          "type": "string",
-          "enum": ["5to3", "3to5", "bidirectional", "none"],
-          "description": "Strand annotation (5′→3′, etc.)"
+        "strand": {
+          "anyOf": [
+            {"$ref": "#/definitions/strand"},
+            {"type": "null"}
+          ]
         },
-        "frame": {"$ref": "#/definitions/frame"},
-        "coordinates": {"$ref": "#/definitions/coordinateSpan"},
-        "strand": {"$ref": "#/definitions/strand"},
         "recognitionSites": {
           "type": "array",
           "items": {"$ref": "#/definitions/recognitionSite"}
         },
         "aliases": {"$ref": "#/definitions/stringList"},
-        "timeline": {"$ref": "#/definitions/timeline"},
+        "timeline": {
+          "anyOf": [
+            {"$ref": "#/definitions/timeline"},
+            {"type": "null"}
+          ]
+        },
         "evidence": {"$ref": "#/definitions/stringList"},
         "references": {
           "type": "array",
-          "items": {"type": "string", "format": "uri-reference"}
+          "items": {"type": "string"}
         },
-        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
-        "style": {
-          "type": "object",
-          "properties": {
-            "fill": {"type": "string", "format": "color"},
-            "stroke": {"type": "string", "format": "color"},
-            "strokeWidth": {"type": "number", "minimum": 0}
-          }
-        },
-        "data": {
-          "type": "object",
-          "description": "Domain-specific payload (IDs, sequences, notes)."
-        }
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1}
       }
     },
     "edge": {
@@ -318,62 +348,57 @@
         "to": {"type": "string"},
         "kind": {
           "type": "string",
-          "enum": [
-            "replicates",
-            "transcribes",
-            "translates",
-            "activates",
-            "represses",
-            "binds",
-            "modifies",
-            "transports",
-            "interacts",
-            "degrades"
+          "enum": ["flow", "regulation"]
+        },
+        "router": {
+          "type": "string",
+          "enum": ["orthogonal", "direct", "straight", "bezier"]
+        },
+        "label": {"type": "string"},
+        "markers": {
+          "anyOf": [
+            {"$ref": "#/definitions/markers"},
+            {"type": "null"}
           ]
         },
-        "label": {"$ref": "#/definitions/label"},
-        "geometry": {
-          "type": "string",
-          "enum": ["orthogonal", "bezier", "straight"],
-          "default": "orthogonal"
+        "autoCorrections": {
+          "type": "array",
+          "items": {"type": "string"}
         },
-        "frame": {"$ref": "#/definitions/frame"},
-        "coordinates": {"$ref": "#/definitions/coordinateSpan"},
-        "strand": {"$ref": "#/definitions/strand"},
+        "frame": {
+          "anyOf": [
+            {"$ref": "#/definitions/frame"},
+            {"type": "null"}
+          ]
+        },
+        "coordinates": {
+          "anyOf": [
+            {"$ref": "#/definitions/coordinateSpan"},
+            {"type": "null"}
+          ]
+        },
+        "strand": {
+          "anyOf": [
+            {"$ref": "#/definitions/strand"},
+            {"type": "null"}
+          ]
+        },
         "recognitionSites": {
           "type": "array",
           "items": {"$ref": "#/definitions/recognitionSite"}
         },
-        "timeline": {"$ref": "#/definitions/timeline"},
+        "timeline": {
+          "anyOf": [
+            {"$ref": "#/definitions/timeline"},
+            {"type": "null"}
+          ]
+        },
         "evidence": {"$ref": "#/definitions/stringList"},
         "references": {
           "type": "array",
-          "items": {"type": "string", "format": "uri-reference"}
+          "items": {"type": "string"}
         },
-        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
-        "style": {
-          "type": "object",
-          "properties": {
-            "color": {"type": "string", "format": "color"},
-            "width": {"type": "number", "minimum": 0.5},
-            "markerStart": {"type": "string"},
-            "markerEnd": {"type": "string"}
-          }
-        },
-        "router": {
-          "type": "object",
-          "properties": {
-            "waypoints": {
-              "type": "array",
-              "items": {"$ref": "#/definitions/point"}
-            }
-          }
-        },
-        "layer": {
-          "type": "string",
-          "enum": ["primary", "secondary", "tertiary", "annotation"],
-          "default": "primary"
-        }
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1}
       }
     }
   }
