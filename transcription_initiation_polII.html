@@ -71,11 +71,39 @@
       font-size: 22pt;
       letter-spacing: -0.4pt;
     }
+    header .meta-column {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3mm;
+    }
     header .meta {
       text-align: right;
       font-size: 9pt;
       line-height: 1.4;
       color: var(--muted);
+    }
+    #language-switch {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1.5mm;
+      font-size: 8pt;
+      color: var(--muted);
+    }
+    #language-switch select {
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 6px;
+      padding: 1mm 3mm;
+      font-size: 8.5pt;
+      background: #ffffff;
+      color: var(--ink);
+      cursor: pointer;
+      min-width: 52px;
+    }
+    #language-switch select:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 1mm;
     }
     main {
       display: grid;
@@ -686,10 +714,13 @@
         <h1 id="header-title"></h1>
         <div class="pill" id="header-pill"></div>
       </div>
-      <div class="meta">
-        <div id="meta-environment"></div>
-        <div id="meta-context"></div>
-        <div id="meta-focus"></div>
+      <div class="meta-column">
+        <div class="meta">
+          <div id="meta-environment"></div>
+          <div id="meta-context"></div>
+          <div id="meta-focus"></div>
+        </div>
+        <div id="language-switch" class="language-switch"></div>
       </div>
     </header>
     <main>
@@ -4075,7 +4106,9 @@
       const orgSelect = document.getElementById('org-select');
       const presetControl = document.getElementById('preset-control');
       const orgControl = document.getElementById('org-control');
+      const languageSwitch = document.getElementById('language-switch');
 
+      setupLanguageSwitch();
       applyStaticText();
       setupPresetSystem();
       init();
@@ -4437,6 +4470,63 @@
         const normalizedCandidate = normalizeForMatch(candidate);
         if (!normalizedCandidate) return false;
         return value.includes(normalizedCandidate) || compactKey(value).includes(compactKey(candidate));
+      }
+
+      function setupLanguageSwitch() {
+        if (!languageSwitch) return;
+        const languages = Object.keys(STRINGS);
+        if (languages.length <= 1) {
+          languageSwitch.hidden = true;
+          return;
+        }
+
+        languageSwitch.hidden = false;
+        languageSwitch.innerHTML = '';
+        languageSwitch.setAttribute('role', 'group');
+        languageSwitch.setAttribute('aria-label', 'Interface language');
+
+        const labelId = `${languageSwitch.id}-label`;
+        const hiddenLabel = document.createElement('span');
+        hiddenLabel.className = 'visually-hidden';
+        hiddenLabel.id = labelId;
+        hiddenLabel.textContent = 'Interface language';
+        languageSwitch.appendChild(hiddenLabel);
+
+        const select = document.createElement('select');
+        select.className = 'language-switch-control';
+        select.setAttribute('aria-labelledby', labelId);
+        select.title = 'Interface language';
+
+        languages.forEach(langKey => {
+          if (!STRINGS[langKey]) return;
+          const option = document.createElement('option');
+          option.value = langKey;
+          option.textContent = langKey.toUpperCase();
+          if (langKey === ACTIVE_LANG) {
+            option.selected = true;
+          }
+          select.appendChild(option);
+        });
+
+        select.value = ACTIVE_LANG;
+
+        select.addEventListener('change', () => {
+          const nextLang = select.value;
+          if (!nextLang || nextLang === ACTIVE_LANG || !STRINGS[nextLang]) {
+            select.value = ACTIVE_LANG;
+            return;
+          }
+          const params = new URLSearchParams(window.location.search);
+          params.delete('ui-lang');
+          params.delete('lang');
+          params.delete('locale');
+          params.set('ui_lang', nextLang);
+          const nextSearch = params.toString();
+          const nextUrl = `${window.location.pathname}${nextSearch ? '?' + nextSearch : ''}${window.location.hash}`;
+          window.location.assign(nextUrl);
+        });
+
+        languageSwitch.appendChild(select);
       }
 
       function applyStaticText() {
