@@ -4045,6 +4045,7 @@
         nodes: new Map(),
         edges: []
       };
+      const edgeElements = new Map();
 
       let scale = 1;
       let pan = { x: 0, y: 0 };
@@ -4961,24 +4962,39 @@
       }
 
       function drawEdges() {
-        edgeLayer.querySelectorAll('path').forEach(path => path.remove());
-        state.edges.forEach(edge => {
+        const seen = new Set();
+        state.edges.forEach((edge, index) => {
           const from = state.nodes.get(edge.from);
           const to = state.nodes.get(edge.to);
           if (!from || !to) return;
-          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          const key = edge.id ?? `${edge.from}->${edge.to}#${index}`;
+          let path = edgeElements.get(key);
+          if (!path) {
+            path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            edgeElements.set(key, path);
+          }
+          seen.add(key);
           path.dataset.kind = edge.kind || 'flow';
           path.dataset.router = edge.router || 'orthogonal';
-          path.setAttribute('d', computeOrthogonalPath(from, to));
+          const d = computeOrthogonalPath(from, to);
+          if (path.getAttribute('d') !== d) {
+            path.setAttribute('d', d);
+          }
           if (edge.strand) {
             path.dataset.strand = edge.strand;
+          } else if (path.dataset.strand) {
+            delete path.dataset.strand;
           }
           const markerEnd = edge.markers?.end || (edge.kind === 'regulation' ? 'arrow-regulation' : 'arrow-flow');
           if (markerEnd) {
             path.setAttribute('marker-end', `url(#${markerEnd})`);
+          } else {
+            path.removeAttribute('marker-end');
           }
           if (edge.markers?.start) {
             path.setAttribute('marker-start', `url(#${edge.markers.start})`);
+          } else {
+            path.removeAttribute('marker-start');
           }
           const tooltipParts = [];
           if (edge.label) tooltipParts.push(edge.label);
@@ -4994,13 +5010,30 @@
               .join('; ');
             if (sites) tooltipParts.push(sites);
           }
-          if (tooltipParts.length) {
-            const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-            title.textContent = tooltipParts.join(' • ');
-            path.appendChild(title);
+          const tooltipText = tooltipParts.join(' • ');
+          let title = path.querySelector('title');
+          if (tooltipText) {
+            if (!title) {
+              title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+              path.appendChild(title);
+            }
+            if (title.textContent !== tooltipText) {
+              title.textContent = tooltipText;
+            }
+          } else if (title) {
+            title.remove();
           }
           edgeLayer.appendChild(path);
         });
+
+        const staleKeys = [];
+        edgeElements.forEach((path, key) => {
+          if (!seen.has(key)) {
+            path.remove();
+            staleKeys.push(key);
+          }
+        });
+        staleKeys.forEach(key => edgeElements.delete(key));
       }
 
       function computeOrthogonalPath(from, to) {
