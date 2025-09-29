@@ -153,6 +153,81 @@
     .legend-item[data-type="rna"] .legend-swatch {
       background: #b91c1c;
     }
+    .data-model {
+      grid-column: span 2;
+    }
+    .data-model h2 {
+      display: flex;
+      align-items: baseline;
+      gap: 3mm;
+      flex-wrap: wrap;
+    }
+    .data-model h2 .subheading {
+      font-size: 8pt;
+      font-weight: 600;
+      letter-spacing: 0.6pt;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: rgba(17, 24, 39, 0.06);
+      padding: 1mm 3mm;
+      border-radius: 999px;
+    }
+    .model-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3mm;
+      margin: 4mm 0;
+    }
+    .model-tabs button {
+      border: 1px solid rgba(0,0,0,0.16);
+      border-radius: 999px;
+      padding: 2mm 4mm;
+      background: #f8fafc;
+      font-size: 8.5pt;
+      letter-spacing: 0.2pt;
+      cursor: pointer;
+      transition: background 0.2s, border 0.2s, color 0.2s;
+    }
+    .model-tabs button.active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+    .model-panel {
+      background: #f8fafc;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 5px;
+      padding: 5mm;
+      display: grid;
+      gap: 3mm;
+    }
+    .model-panel h3 {
+      margin: 0;
+      font-size: 12pt;
+    }
+    .model-panel ul {
+      margin: 0;
+      padding-left: 4mm;
+      font-size: 9.5pt;
+      line-height: 1.45;
+    }
+    .model-panel .callout {
+      font-size: 8.5pt;
+      color: var(--muted);
+      background: rgba(29, 78, 216, 0.08);
+      border-left: 2px solid var(--accent);
+      padding: 2mm 3mm;
+      border-radius: 3px;
+    }
+    .model-panel pre {
+      margin: 0;
+      font-size: 8pt;
+      line-height: 1.45;
+      background: rgba(15, 23, 42, 0.08);
+      padding: 3mm;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
     .timeline {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -404,6 +479,35 @@
           <div class="chip">Контроль качества: TFIIS помогает Pol II преодолеть остановку на слабом стартовом сигнале.</div>
         </div>
       </section>
+      <section class="block data-model" aria-labelledby="model-title">
+        <h2 id="model-title">Модель данных v1.1 <span class="subheading">JSON schema • визуальная грамматика A4</span></h2>
+        <div class="model-tabs" role="tablist" aria-label="Компоненты модели">
+          <button type="button" class="active" data-model="nodes" role="tab" aria-selected="true">Узлы</button>
+          <button type="button" data-model="edges" role="tab" aria-selected="false">Рёбра</button>
+          <button type="button" data-model="layout" role="tab" aria-selected="false">Вёрстка</button>
+        </div>
+        <div class="model-panel" role="tabpanel" id="model-panel">
+          <h3>Структура узла {id, x, y, w, h, label, type, data}</h3>
+          <ul>
+            <li>Поле <strong>type</strong> принимает роли: DNA, RNA, Protein, Promoter, Enhancer, TSS, TF, Mediator и др.</li>
+            <li>Геометрия задаётся в миллиметрах A4: координаты (x, y) и размеры (w, h) относительно зоны сетки.</li>
+            <li>Доп. данные (<code>data</code>) включают метки 5′→3′, модификации (H3K4me3) и состояние комплекса.</li>
+            <li>Слои доступны через <code>layer</code> и <code>zIndex</code> — используют стандарт «process» для Pol II.</li>
+          </ul>
+          <div class="callout">Рекомендация: хранить идентификаторы в формате <code>promoter:tata</code>, <code>protein:tf2h</code> для совместимости с экспортом.</div>
+          <pre>{
+  "id": "node:tfiih",
+  "type": "TFIIH",
+  "x": 420,
+  "y": 120,
+  "w": 90,
+  "h": 46,
+  "label": "TFIIH",
+  "layer": "factors",
+  "data": {"helicase": "XPB/XPD", "phosphorylation": "CTD Ser5"}
+}</pre>
+        </div>
+      </section>
     </main>
     <footer>
       <div>Шкалы: время (слева направо) · структура комплекса (по высоте) · регуляторы (подписи)</div>
@@ -580,6 +684,83 @@
       if (event.target === overlay) {
         overlay.classList.remove('active');
       }
+    });
+
+    const modelButtons = document.querySelectorAll('.model-tabs button');
+    const modelPanel = document.getElementById('model-panel');
+    const modelContent = {
+      nodes: {
+        title: 'Структура узла {id, x, y, w, h, label, type, data}',
+        items: [
+          'Поле <strong>type</strong> принимает роли: DNA, RNA, Protein, Promoter, Enhancer, TSS, TF, Mediator и др.',
+          'Геометрия задаётся в миллиметрах A4: координаты (x, y) и размеры (w, h) относительно зоны сетки.',
+          'Доп. данные (<code>data</code>) включают метки 5′→3′, модификации (H3K4me3) и состояние комплекса.',
+          'Слои доступны через <code>layer</code> и <code>zIndex</code> — используют стандарт «process» для Pol II.'
+        ],
+        callout: 'Рекомендация: хранить идентификаторы в формате <code>promoter:tata</code>, <code>protein:tf2h</code> для совместимости с экспортом.',
+        snippet: `{
+  "id": "node:tfiih",
+  "type": "TFIIH",
+  "x": 420,
+  "y": 120,
+  "w": 90,
+  "h": 46,
+  "label": "TFIIH",
+  "layer": "factors",
+  "data": {"helicase": "XPB/XPD", "phosphorylation": "CTD Ser5"}
+}`
+      },
+      edges: {
+        title: 'Определение ребра {id, from, to, kind, label, router, markers}',
+        items: [
+          'Тип <strong>kind</strong>: flow (transcribes, recruits, phosphorylates) или regulation (activates, represses, pauses).',
+          'Поле <code>router</code> описывает геометрию: orthogonal для PIC, bezier для энхансерных петель, straight для коротких связей.',
+          'Маркеры стрелок (<code>markers</code>) задают форму/цвет; используем словарь arrow:polII, arrow:regulation, tee:repress.',
+          'Атрибут <code>timeline</code> хранит контрольные точки (e.g. {start: "+1", end: "+60"}) для синхронизации с осью времени.'
+        ],
+        callout: 'Связывайте рёбра с узлами по UUID — это облегчает слияние схем от разных авторов.',
+        snippet: `{
+  "id": "edge:tf2h-open",
+  "from": "node:tfiih",
+  "to": "node:openbubble",
+  "kind": "flow",
+  "label": "открывает",
+  "router": "orthogonal",
+  "markers": {"start": null, "end": "arrow:polII"}
+}`
+      },
+      layout: {
+        title: 'Правила вёрстки A4 landscape (print theme)',
+        items: [
+          'Поле <code>page</code>: {width: 297, height: 210, margin: 12} — размеры в мм с учётом сетки 28 мм.',
+          'Слои (<code>layers</code>): background, chromatin, factors, rna, annotations — управляют порядком рисования.',
+          'Стили (<code>styles</code>) фиксируют цвета ролей: Pol II #1d4ed8, chromatin #4d7c0f, RNA #b91c1c.',
+          'Гайды (<code>guides</code>) описывают линейки осей: time (left→right), assembly depth (top→bottom), regulation captions.'
+        ],
+        callout: 'Экспорт в SVG/PNG использует эти параметры — держите масштаб 1 мм = 3.78 px для консистентности.',
+        snippet: `{
+  "layout": {
+    "page": {"width": 297, "height": 210, "margin": 12},
+    "grid": {"size": 28, "visible": true},
+    "theme": "print"
+  }
+}`
+      }
+    };
+
+    modelButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        modelButtons.forEach(b => {
+          b.classList.toggle('active', b === button);
+          b.setAttribute('aria-selected', b === button);
+        });
+        const state = modelContent[button.dataset.model];
+        if (!state) return;
+        const list = state.items.map(item => `<li>${item}</li>`).join('');
+        const callout = state.callout ? `<div class="callout">${state.callout}</div>` : '';
+        const snippet = state.snippet ? `<pre>${state.snippet}</pre>` : '';
+        modelPanel.innerHTML = `<h3>${state.title}</h3><ul>${list}</ul>${callout}${snippet}`;
+      });
     });
   </script>
 </body>
