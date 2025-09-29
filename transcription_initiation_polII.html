@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="ui-lang" content="ru" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; script-src 'self' 'unsafe-inline'; connect-src 'none'; frame-ancestors 'self'; base-uri 'self'; form-action 'none'; sandbox allow-scripts allow-same-origin allow-downloads allow-modals" />
+  <meta http-equiv="Referrer-Policy" content="no-referrer" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="color-scheme" content="only light" />
   <title>Инициация транскрипции Pol II — схема процесса</title>
   <!-- Spec-Version: v1.1 | Generated-At: 2025-09-29 | LANG: HTML | TOPIC: Transcription initiation (Pol II, +1 TSS) | ORG: eukaryote | LEVEL: advanced | VIEW: process | THEME: print | EXPORTS: svg,png,pdf | LAYOUT: A4-landscape | INTERACTIVE: on -->
   <style>
@@ -256,6 +260,10 @@
       cursor: grab;
       box-shadow: 0 3px 10px rgba(15, 23, 42, 0.08);
       transition: box-shadow 0.2s;
+    }
+    .node[data-corrected="true"] {
+      outline: 1.2px solid var(--highlight);
+      outline-offset: -3px;
     }
     .node:focus-visible {
       outline: 2px solid var(--accent);
@@ -569,11 +577,18 @@
       line-height: 1.4;
     }
     footer {
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
       align-items: center;
       font-size: 8pt;
       color: var(--muted);
+      gap: 6mm;
+    }
+    footer .attribution {
+      display: flex;
+      flex-direction: column;
+      gap: 1mm;
+      max-width: 140mm;
     }
     footer .controls {
       display: flex;
@@ -591,6 +606,16 @@
     footer button:hover {
       background: var(--accent);
       color: #ffffff;
+    }
+    .safe-mode *,
+    .safe-mode *::before,
+    .safe-mode *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+    @page {
+      size: A4 landscape;
+      margin: 12mm;
     }
     .overlay {
       position: absolute;
@@ -632,14 +657,23 @@
       body {
         padding: 0;
         box-shadow: none;
+        background: var(--bg);
       }
       .page {
         margin: 0;
         box-shadow: none;
         border: none;
+        width: 100%;
+        height: auto;
+      }
+      .page::before {
+        display: none;
       }
       footer button {
         display: none;
+      }
+      footer .attribution {
+        font-size: 7.5pt;
       }
     }
   </style>
@@ -725,6 +759,10 @@
       </section>
     </main>
     <footer>
+      <div class="attribution">
+        <span id="footer-attribution"></span>
+        <span id="footer-license"></span>
+      </div>
       <div id="footer-scales"></div>
       <div class="controls" aria-label="" id="export-controls">
         <button type="button" id="export-svg"></button>
@@ -922,11 +960,13 @@
       }
     },
     "footer": {
+      "attribution": "© 2025 eukaryote lab · Данные: литература по Pol II (Cold Spring Harbor, eLife, 2021–2024)",
+      "license": "Лицензия: CC BY 4.0 · указание авторства обязательно при публикации",
       "scales": "Шкалы: время (слева направо) · структура комплекса (по высоте) · регуляторы (подписи)",
       "controlsAria": "Экспорт",
       "buttons": {
         "exportSvg": "Экспорт SVG",
-        "exportPng": "Экспорт PNG",
+        "exportPng": "Экспорт PNG (300 DPI)",
         "exportPdf": "PDF / Печать",
         "exportJson": "Экспорт JSON",
         "importJson": "Импорт JSON",
@@ -1516,6 +1556,10 @@
       "missingNodes": "Структура JSON не содержит массива \"nodes\"",
       "stateReset": "Сброс сохранённого состояния из-за ошибки",
       "saveError": "Не удалось сохранить состояние",
+      "autoCorrectionPrefix": "Автоисправлено:",
+      "validationApplied": "Исправлены поля: {fields}",
+      "pngFallback": "PNG не создан — сохранён резервный SVG",
+      "safeMode": "Безопасный режим: анимации отключены",
       "dragHandle": "Переместить",
       "nodeAria": "{label}. {type}. Перемещение стрелками, Shift — шаг x2."
     }
@@ -1686,11 +1730,13 @@
       }
     },
     "footer": {
+      "attribution": "© 2025 eukaryote lab · Sources: Pol II literature (Cold Spring Harbor, eLife, 2021–2024)",
+      "license": "License: CC BY 4.0 · attribution required for reuse",
       "scales": "Scales: time (left to right) · complex structure (vertical) · regulators (captions)",
       "controlsAria": "Export",
       "buttons": {
         "exportSvg": "Export SVG",
-        "exportPng": "Export PNG",
+        "exportPng": "Export PNG (300 DPI)",
         "exportPdf": "PDF / Print",
         "exportJson": "Export JSON",
         "importJson": "Import JSON",
@@ -2280,6 +2326,10 @@
       "missingNodes": "JSON structure is missing a \"nodes\" array",
       "stateReset": "Stored state was reset after an error",
       "saveError": "Failed to save state",
+      "autoCorrectionPrefix": "Auto-corrected:",
+      "validationApplied": "Adjusted fields: {fields}",
+      "pngFallback": "PNG export failed — delivered fallback SVG",
+      "safeMode": "Safe mode: animations disabled",
       "dragHandle": "Drag",
       "nodeAria": "{label}. {type}. Move with arrow keys, Shift doubles the step."
     }
@@ -2450,11 +2500,13 @@
       }
     },
     "footer": {
+      "attribution": "© 2025 eukaryote lab · Quellen: Pol-II-Literatur (Cold Spring Harbor, eLife, 2021–2024)",
+      "license": "Lizenz: CC BY 4.0 · Namensnennung bei Weiterverwendung erforderlich",
       "scales": "Skalen: Zeit (links nach rechts) · Komplexstruktur (vertikal) · Regulatoren (Beschriftungen)",
       "controlsAria": "Export",
       "buttons": {
         "exportSvg": "SVG exportieren",
-        "exportPng": "PNG exportieren",
+        "exportPng": "PNG exportieren (300 DPI)",
         "exportPdf": "PDF / Drucken",
         "exportJson": "JSON exportieren",
         "importJson": "JSON importieren",
@@ -3043,6 +3095,10 @@
       "missingNodes": "JSON-Struktur enthält kein \"nodes\"-Array",
       "stateReset": "Gespeicherter Zustand wurde nach einem Fehler zurückgesetzt",
       "saveError": "Zustand konnte nicht gespeichert werden",
+      "autoCorrectionPrefix": "Automatisch korrigiert:",
+      "validationApplied": "Angepasste Felder: {fields}",
+      "pngFallback": "PNG-Export fehlgeschlagen – SVG als Fallback gespeichert",
+      "safeMode": "Sicherheitsmodus: Animationen deaktiviert",
       "dragHandle": "Ziehen",
       "nodeAria": "{label}. {type}. Mit Pfeiltasten bewegen, Umschalt verdoppelt die Schritte."
     }
@@ -3104,10 +3160,18 @@
         return Array.isArray(value) ? value.slice() : [];
       }
 
+      const URL_PARAMS = new URLSearchParams(window.location.search);
+
       const GRID_SIZE = 24;
       const MAP_WIDTH = 960;
       const MAP_HEIGHT = 520;
       const STORAGE_KEY_BASE = 'polii-map-layout-v1';
+      const EXPORT_BASE_NAME = 'transcription_initiation_polII';
+      const CSS_PX_PER_INCH = 96;
+      const EXPORT_DPI = 300;
+      const MM_PER_INCH = 25.4;
+      const PAGE_WIDTH_MM = 297;
+      const PAGE_HEIGHT_MM = 210;
       const LAYER_ORDER = { chromatin: 10, factors: 20, rna: 30, annotations: 40 };
       const LAYER_STYLE = {
         chromatin: { fill: '#dcfce7', stroke: '#4d7c0f' },
@@ -3115,6 +3179,16 @@
         rna: { fill: '#fee2e2', stroke: '#b91c1c' },
         annotations: { fill: '#e2e8f0', stroke: '#475569' }
       };
+      const ALLOWED_NODE_LAYERS = new Set(Object.keys(LAYER_STYLE));
+      const ALLOWED_STRANDS = new Set(['plus', '5to3', 'minus', '3to5', 'bidirectional', 'both', 'unknown']);
+      const ALLOWED_EDGE_KINDS = new Set(['flow', 'regulation']);
+      const ALLOWED_EDGE_ROUTERS = new Set(['orthogonal', 'direct', 'straight', 'bezier']);
+      const ALLOWED_MARKERS = new Set(['arrow-flow', 'arrow-regulation', 'tee-regulation']);
+
+      const SAFE_MODE = detectSafeMode();
+      if (SAFE_MODE && document.body) {
+        document.body.classList.add('safe-mode');
+      }
 
       function cloneFrame(frame) {
         if (!frame || typeof frame !== 'object') return null;
@@ -3198,6 +3272,7 @@
       let storageKey = buildStorageKey(activePresetKey, activeOrgKey);
       let presetNodes = [];
       let presetEdges = [];
+      let edgeRenderPending = false;
 
       const NODE_TEMPLATES = [
   {
@@ -4076,7 +4151,7 @@
 
         exportJsonButton.addEventListener('click', () => {
           const payload = exportState();
-          download('transcription_initiation_polII.json', JSON.stringify(payload, null, 2), 'application/json');
+          download(buildExportFilename('json'), JSON.stringify(payload, null, 2), 'application/json');
         });
 
         importJsonButton.addEventListener('click', () => {
@@ -4087,7 +4162,7 @@
 
         exportSvgButton.addEventListener('click', () => {
           const svgMarkup = buildExportSvg();
-          download('transcription_initiation_polII.svg', `<?xml version="1.0" encoding="UTF-8"?>\n${svgMarkup}`, 'image/svg+xml;charset=utf-8');
+          download(buildExportFilename('svg'), `<?xml version="1.0" encoding="UTF-8"?>\n${svgMarkup}`, 'image/svg+xml;charset=utf-8');
         });
 
         exportPngButton.addEventListener('click', () => {
@@ -4095,22 +4170,29 @@
           const blob = new Blob([svgMarkup], { type: 'image/svg+xml;charset=utf-8' });
           const url = URL.createObjectURL(blob);
           const img = new Image();
+          img.decoding = 'async';
           const canvas = document.createElement('canvas');
-          const ratio = Math.max(2, Math.round(window.devicePixelRatio || 2));
-          canvas.width = MAP_WIDTH * ratio;
-          canvas.height = MAP_HEIGHT * ratio;
+          const scale = EXPORT_DPI / CSS_PX_PER_INCH;
+          canvas.width = Math.round(MAP_WIDTH * scale);
+          canvas.height = Math.round(MAP_HEIGHT * scale);
           const ctx = canvas.getContext('2d');
           img.onload = () => {
-            ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+            ctx.setTransform(scale, 0, 0, scale, 0, 0);
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
             ctx.drawImage(img, 0, 0);
             URL.revokeObjectURL(url);
             canvas.toBlob(result => {
               if (result) {
-                download('transcription_initiation_polII.png', result, 'image/png');
+                download(buildExportFilename('png'), result, 'image/png');
+              } else {
+                handlePngFallback(svgMarkup);
               }
             }, 'image/png');
+          };
+          img.onerror = () => {
+            URL.revokeObjectURL(url);
+            handlePngFallback(svgMarkup);
           };
           img.src = url;
         });
@@ -4182,6 +4264,13 @@
         const presetPart = compactKey(presetKey || 'default') || 'default';
         const orgPart = compactKey(orgKey || 'any') || 'any';
         return `${STORAGE_KEY_BASE}:${presetPart}:${orgPart}`;
+      }
+
+      function buildExportFilename(extension) {
+        const presetPart = compactKey(activePresetKey) || 'default';
+        const orgPart = compactKey(activeOrgKey) || 'any';
+        const ext = extension.replace(/^\.+/, '');
+        return `${EXPORT_BASE_NAME}__${presetPart}.${orgPart}.${ext}`;
       }
 
       function setupPresetSystem() {
@@ -4298,6 +4387,27 @@
         return keys.length ? keys[0] : 'eukaryote';
       }
 
+      function detectSafeMode() {
+        const safeParam = normalizeForMatch(URL_PARAMS.get('safe') || URL_PARAMS.get('mode'));
+        if (safeParam && ['1', 'true', 'safe', 'on', 'yes'].includes(safeParam)) {
+          return true;
+        }
+        const reduceParam = normalizeForMatch(URL_PARAMS.get('reduceMotion'));
+        if (reduceParam && ['1', 'true', 'on', 'yes'].includes(reduceParam)) {
+          return true;
+        }
+        if (typeof window.matchMedia === 'function') {
+          try {
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+              return true;
+            }
+          } catch (error) {
+            console.warn('matchMedia check failed', error);
+          }
+        }
+        return false;
+      }
+
       function normalizeForMatch(value) {
         return typeof value === 'string' ? value.toLowerCase().trim() : '';
       }
@@ -4387,6 +4497,18 @@
         const modelTabsElement = document.getElementById('model-tabs');
         if (modelTabsElement) modelTabsElement.setAttribute('aria-label', getLocaleString('model.ariaLabel'));
 
+        const footerAttribution = document.getElementById('footer-attribution');
+        if (footerAttribution) footerAttribution.textContent = getLocaleString('footer.attribution');
+        const footerLicense = document.getElementById('footer-license');
+        if (footerLicense) {
+          footerLicense.textContent = getLocaleString('footer.license');
+          if (SAFE_MODE) {
+            const safeNote = getLocaleString('messages.safeMode');
+            if (safeNote) {
+              footerLicense.textContent = `${footerLicense.textContent} · ${safeNote}`;
+            }
+          }
+        }
         const footerScales = document.getElementById('footer-scales');
         if (footerScales) footerScales.textContent = getLocaleString('footer.scales');
         const exportControls = document.getElementById('export-controls');
@@ -4640,6 +4762,11 @@
         element.tabIndex = 0;
         element.setAttribute('role', 'group');
         element.setAttribute('aria-label', formatNodeAria(node));
+        if (Array.isArray(node.autoCorrections) && node.autoCorrections.length) {
+          element.dataset.corrected = 'true';
+        } else {
+          delete element.dataset.corrected;
+        }
         if (node.strand) {
           element.dataset.strand = node.strand;
         } else {
@@ -4825,6 +4952,15 @@
       }
 
       function updateEdges() {
+        if (edgeRenderPending) return;
+        edgeRenderPending = true;
+        requestAnimationFrame(() => {
+          edgeRenderPending = false;
+          drawEdges();
+        });
+      }
+
+      function drawEdges() {
         edgeLayer.querySelectorAll('path').forEach(path => path.remove());
         state.edges.forEach(edge => {
           const from = state.nodes.get(edge.from);
@@ -4969,8 +5105,10 @@
       }
 
       function cloneNode(node, overrides = {}) {
-        const width = Math.max(96, Number.isFinite(Number(overrides.width)) ? Number(overrides.width) : node.width);
-        const height = Math.max(80, Number.isFinite(Number(overrides.height)) ? Number(overrides.height) : node.height);
+        const widthInput = Number.isFinite(Number(overrides.width)) ? Number(overrides.width) : node.width;
+        const heightInput = Number.isFinite(Number(overrides.height)) ? Number(overrides.height) : node.height;
+        const width = clamp(Math.max(96, widthInput), 96, MAP_WIDTH);
+        const height = clamp(Math.max(80, heightInput), 80, MAP_HEIGHT);
         let x = Number.isFinite(Number(overrides.x)) ? Number(overrides.x) : node.x;
         let y = Number.isFinite(Number(overrides.y)) ? Number(overrides.y) : node.y;
         x = clamp(x, 0, MAP_WIDTH - width);
@@ -4987,7 +5125,7 @@
         const strand = overrides.strand !== undefined ? overrides.strand : node.strand;
         const confidenceValue = overrides.confidence !== undefined ? Number(overrides.confidence) : node.confidence;
         const confidence = Number.isFinite(confidenceValue) ? clamp(confidenceValue, 0, 1) : undefined;
-        return {
+        const result = {
           id: overrides.id ?? node.id,
           label: overrides.label ?? node.label,
           type: overrides.type ?? node.type,
@@ -5008,6 +5146,7 @@
           references,
           confidence
         };
+        return enforceNodeConstraints(result);
       }
 
       function cloneEdge(edge, overrides = {}) {
@@ -5021,7 +5160,7 @@
         const strand = overrides.strand !== undefined ? overrides.strand : edge.strand;
         const confidenceValue = overrides.confidence !== undefined ? Number(overrides.confidence) : edge.confidence;
         const confidence = Number.isFinite(confidenceValue) ? clamp(confidenceValue, 0, 1) : undefined;
-        return {
+        const result = {
           id: overrides.id ?? edge.id,
           from: overrides.from ?? edge.from,
           to: overrides.to ?? edge.to,
@@ -5038,6 +5177,158 @@
           references,
           confidence
         };
+        return enforceEdgeConstraints(result);
+      }
+
+      function enforceNodeConstraints(node) {
+        const corrections = [];
+        if (!ALLOWED_NODE_LAYERS.has(node.layer)) {
+          corrections.push('layer→annotations');
+          node.layer = 'annotations';
+        }
+        if (!Number.isFinite(node.z)) {
+          node.z = LAYER_ORDER[node.layer] ?? 1;
+        }
+        node.width = clamp(node.width, 96, MAP_WIDTH);
+        node.height = clamp(node.height, 80, MAP_HEIGHT);
+        node.x = clamp(node.x, 0, MAP_WIDTH - node.width);
+        node.y = clamp(node.y, 0, MAP_HEIGHT - node.height);
+
+        node.strand = canonicalizeStrand(node.strand, corrections, 'strand');
+        if (node.coordinates) {
+          sanitizeCoordinateRange(node.coordinates, corrections, 'coordinates');
+        }
+        if (Array.isArray(node.recognitionSites)) {
+          node.recognitionSites = node.recognitionSites
+            .map(site => sanitizeRecognitionSite(site, corrections))
+            .filter(Boolean);
+        }
+        if (!Array.isArray(node.notes)) {
+          node.notes = [];
+        }
+        if (!Array.isArray(node.aliases)) {
+          node.aliases = [];
+        }
+        if (node.confidence !== undefined && !Number.isFinite(node.confidence)) {
+          corrections.push('confidence→removed');
+          delete node.confidence;
+        }
+        return recordCorrections(node, corrections, { note: true, label: node.id || 'node' });
+      }
+
+      function enforceEdgeConstraints(edge) {
+        const corrections = [];
+        if (!ALLOWED_EDGE_KINDS.has(edge.kind)) {
+          corrections.push('kind→flow');
+          edge.kind = 'flow';
+        }
+        if (!ALLOWED_EDGE_ROUTERS.has(edge.router)) {
+          corrections.push('router→orthogonal');
+          edge.router = 'orthogonal';
+        }
+        edge.strand = canonicalizeStrand(edge.strand, corrections, 'strand');
+        if (edge.coordinates) {
+          sanitizeCoordinateRange(edge.coordinates, corrections, 'coordinates');
+        }
+        if (edge.markers) {
+          if (edge.markers.start && !ALLOWED_MARKERS.has(edge.markers.start)) {
+            corrections.push('marker(start)→removed');
+            delete edge.markers.start;
+          }
+          if (edge.markers.end && !ALLOWED_MARKERS.has(edge.markers.end)) {
+            const fallbackMarker = edge.kind === 'regulation' ? 'arrow-regulation' : 'arrow-flow';
+            corrections.push(`marker(end)→${fallbackMarker}`);
+            edge.markers.end = fallbackMarker;
+          }
+        }
+        if (Array.isArray(edge.recognitionSites)) {
+          edge.recognitionSites = edge.recognitionSites
+            .map(site => sanitizeRecognitionSite(site, corrections))
+            .filter(Boolean);
+        }
+        if (edge.confidence !== undefined && !Number.isFinite(edge.confidence)) {
+          corrections.push('confidence→removed');
+          delete edge.confidence;
+        }
+        return recordCorrections(edge, corrections, { label: edge.id || 'edge' });
+      }
+
+      function canonicalizeStrand(strand, corrections, field) {
+        if (strand === null || strand === undefined) return null;
+        const value = normalizeForMatch(strand);
+        if (!value) return null;
+        if (value === 'plus' || value === '5to3' || value === 'forward') {
+          if (value !== 'plus') corrections.push(`${field}→plus`);
+          return 'plus';
+        }
+        if (value === 'minus' || value === '3to5' || value === 'reverse') {
+          if (value !== 'minus') corrections.push(`${field}→minus`);
+          return 'minus';
+        }
+        if (value === 'bidirectional' || value === 'both') {
+          if (value !== 'bidirectional') corrections.push(`${field}→bidirectional`);
+          return 'bidirectional';
+        }
+        if (value === 'unknown' || value === 'na') {
+          if (value !== 'unknown') corrections.push(`${field}→unknown`);
+          return 'unknown';
+        }
+        corrections.push(`${field}→unset`);
+        return null;
+      }
+
+      function sanitizeCoordinateRange(range, corrections, label) {
+        if (!range) return;
+        if (Number.isFinite(range.start) && Number.isFinite(range.end) && range.start > range.end) {
+          const swap = range.start;
+          range.start = range.end;
+          range.end = swap;
+          corrections.push(`${label}.order→ascending`);
+        }
+        if (range.confidence !== undefined && !Number.isFinite(range.confidence)) {
+          delete range.confidence;
+          corrections.push(`${label}.confidence→removed`);
+        } else if (Number.isFinite(range.confidence)) {
+          const clamped = clamp(range.confidence, 0, 1);
+          if (clamped !== range.confidence) {
+            range.confidence = clamped;
+            corrections.push(`${label}.confidence→clamped`);
+          }
+        }
+      }
+
+      function sanitizeRecognitionSite(site, corrections) {
+        if (!site || typeof site !== 'object') return null;
+        const result = { ...site };
+        if (Number.isFinite(result.start) && Number.isFinite(result.end) && result.start > result.end) {
+          const swap = result.start;
+          result.start = result.end;
+          result.end = swap;
+          corrections.push('recognitionSites.order→ascending');
+        }
+        result.strand = canonicalizeStrand(result.strand, corrections, 'recognitionSites.strand');
+        return result;
+      }
+
+      function recordCorrections(target, corrections, options = {}) {
+        const { note = false, label = 'item' } = options;
+        if (!Array.isArray(corrections) || !corrections.length) {
+          target.autoCorrections = [];
+          return target;
+        }
+        target.autoCorrections = corrections.slice();
+        if (note) {
+          const prefix = getLocaleString('messages.autoCorrectionPrefix') || 'Auto-corrected:';
+          const message = `${prefix} ${corrections.join(', ')}`;
+          const current = Array.isArray(target.notes) ? target.notes.slice(0, 7) : [];
+          if (!current.includes(message)) {
+            current.push(message);
+          }
+          target.notes = current.slice(0, 8);
+        }
+        const summaryTemplate = getLocaleString('messages.validationApplied') || 'Adjusted fields: {fields}';
+        console.info(`${summaryTemplate.replace('{fields}', corrections.join(', '))} (${label})`);
+        return target;
       }
 
       function restoreState() {
@@ -5160,7 +5451,18 @@
 
       function buildExportSvg() {
         const parts = [];
-        parts.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${MAP_WIDTH}" height="${MAP_HEIGHT}" viewBox="0 0 ${MAP_WIDTH} ${MAP_HEIGHT}">`);
+        const widthMm = ((MAP_WIDTH / CSS_PX_PER_INCH) * MM_PER_INCH).toFixed(2);
+        const heightMm = ((MAP_HEIGHT / CSS_PX_PER_INCH) * MM_PER_INCH).toFixed(2);
+        const title = escapeXml(getLocaleString('page.title') || 'Pol II transcription initiation map');
+        const licenseText = escapeXml(getLocaleString('footer.license'));
+        const attributionText = escapeXml(getLocaleString('footer.attribution'));
+        const safeNote = SAFE_MODE ? escapeXml(getLocaleString('messages.safeMode')) : '';
+        parts.push(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" width="${widthMm}mm" height="${heightMm}mm" viewBox="0 0 ${MAP_WIDTH} ${MAP_HEIGHT}" preserveAspectRatio="xMidYMid meet">`);
+        parts.push('<metadata><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/><dc:title>' + title + '</dc:title><dc:creator><cc:Agent><dc:title>eukaryote lab</dc:title></cc:Agent></dc:creator><dc:description>' + attributionText + '</dc:description><dc:coverage>' + PAGE_WIDTH_MM + 'mm × ' + PAGE_HEIGHT_MM + 'mm</dc:coverage><dc:license rdf:resource="https://creativecommons.org/licenses/by/4.0/"/></cc:Work></rdf:RDF></metadata>');
+        const descParts = [attributionText];
+        if (licenseText) descParts.push(licenseText);
+        if (safeNote) descParts.push(safeNote);
+        parts.push(`<desc>${descParts.join(' · ')}</desc>`);
         parts.push('<rect width="100%" height="100%" fill="#f8fafc"/>');
         parts.push('<g stroke-width="1">');
         for (let x = GRID_SIZE; x < MAP_WIDTH; x += GRID_SIZE) {
@@ -5257,7 +5559,20 @@
         link.href = URL.createObjectURL(blob);
         link.download = filename;
         link.click();
-        URL.revokeObjectURL(link.href);
+        setTimeout(() => URL.revokeObjectURL(link.href), 0);
+      }
+
+      function handlePngFallback(svgMarkup) {
+        const fallbackMessage = getLocaleString('messages.pngFallback');
+        if (fallbackMessage) {
+          console.warn(fallbackMessage);
+          try {
+            alert(fallbackMessage);
+          } catch (error) {
+            console.warn('Alert unavailable for PNG fallback', error);
+          }
+        }
+        download(buildExportFilename('svg'), `<?xml version="1.0" encoding="UTF-8"?>\n${svgMarkup}`, 'image/svg+xml;charset=utf-8');
       }
 
       function escapeXml(value) {
