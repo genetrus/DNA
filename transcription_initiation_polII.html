@@ -88,7 +88,8 @@
       border-radius: 6px;
       padding: 6mm;
       position: relative;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
     .block h2 {
       margin-top: 0;
@@ -515,7 +516,7 @@
     }
     .timeline {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 3mm;
       margin-top: 4mm;
     }
@@ -552,7 +553,7 @@
       border: 1px solid rgba(0,0,0,0.1);
       border-radius: 5px;
       padding: 5mm;
-      min-height: 42mm;
+      min-height: 0;
     }
     .step-panel h3 {
       margin: 0 0 2mm;
@@ -564,7 +565,7 @@
     }
     .regulation-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 4mm;
       margin-top: 4mm;
     }
