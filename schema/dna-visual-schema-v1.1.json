@@ -1,0 +1,286 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.org/schema/dna-visual-schema-v1.1.json",
+  "title": "DNA/RNA/Protein Visual Grammar Schema",
+  "description": "Schema v1.1 for A4-oriented biological pathway diagrams with node/edge grammar.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["metadata", "nodes", "edges"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "specVersion",
+        "generatedAt",
+        "lang",
+        "topic",
+        "view",
+        "theme"
+      ],
+      "properties": {
+        "specVersion": {
+          "type": "string",
+          "enum": ["1.1"]
+        },
+        "generatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lang": {
+          "type": "string",
+          "description": "Rendering technology or runtime, e.g. HTML, React, Canvas."
+        },
+        "topic": {
+          "type": "string",
+          "description": "Diagram focus, e.g. Transcription initiation (Pol II, +1 TSS)."
+        },
+        "org": {
+          "type": "string",
+          "enum": ["eukaryote", "prokaryote", "virus"],
+          "default": "eukaryote"
+        },
+        "level": {
+          "type": "string",
+          "enum": ["basic", "standard", "advanced"],
+          "default": "standard"
+        },
+        "view": {
+          "type": "string",
+          "enum": ["process", "structure", "pathway", "timeline"]
+        },
+        "theme": {
+          "type": "string",
+          "enum": ["light", "dark", "print"],
+          "default": "light"
+        },
+        "layout": {
+          "type": "string",
+          "enum": ["A4-portrait", "A4-landscape"],
+          "default": "A4-landscape"
+        },
+        "exports": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["svg", "png", "pdf"]
+          },
+          "uniqueItems": true,
+          "default": ["svg", "png"]
+        },
+        "interactive": {
+          "type": "boolean",
+          "default": false
+        },
+        "scale": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 4
+        },
+        "grid": {
+          "type": "boolean",
+          "default": false
+        },
+        "checksum": {
+          "type": "string",
+          "description": "Optional checksum for exported bundle."
+        }
+      }
+    },
+    "legend": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "items"],
+            "properties": {
+              "title": {"type": "string"},
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["label"],
+                  "properties": {
+                    "label": {"type": "string"},
+                    "icon": {"type": "string"},
+                    "description": {"type": "string"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/definitions/node"},
+      "uniqueItems": true
+    },
+    "edges": {
+      "type": "array",
+      "minItems": 0,
+      "items": {"$ref": "#/definitions/edge"},
+      "uniqueItems": true
+    }
+  },
+  "definitions": {
+    "point": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {
+        "x": {"type": "number"},
+        "y": {"type": "number"}
+      }
+    },
+    "bounds": {
+      "type": "object",
+      "required": ["x", "y", "w", "h"],
+      "properties": {
+        "x": {"type": "number"},
+        "y": {"type": "number"},
+        "w": {"type": "number", "minimum": 0},
+        "h": {"type": "number", "minimum": 0}
+      }
+    },
+    "label": {
+      "type": "object",
+      "required": ["text"],
+      "properties": {
+        "text": {"type": "string"},
+        "anchor": {
+          "type": "string",
+          "enum": ["center", "north", "south", "east", "west", "auto"],
+          "default": "auto"
+        },
+        "fontSize": {
+          "type": "number",
+          "minimum": 12,
+          "description": "Minimum readable font size in px"
+        },
+        "orientation": {
+          "type": "string",
+          "enum": ["horizontal", "vertical", "diagonal"]
+        }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "bounds"],
+      "properties": {
+        "id": {"type": "string"},
+        "type": {
+          "type": "string",
+          "enum": [
+            "DNA",
+            "RNA",
+            "Protein",
+            "Enzyme",
+            "Promoter",
+            "Enhancer",
+            "Silencer",
+            "Insulator",
+            "Gene",
+            "Exon",
+            "Intron",
+            "UTR5",
+            "UTR3",
+            "TSS",
+            "TATA",
+            "PolyA",
+            "Ribosome",
+            "tRNA",
+            "TranscriptionFactor",
+            "PolII",
+            "Mediator",
+            "CTD",
+            "Spliceosome",
+            "Other"
+          ]
+        },
+        "bounds": {"$ref": "#/definitions/bounds"},
+        "label": {"$ref": "#/definitions/label"},
+        "role": {
+          "type": "string",
+          "enum": ["template", "transcript", "product", "regulator", "machinery", "context"]
+        },
+        "orientation": {
+          "type": "string",
+          "enum": ["5to3", "3to5", "bidirectional", "none"],
+          "description": "Strand annotation (5′→3′, etc.)"
+        },
+        "style": {
+          "type": "object",
+          "properties": {
+            "fill": {"type": "string", "format": "color"},
+            "stroke": {"type": "string", "format": "color"},
+            "strokeWidth": {"type": "number", "minimum": 0}
+          }
+        },
+        "data": {
+          "type": "object",
+          "description": "Domain-specific payload (IDs, sequences, notes)."
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "from", "to", "kind"],
+      "properties": {
+        "id": {"type": "string"},
+        "from": {"type": "string"},
+        "to": {"type": "string"},
+        "kind": {
+          "type": "string",
+          "enum": [
+            "replicates",
+            "transcribes",
+            "translates",
+            "activates",
+            "represses",
+            "binds",
+            "modifies",
+            "transports",
+            "interacts",
+            "degrades"
+          ]
+        },
+        "label": {"$ref": "#/definitions/label"},
+        "geometry": {
+          "type": "string",
+          "enum": ["orthogonal", "bezier", "straight"],
+          "default": "orthogonal"
+        },
+        "style": {
+          "type": "object",
+          "properties": {
+            "color": {"type": "string", "format": "color"},
+            "width": {"type": "number", "minimum": 0.5},
+            "markerStart": {"type": "string"},
+            "markerEnd": {"type": "string"}
+          }
+        },
+        "router": {
+          "type": "object",
+          "properties": {
+            "waypoints": {
+              "type": "array",
+              "items": {"$ref": "#/definitions/point"}
+            }
+          }
+        },
+        "layer": {
+          "type": "string",
+          "enum": ["primary", "secondary", "tertiary", "annotation"],
+          "default": "primary"
+        }
+      }
+    }
+  }
+}
