@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
+  <meta name="ui-lang" content="ru" />
   <title>Инициация транскрипции Pol II — схема процесса</title>
   <!-- Spec-Version: v1.1 | Generated-At: 2025-09-29 | LANG: HTML | TOPIC: Transcription initiation (Pol II, +1 TSS) | ORG: eukaryote | LEVEL: advanced | VIEW: process | THEME: print | EXPORTS: svg,png,pdf | LAYOUT: A4-landscape | INTERACTIVE: on -->
   <style>
@@ -553,31 +554,34 @@
   </style>
 </head>
 <body>
-  <div class="page" role="document" aria-label="A4 схема инициации транскрипции Pol II">
+  <div class="page" role="document" aria-label="">
     <header>
       <div>
-        <h1>Инициация транскрипции Pol II на +1 TSS</h1>
-        <div class="pill">Eukaryote · Advanced · Process View</div>
+        <h1 id="header-title"></h1>
+        <div class="pill" id="header-pill"></div>
       </div>
       <div class="meta">
-        <div>Окружение: ядро эукариот</div>
-        <div>Контекст: промотор класса II, TATA+/Inr</div>
-        <div>Фокус: формирование и запуск PIC</div>
+        <div id="meta-environment"></div>
+        <div id="meta-context"></div>
+        <div id="meta-focus"></div>
       </div>
     </header>
     <main>
       <section class="block flow-map" aria-labelledby="map-title">
-        <h2 id="map-title">Схема сборки и переходов</h2>
+        <h2 id="map-title"></h2>
         <div class="map-stage" role="application" aria-labelledby="map-title" aria-describedby="map-instructions">
-          <div class="map-toolbar" role="group" aria-label="Управление картой">
-            <button type="button" id="fit-to-view">Подогнать вид</button>
-            <button type="button" id="toggle-grid" class="active" aria-pressed="true">Сетка</button>
-            <label for="snap-to-grid"><input type="checkbox" id="snap-to-grid" checked> Привязка к сетке</label>
+          <div class="map-toolbar" role="group" aria-label="" id="map-toolbar">
+            <button type="button" id="fit-to-view"></button>
+            <button type="button" id="toggle-grid" class="active" aria-pressed="true"></button>
+            <label for="snap-to-grid" class="snap-option">
+            <input type="checkbox" id="snap-to-grid" checked />
+            <span id="snap-label-text"></span>
+          </label>
             <span aria-hidden="true">·</span>
-            <button type="button" id="reset-overlap">Упорядочить слои</button>
+            <button type="button" id="reset-overlap"></button>
           </div>
-          <div class="map-canvas" id="map-canvas" tabindex="0" aria-label="Рабочая зона" role="region">
-            <div class="axis-label" aria-hidden="true">Геном (5′ → 3′)</div>
+          <div class="map-canvas" id="map-canvas" tabindex="0" aria-label="" role="region">
+            <div class="axis-label" aria-hidden="true" id="axis-label"></div>
             <div class="map-viewport" id="map-viewport">
               <svg class="edge-layer" id="edge-layer" viewBox="0 0 960 520" aria-hidden="true">
                 <defs>
@@ -595,148 +599,932 @@
               <div class="node-layer" id="node-layer" aria-live="polite"></div>
             </div>
           </div>
-          <p class="visually-hidden" id="map-instructions">Используйте мышь или стрелки для перемещения узлов. Колесо мыши с зажатой клавишей Ctrl управляет масштабом, простое прокручивание сдвигает поле. Перетаскивание удерживает элементы в пределах сетки и автоматически перерассчитывает связи.</p>
+          <p class="visually-hidden" id="map-instructions"></p>
         </div>
-        <div class="legend" aria-label="Условные обозначения">
-          <div class="legend-item" data-type="polii"><span class="legend-swatch"></span>Полимераза II и общие факторы</div>
-          <div class="legend-item" data-type="chromatin"><span class="legend-swatch"></span>Хроматин и промоторная ДНК</div>
-          <div class="legend-item" data-type="rna"><span class="legend-swatch"></span>РНК, побег и пауза</div>
+        <div class="legend" aria-label="" id="legend">
+          <div class="legend-item" data-type="polii"><span class="legend-swatch"></span><span id="legend-polii"></span></div>
+          <div class="legend-item" data-type="chromatin"><span class="legend-swatch"></span><span id="legend-chromatin"></span></div>
+          <div class="legend-item" data-type="rna"><span class="legend-swatch"></span><span id="legend-rna"></span></div>
         </div>
       </section>
       <section class="block" aria-labelledby="steps-title">
-        <h2 id="steps-title">Ключевые стадии и контрольные точки</h2>
-        <div class="timeline" role="tablist" aria-label="Этапы">
-          <button type="button" class="active" data-step="assembly" aria-selected="true" role="tab">
-            <span class="title">1. Предсборка</span>
-            <span class="detail">TFIID распознаёт TATA/Inr, активаторы стабилизируют Mediator.</span>
-          </button>
-          <button type="button" data-step="isomerization" role="tab" aria-selected="false">
-            <span class="title">2. Изомеризация</span>
-            <span class="detail">TFIIE рекрутирует TFIIH, открытие пузыря, загрузка шаблона.</span>
-          </button>
-          <button type="button" data-step="initiation" role="tab" aria-selected="false">
-            <span class="title">3. Старт синтеза</span>
-            <span class="detail">Abortive циклы &lt; 10 нт, CTD Ser5-P запускает кэпирование.</span>
-          </button>
-          <button type="button" data-step="escape" role="tab" aria-selected="false">
-            <span class="title">4. Побег</span>
-            <span class="detail">TFIIB/TFIIE освобождаются, NELF/DSIF контролируют удлинение.</span>
-          </button>
-        </div>
-        <div class="step-panel" role="tabpanel" id="step-panel">
-          <h3>1. Предсборка преинициаторного комплекса</h3>
-          <ul>
-            <li>TBP изгибает ДНК на ~80°, позиционируя +1 сайт напротив активного центра.</li>
-            <li>TFIID взаимодействует с коактиваторами (TAF1/2) и метками H3K4me3.</li>
-            <li>TFIIA стабилизирует TBP–ДНК, TFIIB задаёт направление транскрипции.</li>
-            <li>Mediator передаёт сигналы от энхансеров, подготавливая CDK8-модуль.</li>
-          </ul>
-        </div>
-        <div class="regulation-grid" aria-label="Регуляция">
-          <div class="chip">Позитивная регуляция: ремоделлеры (SWI/SNF), H3K27ac усиливают доступность промотора.</div>
-          <div class="chip">Негативная регуляция: комплексы NURD, метилирование ДНК ограничивают загрузку TFIID.</div>
-          <div class="chip">Сигнальные входы: MAPK/CDK активируют фосфориляцию CTD через Mediator/CDK7.</div>
-          <div class="chip">Контроль качества: TFIIS помогает Pol II преодолеть остановку на слабом стартовом сигнале.</div>
-        </div>
+        <h2 id="steps-title"></h2>
+        <div class="timeline" role="tablist" aria-label="" id="timeline"></div>
+        <div class="step-panel" role="tabpanel" id="step-panel"></div>
+        <div class="regulation-grid" aria-label="" id="regulation-grid"></div>
       </section>
       <section class="block data-model" aria-labelledby="model-title">
-        <h2 id="model-title">Модель данных v1.1 <span class="subheading">JSON schema • визуальная грамматика A4</span></h2>
-        <div class="model-tabs" role="tablist" aria-label="Компоненты модели">
-          <button type="button" class="active" data-model="nodes" role="tab" aria-selected="true">Узлы</button>
-          <button type="button" data-model="edges" role="tab" aria-selected="false">Рёбра</button>
-          <button type="button" data-model="layout" role="tab" aria-selected="false">Вёрстка</button>
+        <h2 id="model-title"><span id="model-title-main"></span> <span class="subheading" id="model-subheading"></span></h2>
+        <div class="model-tabs" role="tablist" aria-label="" id="model-tabs">
+          <button type="button" class="active" data-model="nodes" role="tab" aria-selected="true" id="tab-nodes"></button>
+          <button type="button" data-model="edges" role="tab" aria-selected="false" id="tab-edges"></button>
+          <button type="button" data-model="layout" role="tab" aria-selected="false" id="tab-layout"></button>
         </div>
-        <div class="model-panel" role="tabpanel" id="model-panel">
-          <h3>Структура узла {id, x, y, w, h, label, type, data}</h3>
-          <ul>
-            <li>Поле <strong>type</strong> принимает роли: DNA, RNA, Protein, Promoter, Enhancer, TSS, TF, Mediator и др.</li>
-            <li>Геометрия задаётся в миллиметрах A4: координаты (x, y) и размеры (w, h) относительно зоны сетки.</li>
-            <li>Доп. данные (<code>data</code>) включают метки 5′→3′, модификации (H3K4me3) и состояние комплекса.</li>
-            <li>Слои доступны через <code>layer</code> и <code>zIndex</code> — используют стандарт «process» для Pol II.</li>
-          </ul>
-          <div class="callout">Рекомендация: хранить идентификаторы в формате <code>promoter:tata</code>, <code>protein:tf2h</code> для совместимости с экспортом.</div>
-          <pre>{
-  "id": "node:tfiih",
-  "type": "TFIIH",
-  "x": 420,
-  "y": 120,
-  "w": 90,
-  "h": 46,
-  "label": "TFIIH",
-  "layer": "factors",
-  "data": {"helicase": "XPB/XPD", "phosphorylation": "CTD Ser5"}
-}</pre>
-        </div>
+        <div class="model-panel" role="tabpanel" id="model-panel"></div>
       </section>
     </main>
     <footer>
-      <div>Шкалы: время (слева направо) · структура комплекса (по высоте) · регуляторы (подписи)</div>
-      <div class="controls" aria-label="Экспорт">
-        <button type="button" id="export-svg">Экспорт SVG</button>
-        <button type="button" id="export-png">Экспорт PNG</button>
-        <button type="button" id="export-pdf">PDF / Печать</button>
-        <button type="button" id="export-json">Экспорт JSON</button>
-        <button type="button" id="import-json">Импорт JSON</button>
-        <button type="button" id="reset-layout">Сброс</button>
-        <button type="button" id="open-reference">Таблица комплексов</button>
+      <div id="footer-scales"></div>
+      <div class="controls" aria-label="" id="export-controls">
+        <button type="button" id="export-svg"></button>
+        <button type="button" id="export-png"></button>
+        <button type="button" id="export-pdf"></button>
+        <button type="button" id="export-json"></button>
+        <button type="button" id="import-json"></button>
+        <button type="button" id="reset-layout"></button>
+        <button type="button" id="open-reference"></button>
       </div>
     </footer>
     <input type="file" id="import-file" accept="application/json" class="visually-hidden" aria-hidden="true" tabindex="-1" />
     <div class="overlay" id="reference-overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
-      <button class="close-overlay" type="button" id="close-overlay">Закрыть</button>
-      <h2 id="overlay-title">Факторный состав и функции</h2>
+      <button class="close-overlay" type="button" id="close-overlay"></button>
+      <h2 id="overlay-title"></h2>
       <table>
         <thead>
           <tr>
-            <th>Модуль</th>
-            <th>Состав</th>
-            <th>Функция в инициации</th>
-            <th>Контроль</th>
+            <th id="overlay-col-module"></th>
+            <th id="overlay-col-composition"></th>
+            <th id="overlay-col-function"></th>
+            <th id="overlay-col-control"></th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>TFIID ядро</td>
-            <td>TBP + TAF1/2/4/6</td>
-            <td>Распознаёт TATA/Inr, контактирует с DPE/MTE</td>
-            <td>Ацетил-H3/4, TAF фосфориляция</td>
-          </tr>
-          <tr>
-            <td>TFIIB мост</td>
-            <td>Rrn7-подобные домены</td>
-            <td>Организация +1 канала, стабилизация ранних транскриптов</td>
-            <td>Фосфориляция Ser65 уменьшает удержание</td>
-          </tr>
-          <tr>
-            <td>TFIIE/F</td>
-            <td>α/β субъединицы</td>
-            <td>Рекрутирование TFIIH, поддержка открытого пузыря</td>
-            <td>Убиквитинирование регулирует деградацию</td>
-          </tr>
-          <tr>
-            <td>TFIIH</td>
-            <td>XPB, XPD, CAK (CDK7/CycH/MAT1)</td>
-            <td>Хеликазная активность, CTD Ser5-фосфорилирование</td>
-            <td>Сигналы стресс-ответа через ATR/ATM</td>
-          </tr>
-          <tr>
-            <td>Mediator</td>
-            <td>Head/Middle/Tail + CDK8</td>
-            <td>Платформа для факторов, интеграция сигналов энхансеров</td>
-            <td>CDK8/CycC переключают режим паузы</td>
-          </tr>
-          <tr>
-            <td>Pausing-модуль</td>
-            <td>DSIF (Spt4/5), NELF A–E</td>
-            <td>Стабилизация Pol II на +20–+60, подготовка к паузе</td>
-            <td>P-TEFb фосфорилирует для освобождения</td>
-          </tr>
-        </tbody>
+        <tbody id="overlay-body"></tbody>
       </table>
     </div>
   </div>
   <script>
     (function() {
+      const STRINGS = {
+  "ru": {
+    "htmlLang": "ru",
+    "page": {
+      "title": "Инициация транскрипции Pol II — схема процесса",
+      "ariaLabel": "A4 схема инициации транскрипции Pol II",
+      "header": {
+        "title": "Инициация транскрипции Pol II на +1 TSS",
+        "pill": "Eukaryote · Advanced · Process View",
+        "meta": {
+          "environment": "Окружение: ядро эукариот",
+          "context": "Контекст: промотор класса II, TATA+/Inr",
+          "focus": "Фокус: формирование и запуск PIC"
+        }
+      }
+    },
+    "map": {
+      "title": "Схема сборки и переходов",
+      "toolbarAria": "Управление картой",
+      "buttons": {
+        "fit": "Подогнать вид",
+        "grid": "Сетка",
+        "snap": "Привязка к сетке",
+        "resetOverlap": "Упорядочить слои"
+      },
+      "canvasAria": "Рабочая зона",
+      "axisLabel": "Геном (5′ → 3′)",
+      "instructions": "Используйте мышь или стрелки для перемещения узлов. Колесо мыши с зажатой клавишей Ctrl управляет масштабом, простое прокручивание сдвигает поле. Перетаскивание удерживает элементы в пределах сетки и автоматически перерассчитывает связи.",
+      "legendAria": "Условные обозначения",
+      "legend": {
+        "polii": "Полимераза II и общие факторы",
+        "chromatin": "Хроматин и промоторная ДНК",
+        "rna": "РНК, побег и пауза"
+      }
+    },
+    "timeline": {
+      "title": "Ключевые стадии и контрольные точки",
+      "ariaLabel": "Этапы",
+      "order": [
+        "assembly",
+        "isomerization",
+        "initiation",
+        "escape"
+      ],
+      "steps": {
+        "assembly": {
+          "buttonTitle": "1. Предсборка",
+          "buttonDetail": "TFIID распознаёт TATA/Inr, активаторы стабилизируют Mediator.",
+          "panelTitle": "1. Предсборка преинициаторного комплекса",
+          "panelPoints": [
+            "TBP изгибает ДНК на ~80°, позиционируя +1 сайт напротив активного центра.",
+            "TFIID взаимодействует с коактиваторами (TAF1/2) и метками H3K4me3.",
+            "TFIIA стабилизирует TBP–ДНК, TFIIB задаёт направление транскрипции.",
+            "Mediator передаёт сигналы от энхансеров, подготавливая CDK8-модуль."
+          ]
+        },
+        "isomerization": {
+          "buttonTitle": "2. Изомеризация",
+          "buttonDetail": "TFIIE рекрутирует TFIIH, открытие пузыря, загрузка шаблона.",
+          "panelTitle": "2. Изомеризация и открытие промотора",
+          "panelPoints": [
+            "TFIIE координирует рекрутирование TFIIH и подготавливает хеликазный цикл XPB.",
+            "ATP-зависимое расплетание формирует открытый пузырь (-9/+2) вокруг TSS.",
+            "Шаблонная цепь позиционируется в канал Pol II при участии TFIIB-B reader.",
+            "CTD Ser5-фосфориляция инициирует рекрутирование комплекса кэпирования."
+          ]
+        },
+        "initiation": {
+          "buttonTitle": "3. Старт синтеза",
+          "buttonDetail": "Abortive циклы < 10 нт, CTD Ser5-P запускает кэпирование.",
+          "panelTitle": "3. Старт синтеза и ранние транскрипты",
+          "panelPoints": [
+            "Pol II инициирует синтез с +1 аденина/цитозина, формируя короткие РНК.",
+            "Abortive циклы (<10 нт) очищают канал; σ-подобная петля TFIIB ориентирует выход.",
+            "NELF/DSIF начинают связываться, подготавливая платформу паузы.",
+            "Ser5-P CTD рекрутирует TFIIH CAK и фактор кэпирования CE/HCE."
+          ]
+        },
+        "escape": {
+          "buttonTitle": "4. Побег",
+          "buttonDetail": "TFIIB/TFIIE освобождаются, NELF/DSIF контролируют удлинение.",
+          "panelTitle": "4. Промоторный побег и фиксация паузы",
+          "panelPoints": [
+            "Pol II проходит +10/+12, выбрасывая TFIIB/TFIIE и ослабляя связи Mediator.",
+            "TFIIH остаётся до формирования устойчивого гибрида ДНК–РНК (~8–9 нт).",
+            "DSIF стабилизирует удлинение, NELF удерживает полимеразу на +20/+60.",
+            "P-TEFb (CDK9/CycT) фосфорилирует NELF/DSIF и CTD Ser2, переводя в элонгацию."
+          ]
+        }
+      }
+    },
+    "regulation": {
+      "ariaLabel": "Регуляция",
+      "chips": [
+        "Позитивная регуляция: ремоделлеры (SWI/SNF), H3K27ac усиливают доступность промотора.",
+        "Негативная регуляция: комплексы NURD, метилирование ДНК ограничивают загрузку TFIID.",
+        "Сигнальные входы: MAPK/CDK активируют фосфориляцию CTD через Mediator/CDK7.",
+        "Контроль качества: TFIIS помогает Pol II преодолеть остановку на слабом стартовом сигнале."
+      ]
+    },
+    "model": {
+      "title": "Модель данных v1.1",
+      "subheading": "JSON schema • визуальная грамматика A4",
+      "ariaLabel": "Компоненты модели",
+      "tabs": {
+        "nodes": "Узлы",
+        "edges": "Рёбра",
+        "layout": "Вёрстка"
+      },
+      "content": {
+        "nodes": {
+          "title": "Структура узла {id, x, y, w, h, label, type, data}",
+          "items": [
+            "Поле <strong>type</strong> принимает роли: DNA, RNA, Protein, Promoter, Enhancer, TSS, TF, Mediator и др.",
+            "Геометрия задаётся в миллиметрах A4: координаты (x, y) и размеры (w, h) относительно зоны сетки.",
+            "Доп. данные (<code>data</code>) включают метки 5′→3′, модификации (H3K4me3) и состояние комплекса.",
+            "Слои доступны через <code>layer</code> и <code>zIndex</code> — используют стандарт «process» для Pol II."
+          ],
+          "callout": "Рекомендация: хранить идентификаторы в формате <code>promoter:tata</code>, <code>protein:tf2h</code> для совместимости с экспортом.",
+          "snippet": "{\n  \"id\": \"node:tfiih\",\n  \"type\": \"TFIIH\",\n  \"x\": 420,\n  \"y\": 120,\n  \"w\": 90,\n  \"h\": 46,\n  \"label\": \"TFIIH\",\n  \"layer\": \"factors\",\n  \"data\": {\"helicase\": \"XPB/XPD\", \"phosphorylation\": \"CTD Ser5\"}\n}"
+        },
+        "edges": {
+          "title": "Определение ребра {id, from, to, kind, label, router, markers}",
+          "items": [
+            "Тип <strong>kind</strong>: flow (transcribes, recruits, phosphorylates) или regulation (activates, represses, pauses).",
+            "Поле <code>router</code> описывает геометрию: orthogonal для PIC, bezier для энхансерных петель, straight для коротких связей.",
+            "Маркеры стрелок (<code>markers</code>) задают форму/цвет; используем словарь arrow:polII, arrow:regulation, tee:repress.",
+            "Атрибут <code>timeline</code> хранит контрольные точки (например, {start: \"+1\", end: \"+60\"}) для синхронизации с осью времени."
+          ],
+          "callout": "Связывайте рёбра с узлами по UUID — это облегчает слияние схем от разных авторов.",
+          "snippet": "{\n  \"id\": \"edge:tf2h-open\",\n  \"from\": \"node:tfiih\",\n  \"to\": \"node:openbubble\",\n  \"kind\": \"flow\",\n  \"label\": \"открывает\",\n  \"router\": \"orthogonal\",\n  \"markers\": {\"start\": null, \"end\": \"arrow:polII\"}\n}"
+        },
+        "layout": {
+          "title": "Правила вёрстки A4 landscape (print theme)",
+          "items": [
+            "Поле <code>page</code>: {width: 297, height: 210, margin: 12} — размеры в мм с учётом сетки 28 мм.",
+            "Слои (<code>layers</code>): background, chromatin, factors, rna, annotations — управляют порядком рисования.",
+            "Стили (<code>styles</code>) фиксируют цвета ролей: Pol II #1d4ed8, chromatin #4d7c0f, RNA #b91c1c.",
+            "Гайды (<code>guides</code>) описывают линейки осей: time (left→right), assembly depth (top→bottom), regulation captions."
+          ],
+          "callout": "Экспорт в SVG/PNG использует эти параметры — держите масштаб 1 мм = 3.78 px для консистентности.",
+          "snippet": "{\n  \"layout\": {\n    \"page\": {\"width\": 297, \"height\": 210, \"margin\": 12},\n    \"grid\": {\"size\": 28, \"visible\": true},\n    \"theme\": \"print\"\n  }\n}"
+        }
+      }
+    },
+    "footer": {
+      "scales": "Шкалы: время (слева направо) · структура комплекса (по высоте) · регуляторы (подписи)",
+      "controlsAria": "Экспорт",
+      "buttons": {
+        "exportSvg": "Экспорт SVG",
+        "exportPng": "Экспорт PNG",
+        "exportPdf": "PDF / Печать",
+        "exportJson": "Экспорт JSON",
+        "importJson": "Импорт JSON",
+        "resetLayout": "Сброс",
+        "openReference": "Таблица комплексов"
+      }
+    },
+    "overlay": {
+      "close": "Закрыть",
+      "title": "Факторный состав и функции",
+      "columns": {
+        "module": "Модуль",
+        "composition": "Состав",
+        "function": "Функция в инициации",
+        "control": "Контроль"
+      },
+      "rows": [
+        {
+          "module": "TFIID ядро",
+          "composition": "TBP + TAF1/2/4/6",
+          "function": "Распознаёт TATA/Inr, контактирует с DPE/MTE",
+          "control": "Ацетил-H3/4, TAF фосфориляция"
+        },
+        {
+          "module": "TFIIB мост",
+          "composition": "Rrn7-подобные домены",
+          "function": "Организация +1 канала, стабилизация ранних транскриптов",
+          "control": "Фосфориляция Ser65 уменьшает удержание"
+        },
+        {
+          "module": "TFIIE/F",
+          "composition": "α/β субъединицы",
+          "function": "Рекрутирование TFIIH, поддержка открытого пузыря",
+          "control": "Убиквитинирование регулирует деградацию"
+        },
+        {
+          "module": "TFIIH",
+          "composition": "XPB, XPD, CAK (CDK7/CycH/MAT1)",
+          "function": "Хеликазная активность, CTD Ser5-фосфорилирование",
+          "control": "Сигналы стресс-ответа через ATR/ATM"
+        },
+        {
+          "module": "Mediator",
+          "composition": "Head/Middle/Tail + CDK8",
+          "function": "Платформа для факторов, интеграция сигналов энхансеров",
+          "control": "CDK8/CycC переключают режим паузы"
+        },
+        {
+          "module": "Pausing-модуль",
+          "composition": "DSIF (Spt4/5), NELF A–E",
+          "function": "Стабилизация Pol II на +20–+60, подготовка к паузе",
+          "control": "P-TEFb фосфорилирует для освобождения"
+        }
+      ]
+    },
+    "nodes": {
+      "chromatin": {
+        "label": "Хроматин ремоделирован",
+        "type": "Chromatin",
+        "notes": [
+          "SWI/SNF и HAT открывают TATA-бокс и снимают нуклеосомы.",
+          "H3K4me3 / ацетил-H3 повышают аффинность TFIID."
+        ]
+      },
+      "mediator": {
+        "label": "Mediator + общие факторы",
+        "type": "Mediator complex",
+        "notes": [
+          "TFIID-TBP, TFIIA и TFIIB фиксируют +1 позицию.",
+          "Tail/Head модули интегрируют сигналы энхансеров."
+        ]
+      },
+      "polii": {
+        "label": "Pol II–TFIIF ядро",
+        "type": "Pol II core",
+        "notes": [
+          "TFIIE координирует загрузку TFIIH; XPB раскрывает пузырь (-9/+2).",
+          "CDK7 (CAK) фосфорилирует CTD Ser5, рекрутирует кэпирующий комплекс."
+        ]
+      },
+      "escape": {
+        "label": "Промоторный побег и пауза",
+        "type": "RNA transition",
+        "notes": [
+          "Гибрид ДНК–РНК стабилизируется (~8–9 нт), Mediator отходит.",
+          "DSIF/NELF удерживают Pol II на +20/+60 до активации P-TEFb."
+        ]
+      },
+      "enhancer": {
+        "label": "Энхансерные петли",
+        "type": "Enhancer",
+        "notes": [
+          "Активаторы и Mediator Tail формируют петлю, вовлекая Cohesin.",
+          "Chromatin reader-комплексы удерживают гистоновые метки."
+        ]
+      },
+      "ptefb": {
+        "label": "P-TEFb / сигналы освобождения",
+        "type": "Regulation",
+        "notes": [
+          "CDK9/CycT активируются через BRD4/SEC и сигналы стресс-ответа.",
+          "Фосфорилируют DSIF, NELF и CTD Ser2, переводя в продуктивную элонгацию."
+        ]
+      }
+    },
+    "edges": {
+      "chromatinMediator": "рекрутирует",
+      "mediatorPolii": "собирает PIC",
+      "poliiEscape": "инициирует транскрипцию",
+      "enhancerMediator": "активирует",
+      "ptefbEscape": "освобождает паузу"
+    },
+    "messages": {
+      "importError": "Не удалось импортировать JSON: ",
+      "missingNodes": "Структура JSON не содержит массива \"nodes\"",
+      "stateReset": "Сброс сохранённого состояния из-за ошибки",
+      "saveError": "Не удалось сохранить состояние",
+      "dragHandle": "Переместить",
+      "nodeAria": "{label}. {type}. Перемещение стрелками, Shift — шаг x2."
+    }
+  },
+  "en": {
+    "htmlLang": "en",
+    "page": {
+      "title": "Pol II transcription initiation — process map",
+      "ariaLabel": "A4 Pol II transcription initiation diagram",
+      "header": {
+        "title": "Pol II transcription initiation at the +1 TSS",
+        "pill": "Eukaryote · Advanced · Process View",
+        "meta": {
+          "environment": "Environment: eukaryotic nucleus",
+          "context": "Context: class II promoter, TATA+/Inr",
+          "focus": "Focus: assembling and firing the PIC"
+        }
+      }
+    },
+    "map": {
+      "title": "Assembly and transition map",
+      "toolbarAria": "Map controls",
+      "buttons": {
+        "fit": "Fit to view",
+        "grid": "Grid",
+        "snap": "Snap to grid",
+        "resetOverlap": "Arrange layers"
+      },
+      "canvasAria": "Workspace",
+      "axisLabel": "Genome (5′ → 3′)",
+      "instructions": "Use the mouse or arrow keys to move nodes. Scroll with Ctrl adjusts zoom; plain scrolling pans the field. Dragging keeps elements snapped to the grid and recomputes connections.",
+      "legendAria": "Legend",
+      "legend": {
+        "polii": "Pol II and general factors",
+        "chromatin": "Chromatin and promoter DNA",
+        "rna": "RNA, escape and pause"
+      }
+    },
+    "timeline": {
+      "title": "Key stages and checkpoints",
+      "ariaLabel": "Stages",
+      "order": [
+        "assembly",
+        "isomerization",
+        "initiation",
+        "escape"
+      ],
+      "steps": {
+        "assembly": {
+          "buttonTitle": "1. Pre-assembly",
+          "buttonDetail": "TFIID recognizes TATA/Inr, activators stabilize Mediator.",
+          "panelTitle": "1. Pre-assembly of the pre-initiation complex",
+          "panelPoints": [
+            "TBP bends DNA by ~80°, positioning the +1 site at the active center.",
+            "TFIID engages co-activators (TAF1/2) and H3K4me3 marks.",
+            "TFIIA stabilizes TBP–DNA, TFIIB sets transcription direction.",
+            "Mediator relays enhancer cues and primes the CDK8 module."
+          ]
+        },
+        "isomerization": {
+          "buttonTitle": "2. Isomerization",
+          "buttonDetail": "TFIIE recruits TFIIH, bubble opening, template loading.",
+          "panelTitle": "2. Promoter isomerization and opening",
+          "panelPoints": [
+            "TFIIE coordinates TFIIH recruitment and primes the XPB helicase cycle.",
+            "ATP-driven unwinding creates an open bubble (-9/+2) around the TSS.",
+            "The template strand is guided into Pol II by the TFIIB B-reader.",
+            "CTD Ser5 phosphorylation triggers capping complex recruitment."
+          ]
+        },
+        "initiation": {
+          "buttonTitle": "3. Initiation",
+          "buttonDetail": "Abortive cycles < 10 nt, CTD Ser5-P triggers capping.",
+          "panelTitle": "3. Initiation and short transcripts",
+          "panelPoints": [
+            "Pol II initiates at +1 A/C, producing short RNAs.",
+            "Abortive cycles (<10 nt) clear the channel; the TFIIB B-finger directs RNA exit.",
+            "NELF/DSIF begin to engage, preparing the pause platform.",
+            "Ser5-phosphorylated CTD recruits TFIIH CAK and the capping enzyme."
+          ]
+        },
+        "escape": {
+          "buttonTitle": "4. Promoter escape",
+          "buttonDetail": "TFIIB/TFIIE release, NELF/DSIF tune elongation.",
+          "panelTitle": "4. Promoter escape and pause establishment",
+          "panelPoints": [
+            "Pol II passes +10/+12, releasing TFIIB/TFIIE and loosening Mediator contacts.",
+            "TFIIH remains until a stable DNA–RNA hybrid (~8–9 nt) forms.",
+            "DSIF stabilizes elongation; NELF holds Pol II at +20/+60.",
+            "P-TEFb (CDK9/CycT) phosphorylates NELF/DSIF and CTD Ser2 to enter productive elongation."
+          ]
+        }
+      }
+    },
+    "regulation": {
+      "ariaLabel": "Regulation",
+      "chips": [
+        "Positive control: remodelers (SWI/SNF) and H3K27ac increase promoter accessibility.",
+        "Negative control: NuRD complexes and DNA methylation limit TFIID loading.",
+        "Signaling inputs: MAPK/CDK routes activate CTD phosphorylation via Mediator/CDK7.",
+        "Quality control: TFIIS helps Pol II bypass weak-start stalls."
+      ]
+    },
+    "model": {
+      "title": "Data model v1.1",
+      "subheading": "JSON schema • A4 visual grammar",
+      "ariaLabel": "Model components",
+      "tabs": {
+        "nodes": "Nodes",
+        "edges": "Edges",
+        "layout": "Layout"
+      },
+      "content": {
+        "nodes": {
+          "title": "Node structure {id, x, y, w, h, label, type, data}",
+          "items": [
+            "Field <strong>type</strong> covers roles: DNA, RNA, Protein, Promoter, Enhancer, TSS, TF, Mediator, etc.",
+            "Geometry is in A4 millimetres: coordinates (x, y) and size (w, h) within the grid area.",
+            "Extra <code>data</code> stores 5′→3′ marks, modifications (H3K4me3) and complex states.",
+            "<code>layer</code> and <code>zIndex</code> follow the Pol II “process” standard."
+          ],
+          "callout": "Recommendation: keep identifiers like <code>promoter:tata</code>, <code>protein:tf2h</code> for export compatibility.",
+          "snippet": "{\n  \"id\": \"node:tfiih\",\n  \"type\": \"TFIIH\",\n  \"x\": 420,\n  \"y\": 120,\n  \"w\": 90,\n  \"h\": 46,\n  \"label\": \"TFIIH\",\n  \"layer\": \"factors\",\n  \"data\": {\"helicase\": \"XPB/XPD\", \"phosphorylation\": \"CTD Ser5\"}\n}"
+        },
+        "edges": {
+          "title": "Edge definition {id, from, to, kind, label, router, markers}",
+          "items": [
+            "<strong>kind</strong>: flow (transcribes, recruits, phosphorylates) or regulation (activates, represses, pauses).",
+            "<code>router</code> shapes geometry: orthogonal for the PIC, bezier for enhancer loops, straight for short links.",
+            "Arrow markers (<code>markers</code>) pick shape/colour; use the catalog arrow:polII, arrow:regulation, tee:repress.",
+            "<code>timeline</code> marks checkpoints (e.g. {start: \"+1\", end: \"+60\"}) to align with the time axis."
+          ],
+          "callout": "Bind edges to nodes via UUIDs — it simplifies merging diagrams from different authors.",
+          "snippet": "{\n  \"id\": \"edge:tf2h-open\",\n  \"from\": \"node:tfiih\",\n  \"to\": \"node:openbubble\",\n  \"kind\": \"flow\",\n  \"label\": \"opens\",\n  \"router\": \"orthogonal\",\n  \"markers\": {\"start\": null, \"end\": \"arrow:polII\"}\n}"
+        },
+        "layout": {
+          "title": "A4 landscape layout rules (print theme)",
+          "items": [
+            "<code>page</code>: {width: 297, height: 210, margin: 12} — millimetres with a 28 mm grid.",
+            "Layers (<code>layers</code>): background, chromatin, factors, rna, annotations — control draw order.",
+            "Styles (<code>styles</code>) fix role colours: Pol II #1d4ed8, chromatin #4d7c0f, RNA #b91c1c.",
+            "Guides (<code>guides</code>) define axes: time (left→right), assembly depth (top→bottom), regulation captions."
+          ],
+          "callout": "SVG/PNG export relies on these parameters — keep 1 mm = 3.78 px for consistency.",
+          "snippet": "{\n  \"layout\": {\n    \"page\": {\"width\": 297, \"height\": 210, \"margin\": 12},\n    \"grid\": {\"size\": 28, \"visible\": true},\n    \"theme\": \"print\"\n  }\n}"
+        }
+      }
+    },
+    "footer": {
+      "scales": "Scales: time (left to right) · complex structure (vertical) · regulators (captions)",
+      "controlsAria": "Export",
+      "buttons": {
+        "exportSvg": "Export SVG",
+        "exportPng": "Export PNG",
+        "exportPdf": "PDF / Print",
+        "exportJson": "Export JSON",
+        "importJson": "Import JSON",
+        "resetLayout": "Reset",
+        "openReference": "Complex table"
+      }
+    },
+    "overlay": {
+      "close": "Close",
+      "title": "Factor composition and functions",
+      "columns": {
+        "module": "Module",
+        "composition": "Composition",
+        "function": "Role in initiation",
+        "control": "Control"
+      },
+      "rows": [
+        {
+          "module": "TFIID core",
+          "composition": "TBP + TAF1/2/4/6",
+          "function": "Recognizes TATA/Inr, contacts DPE/MTE",
+          "control": "H3/H4 acetylation, TAF phosphorylation"
+        },
+        {
+          "module": "TFIIB bridge",
+          "composition": "Rrn7-like domains",
+          "function": "Organizes the +1 channel, stabilizes early transcripts",
+          "control": "Ser65 phosphorylation lowers retention"
+        },
+        {
+          "module": "TFIIE/F",
+          "composition": "α/β subunits",
+          "function": "Recruit TFIIH, support the open bubble",
+          "control": "Ubiquitination regulates turnover"
+        },
+        {
+          "module": "TFIIH",
+          "composition": "XPB, XPD, CAK (CDK7/CycH/MAT1)",
+          "function": "Helicase activity, CTD Ser5 phosphorylation",
+          "control": "Stress-response signals via ATR/ATM"
+        },
+        {
+          "module": "Mediator",
+          "composition": "Head/Middle/Tail + CDK8",
+          "function": "Factor platform integrating enhancer signals",
+          "control": "CDK8/CycC toggles the pause module"
+        },
+        {
+          "module": "Pausing module",
+          "composition": "DSIF (Spt4/5), NELF A–E",
+          "function": "Stabilizes Pol II at +20–+60, sets up pausing",
+          "control": "P-TEFb phosphorylation triggers release"
+        }
+      ]
+    },
+    "nodes": {
+      "chromatin": {
+        "label": "Chromatin remodeled",
+        "type": "Chromatin",
+        "notes": [
+          "SWI/SNF and HATs expose the TATA box and clear nucleosomes.",
+          "H3K4me3 / H3 acetylation increases TFIID affinity."
+        ]
+      },
+      "mediator": {
+        "label": "Mediator + general factors",
+        "type": "Mediator complex",
+        "notes": [
+          "TFIID-TBP, TFIIA and TFIIB lock the +1 position.",
+          "Tail/Head modules integrate enhancer signals."
+        ]
+      },
+      "polii": {
+        "label": "Pol II–TFIIF core",
+        "type": "Pol II core",
+        "notes": [
+          "TFIIE coordinates TFIIH loading; XPB opens the bubble (-9/+2).",
+          "CDK7 (CAK) phosphorylates CTD Ser5 and recruits the capping machinery."
+        ]
+      },
+      "escape": {
+        "label": "Promoter escape and pause",
+        "type": "RNA transition",
+        "notes": [
+          "The DNA–RNA hybrid stabilizes (~8–9 nt) while Mediator disengages.",
+          "DSIF/NELF hold Pol II at +20/+60 until P-TEFb activation."
+        ]
+      },
+      "enhancer": {
+        "label": "Enhancer loops",
+        "type": "Enhancer",
+        "notes": [
+          "Activators and the Mediator Tail loop DNA, engaging Cohesin.",
+          "Chromatin reader complexes maintain histone marks."
+        ]
+      },
+      "ptefb": {
+        "label": "P-TEFb / release signals",
+        "type": "Regulation",
+        "notes": [
+          "CDK9/CycT activated via BRD4/SEC and stress pathways.",
+          "Phosphorylate DSIF, NELF and CTD Ser2 to trigger productive elongation."
+        ]
+      }
+    },
+    "edges": {
+      "chromatinMediator": "recruits",
+      "mediatorPolii": "assembles the PIC",
+      "poliiEscape": "initiates transcription",
+      "enhancerMediator": "activates",
+      "ptefbEscape": "releases the pause"
+    },
+    "messages": {
+      "importError": "Failed to import JSON: ",
+      "missingNodes": "JSON structure is missing a \"nodes\" array",
+      "stateReset": "Stored state was reset after an error",
+      "saveError": "Failed to save state",
+      "dragHandle": "Drag",
+      "nodeAria": "{label}. {type}. Move with arrow keys, Shift doubles the step."
+    }
+  },
+  "de": {
+    "htmlLang": "de",
+    "page": {
+      "title": "Pol-II-Transkriptionsinitiation – Prozessübersicht",
+      "ariaLabel": "A4-Diagramm der Pol-II-Transkriptionsinitiation",
+      "header": {
+        "title": "Pol-II-Transkriptionsinitiation am +1-Start",
+        "pill": "Eukaryot · Fortgeschritten · Prozessansicht",
+        "meta": {
+          "environment": "Umgebung: eukaryotischer Zellkern",
+          "context": "Kontext: Klasse-II-Promotor, TATA+/Inr",
+          "focus": "Fokus: Aufbau und Auslösung des PIC"
+        }
+      }
+    },
+    "map": {
+      "title": "Karte der Assemblierung und Übergänge",
+      "toolbarAria": "Kartensteuerung",
+      "buttons": {
+        "fit": "Ansicht anpassen",
+        "grid": "Raster",
+        "snap": "Am Raster ausrichten",
+        "resetOverlap": "Ebenen ordnen"
+      },
+      "canvasAria": "Arbeitsbereich",
+      "axisLabel": "Genom (5′ → 3′)",
+      "instructions": "Verwenden Sie Maus oder Pfeiltasten, um Knoten zu verschieben. Strg+Scrollen zoomt, normales Scrollen verschiebt die Ansicht. Ziehen hält Elemente im Raster und berechnet Verbindungen neu.",
+      "legendAria": "Legende",
+      "legend": {
+        "polii": "Pol II und allgemeine Faktoren",
+        "chromatin": "Chromatin und Promotor-DNA",
+        "rna": "RNA, Escape und Pause"
+      }
+    },
+    "timeline": {
+      "title": "Schlüsselphasen und Kontrollpunkte",
+      "ariaLabel": "Phasen",
+      "order": [
+        "assembly",
+        "isomerization",
+        "initiation",
+        "escape"
+      ],
+      "steps": {
+        "assembly": {
+          "buttonTitle": "1. Präassemblierung",
+          "buttonDetail": "TFIID erkennt TATA/Inr, Aktivatoren stabilisieren Mediator.",
+          "panelTitle": "1. Präassemblierung des Präinitiationskomplexes",
+          "panelPoints": [
+            "TBP biegt die DNA um ~80° und positioniert +1 im aktiven Zentrum.",
+            "TFIID bindet Koaktivatoren (TAF1/2) und H3K4me3-Marken.",
+            "TFIIA stabilisiert TBP–DNA, TFIIB legt die Transkriptionsrichtung fest.",
+            "Mediator überträgt Enhancer-Signale und bereitet das CDK8-Modul vor."
+          ]
+        },
+        "isomerization": {
+          "buttonTitle": "2. Isomerisierung",
+          "buttonDetail": "TFIIE rekrutiert TFIIH, öffnet die Blase, lädt die Matrize.",
+          "panelTitle": "2. Promotorisomerisierung und -öffnung",
+          "panelPoints": [
+            "TFIIE koordiniert das TFIIH-Recruitment und zündet den XPB-Helikasezyklus.",
+            "ATP-abhängiges Aufschmelzen erzeugt eine offene Blase (-9/+2) um den TSS.",
+            "Der Matrizenstrang wird durch den TFIIB-B-reader in Pol II geführt.",
+            "CTD-Ser5-Phosphorylierung rekrutiert den Capping-Komplex."
+          ]
+        },
+        "initiation": {
+          "buttonTitle": "3. Initiation",
+          "buttonDetail": "Abortive Zyklen < 10 nt, CTD Ser5-P startet Capping.",
+          "panelTitle": "3. Initiation und kurze Transkripte",
+          "panelPoints": [
+            "Pol II startet bei +1 (A/C) und bildet kurze RNAs.",
+            "Abortive Zyklen (<10 nt) räumen den Kanal; die TFIIB-Schleife lenkt den Austritt.",
+            "NELF/DSIF binden an und bereiten die Pausenplattform vor.",
+            "Ser5-phosphoryliertes CTD rekrutiert TFIIH-CAK und die Capping-Enzyme."
+          ]
+        },
+        "escape": {
+          "buttonTitle": "4. Promotor-Escape",
+          "buttonDetail": "TFIIB/TFIIE lösen sich, NELF/DSIF steuern die Elongation.",
+          "panelTitle": "4. Promotor-Escape und Etablierung der Pause",
+          "panelPoints": [
+            "Pol II passiert +10/+12, löst TFIIB/TFIIE und schwächt Mediator-Kontakte.",
+            "TFIIH bleibt, bis ein stabiler DNA–RNA-Hybrid (~8–9 nt) entsteht.",
+            "DSIF stabilisiert die Elongation, NELF hält Pol II bei +20/+60.",
+            "P-TEFb (CDK9/CycT) phosphoryliert NELF/DSIF und CTD Ser2 für produktive Elongation."
+          ]
+        }
+      }
+    },
+    "regulation": {
+      "ariaLabel": "Regulation",
+      "chips": [
+        "Positive Regulation: Remodeler (SWI/SNF) und H3K27ac erhöhen die Promotorzugänglichkeit.",
+        "Negative Regulation: NuRD-Komplexe und DNA-Methylierung begrenzen die TFIID-Beladung.",
+        "Signalschnittstellen: MAPK/CDK-Wege aktivieren die CTD-Phosphorylierung über Mediator/CDK7.",
+        "Qualitätskontrolle: TFIIS hilft Pol II, Stalls an schwachen Starts zu überwinden."
+      ]
+    },
+    "model": {
+      "title": "Datenmodell v1.1",
+      "subheading": "JSON-Schema • A4-Visualgrammatik",
+      "ariaLabel": "Modellelemente",
+      "tabs": {
+        "nodes": "Knoten",
+        "edges": "Kanten",
+        "layout": "Layout"
+      },
+      "content": {
+        "nodes": {
+          "title": "Knotenstruktur {id, x, y, w, h, label, type, data}",
+          "items": [
+            "Feld <strong>type</strong> umfasst Rollen wie DNA, RNA, Protein, Promoter, Enhancer, TSS, TF, Mediator usw.",
+            "Geometrie in A4-Millimetern: Koordinaten (x, y) und Größen (w, h) relativ zum Rasterbereich.",
+            "Zusätzliche <code>data</code> enthalten 5′→3′-Marken, Modifikationen (H3K4me3) und Komplexzustände.",
+            "<code>layer</code> und <code>zIndex</code> folgen dem Pol-II-Standard „process“."
+          ],
+          "callout": "Empfehlung: IDs wie <code>promoter:tata</code>, <code>protein:tf2h</code> für Exportkompatibilität verwenden.",
+          "snippet": "{\n  \"id\": \"node:tfiih\",\n  \"type\": \"TFIIH\",\n  \"x\": 420,\n  \"y\": 120,\n  \"w\": 90,\n  \"h\": 46,\n  \"label\": \"TFIIH\",\n  \"layer\": \"factors\",\n  \"data\": {\"helicase\": \"XPB/XPD\", \"phosphorylation\": \"CTD Ser5\"}\n}"
+        },
+        "edges": {
+          "title": "Kantendefinition {id, from, to, kind, label, router, markers}",
+          "items": [
+            "<strong>kind</strong>: flow (transkribiert, rekrutiert, phosphoryliert) oder regulation (aktiviert, reprimiert, pausiert).",
+            "<code>router</code> beschreibt die Geometrie: orthogonal für PIC, Bezier für Enhancer-Schleifen, straight für kurze Verbindungen.",
+            "Pfeilmarker (<code>markers</code>) bestimmen Form/Farbe; nutzen Sie arrow:polII, arrow:regulation, tee:repress.",
+            "<code>timeline</code> speichert Kontrollpunkte (z. B. {start: \"+1\", end: \"+60\"}) zur Synchronisation mit der Zeitachse."
+          ],
+          "callout": "Kanten per UUID mit Knoten verknüpfen – erleichtert das Zusammenführen verschiedener Diagramme.",
+          "snippet": "{\n  \"id\": \"edge:tf2h-open\",\n  \"from\": \"node:tfiih\",\n  \"to\": \"node:openbubble\",\n  \"kind\": \"flow\",\n  \"label\": \"öffnet\",\n  \"router\": \"orthogonal\",\n  \"markers\": {\"start\": null, \"end\": \"arrow:polII\"}\n}"
+        },
+        "layout": {
+          "title": "Layout-Regeln A4 landscape (Print-Thema)",
+          "items": [
+            "<code>page</code>: {width: 297, height: 210, margin: 12} — Maße in mm mit 28-mm-Raster.",
+            "Ebenen (<code>layers</code>): background, chromatin, factors, rna, annotations – steuern die Zeichenreihenfolge.",
+            "Stile (<code>styles</code>) fixieren Rollenfarben: Pol II #1d4ed8, Chromatin #4d7c0f, RNA #b91c1c.",
+            "Guides (<code>guides</code>) definieren Achsen: time (links→rechts), assembly depth (oben→unten), regulation captions."
+          ],
+          "callout": "SVG/PNG-Export nutzt diese Parameter – Maßstab 1 mm = 3,78 px beibehalten.",
+          "snippet": "{\n  \"layout\": {\n    \"page\": {\"width\": 297, \"height\": 210, \"margin\": 12},\n    \"grid\": {\"size\": 28, \"visible\": true},\n    \"theme\": \"print\"\n  }\n}"
+        }
+      }
+    },
+    "footer": {
+      "scales": "Skalen: Zeit (links nach rechts) · Komplexstruktur (vertikal) · Regulatoren (Beschriftungen)",
+      "controlsAria": "Export",
+      "buttons": {
+        "exportSvg": "SVG exportieren",
+        "exportPng": "PNG exportieren",
+        "exportPdf": "PDF / Drucken",
+        "exportJson": "JSON exportieren",
+        "importJson": "JSON importieren",
+        "resetLayout": "Zurücksetzen",
+        "openReference": "Faktortabelle"
+      }
+    },
+    "overlay": {
+      "close": "Schließen",
+      "title": "Faktorzusammensetzung und Funktionen",
+      "columns": {
+        "module": "Modul",
+        "composition": "Zusammensetzung",
+        "function": "Funktion in der Initiation",
+        "control": "Regulation"
+      },
+      "rows": [
+        {
+          "module": "TFIID-Kern",
+          "composition": "TBP + TAF1/2/4/6",
+          "function": "Erkennt TATA/Inr, kontaktiert DPE/MTE",
+          "control": "H3/H4-Acetylierung, TAF-Phosphorylierung"
+        },
+        {
+          "module": "TFIIB-Brücke",
+          "composition": "Rrn7-ähnliche Domänen",
+          "function": "Organisiert den +1-Kanal, stabilisiert frühe Transkripte",
+          "control": "Ser65-Phosphorylierung verringert Verweildauer"
+        },
+        {
+          "module": "TFIIE/F",
+          "composition": "α/β-Untereinheiten",
+          "function": "Rekrutiert TFIIH, stabilisiert die offene Blase",
+          "control": "Ubiquitinierung steuert Abbau"
+        },
+        {
+          "module": "TFIIH",
+          "composition": "XPB, XPD, CAK (CDK7/CycH/MAT1)",
+          "function": "Helikaseaktivität, CTD-Ser5-Phosphorylierung",
+          "control": "Stressantwort-Signale über ATR/ATM"
+        },
+        {
+          "module": "Mediator",
+          "composition": "Head/Middle/Tail + CDK8",
+          "function": "Plattform für Faktoren, integriert Enhancer-Signale",
+          "control": "CDK8/CycC schaltet den Pausenmodus um"
+        },
+        {
+          "module": "Pause-Modul",
+          "composition": "DSIF (Spt4/5), NELF A–E",
+          "function": "Stabilisiert Pol II bei +20/+60, bereitet Pause vor",
+          "control": "P-TEFb-Phosphorylierung löst die Pause"
+        }
+      ]
+    },
+    "nodes": {
+      "chromatin": {
+        "label": "Chromatin umgebaut",
+        "type": "Chromatin",
+        "notes": [
+          "SWI/SNF und HATs legen den TATA-Bereich frei und entfernen Nukleosomen.",
+          "H3K4me3 / H3-Acetylierung erhöht die TFIID-Affinität."
+        ]
+      },
+      "mediator": {
+        "label": "Mediator + allgemeine Faktoren",
+        "type": "Mediator-Komplex",
+        "notes": [
+          "TFIID-TBP, TFIIA und TFIIB fixieren die +1-Position.",
+          "Tail/Head-Module integrieren Enhancer-Signale."
+        ]
+      },
+      "polii": {
+        "label": "Pol II–TFIIF-Kern",
+        "type": "Pol-II-Kern",
+        "notes": [
+          "TFIIE koordiniert TFIIH; XPB öffnet die Blase (-9/+2).",
+          "CDK7 (CAK) phosphoryliert CTD Ser5 und rekrutiert den Capping-Komplex."
+        ]
+      },
+      "escape": {
+        "label": "Promotor-Escape und Pause",
+        "type": "RNA-Übergang",
+        "notes": [
+          "Der DNA–RNA-Hybrid stabilisiert sich (~8–9 nt), Mediator löst sich.",
+          "DSIF/NELF halten Pol II bei +20/+60 bis zur P-TEFb-Aktivierung."
+        ]
+      },
+      "enhancer": {
+        "label": "Enhancer-Schleifen",
+        "type": "Enhancer",
+        "notes": [
+          "Aktivatoren und Mediator-Tail bilden Schleifen und rekrutieren Cohesin.",
+          "Chromatin-Reader-Komplexe erhalten Histonmarken."
+        ]
+      },
+      "ptefb": {
+        "label": "P-TEFb / Freigabesignale",
+        "type": "Regulation",
+        "notes": [
+          "CDK9/CycT werden über BRD4/SEC und Stresssignale aktiviert.",
+          "Phosphorylieren DSIF, NELF und CTD Ser2 für produktive Elongation."
+        ]
+      }
+    },
+    "edges": {
+      "chromatinMediator": "rekrutiert",
+      "mediatorPolii": "baut den PIC auf",
+      "poliiEscape": "initiiert die Transkription",
+      "enhancerMediator": "aktiviert",
+      "ptefbEscape": "löst die Pause"
+    },
+    "messages": {
+      "importError": "JSON konnte nicht importiert werden: ",
+      "missingNodes": "JSON-Struktur enthält kein \"nodes\"-Array",
+      "stateReset": "Gespeicherter Zustand wurde nach einem Fehler zurückgesetzt",
+      "saveError": "Zustand konnte nicht gespeichert werden",
+      "dragHandle": "Ziehen",
+      "nodeAria": "{label}. {type}. Mit Pfeiltasten bewegen, Umschalt verdoppelt die Schritte."
+    }
+  }
+};
+
+      const TIMELINE_ORDER = ['assembly', 'isomerization', 'initiation', 'escape'];
+      const MODEL_TAB_ORDER = ['nodes', 'edges', 'layout'];
+      const DEFAULT_LANG = 'ru';
+
+      function normalizeLang(value) {
+        if (!value) return null;
+        return value.toLowerCase().split('-')[0];
+      }
+
+      function resolveLanguage() {
+        const params = new URLSearchParams(window.location.search);
+        const fromParam = normalizeLang(params.get('ui_lang') || params.get('ui-lang') || params.get('lang') || params.get('locale'));
+        const meta = normalizeLang(document.querySelector('meta[name="ui-lang"]')?.content);
+        const dataAttr = normalizeLang(document.documentElement.getAttribute('data-ui-lang'));
+        const attr = normalizeLang(document.documentElement.getAttribute('lang'));
+        if (fromParam && STRINGS[fromParam]) return fromParam;
+        if (meta && STRINGS[meta]) return meta;
+        if (dataAttr && STRINGS[dataAttr]) return dataAttr;
+        if (attr && STRINGS[attr]) return attr;
+        return DEFAULT_LANG;
+      }
+
+      const UI_LANG = resolveLanguage();
+      const ACTIVE_LANG = STRINGS[UI_LANG] ? UI_LANG : DEFAULT_LANG;
+      const ACTIVE_STRINGS = STRINGS[ACTIVE_LANG];
+      const FALLBACK_STRINGS = STRINGS[DEFAULT_LANG];
+
+      document.documentElement.setAttribute('data-ui-lang', ACTIVE_LANG);
+      document.documentElement.setAttribute('lang', ACTIVE_STRINGS.htmlLang || ACTIVE_LANG);
+      const metaLang = document.querySelector('meta[name="ui-lang"]');
+      if (metaLang) {
+        metaLang.setAttribute('content', ACTIVE_LANG);
+      }
+
+      function getLocaleEntry(path) {
+        const segments = path.split('.');
+        let current = ACTIVE_STRINGS;
+        let fallback = FALLBACK_STRINGS;
+        for (const segment of segments) {
+          current = current && Object.prototype.hasOwnProperty.call(current, segment) ? current[segment] : undefined;
+          fallback = fallback && Object.prototype.hasOwnProperty.call(fallback, segment) ? fallback[segment] : undefined;
+        }
+        return current !== undefined ? current : fallback;
+      }
+
+      function getLocaleString(path) {
+        const value = getLocaleEntry(path);
+        return typeof value === 'string' ? value : '';
+      }
+
+      function getLocaleArray(path) {
+        const value = getLocaleEntry(path);
+        return Array.isArray(value) ? value.slice() : [];
+      }
+
       const GRID_SIZE = 24;
       const MAP_WIDTH = 960;
       const MAP_HEIGHT = 520;
@@ -748,99 +1536,144 @@
         rna: { fill: '#fee2e2', stroke: '#b91c1c' },
         annotations: { fill: '#e2e8f0', stroke: '#475569' }
       };
-      const BASE_NODES = [
-        {
-          id: 'node:chromatin',
-          label: 'Хроматин ремоделирован',
-          type: 'Chromatin',
-          layer: 'chromatin',
-          x: 48,
-          y: 216,
-          width: 216,
-          height: 132,
-          notes: [
-            'SWI/SNF и HAT открывают TATA-бокс и снимают нуклеосомы.',
-            'H3K4me3 / ацетил-H3 повышают аффинность TFIID.'
-          ]
-        },
-        {
-          id: 'node:mediator',
-          label: 'Mediator + общие факторы',
-          type: 'Mediator complex',
-          layer: 'factors',
-          x: 288,
-          y: 192,
-          width: 216,
-          height: 144,
-          notes: [
-            'TFIID-TBP, TFIIA и TFIIB фиксируют +1 позицию.',
-            'Tail/Head модули интегрируют сигналы энхансеров.'
-          ]
-        },
-        {
-          id: 'node:polii',
-          label: 'Pol II–TFIIF ядро',
-          type: 'Pol II core',
-          layer: 'factors',
-          x: 528,
-          y: 192,
-          width: 216,
-          height: 156,
-          notes: [
-            'TFIIE координирует загрузку TFIIH; XPB раскрывает пузырь (-9/+2).',
-            'CDK7 (CAK) фосфорилирует CTD Ser5, рекрутирует кэпирующий комплекс.'
-          ]
-        },
-        {
-          id: 'node:escape',
-          label: 'Промоторный побег и пауза',
-          type: 'RNA transition',
-          layer: 'rna',
-          x: 768,
-          y: 252,
-          width: 192,
-          height: 144,
-          notes: [
-            'Гибрид ДНК–РНК стабилизируется (~8–9 нт), Mediator отходит.',
-            'DSIF/NELF удерживают Pol II на +20/+60 до активации P-TEFb.'
-          ]
-        },
-        {
-          id: 'node:enhancer',
-          label: 'Энхансерные петли',
-          type: 'Enhancer',
-          layer: 'annotations',
-          x: 288,
-          y: 48,
-          width: 216,
-          height: 120,
-          notes: [
-            'Активаторы и Mediator Tail формируют петлю, вовлекая Cohesin.',
-            'Chromatin reader-комплексы удерживают гистоновые метки.'
-          ]
-        },
-        {
-          id: 'node:ptefb',
-          label: 'P-TEFb / сигналы освобождения',
-          type: 'Regulation',
-          layer: 'annotations',
-          x: 768,
-          y: 48,
-          width: 192,
-          height: 120,
-          notes: [
-            'CDK9/CycT активируются через BRD4/SEC и сигналы стресс-ответа.',
-            'Фосфорилируют DSIF, NELF и CTD Ser2, переводя в продуктивную элонгацию.'
-          ]
-        }
-      ];
-      const BASE_EDGES = [
-        { id: 'edge:chromatin-mediator', from: 'node:chromatin', to: 'node:mediator', kind: 'flow', router: 'orthogonal', label: 'рекрутирует' },
-        { id: 'edge:mediator-polii', from: 'node:mediator', to: 'node:polii', kind: 'flow', router: 'orthogonal', label: 'собирает PIC' },
-        { id: 'edge:polii-escape', from: 'node:polii', to: 'node:escape', kind: 'flow', router: 'orthogonal', label: 'инициирует транскрипцию' },
-        { id: 'edge:enhancer-mediator', from: 'node:enhancer', to: 'node:mediator', kind: 'regulation', router: 'orthogonal', label: 'активирует', markers: { end: 'arrow-regulation' } },
-        { id: 'edge:ptefb-escape', from: 'node:ptefb', to: 'node:escape', kind: 'regulation', router: 'orthogonal', label: 'освобождает паузу', markers: { end: 'arrow-regulation' } }
-      ];
+
+      const NODE_TEMPLATES = [
+  {
+    "id": "node:chromatin",
+    "key": "chromatin",
+    "layer": "chromatin",
+    "x": 48,
+    "y": 216,
+    "width": 216,
+    "height": 132
+  },
+  {
+    "id": "node:mediator",
+    "key": "mediator",
+    "layer": "factors",
+    "x": 288,
+    "y": 192,
+    "width": 216,
+    "height": 144
+  },
+  {
+    "id": "node:polii",
+    "key": "polii",
+    "layer": "factors",
+    "x": 528,
+    "y": 192,
+    "width": 216,
+    "height": 156
+  },
+  {
+    "id": "node:escape",
+    "key": "escape",
+    "layer": "rna",
+    "x": 768,
+    "y": 252,
+    "width": 192,
+    "height": 144
+  },
+  {
+    "id": "node:enhancer",
+    "key": "enhancer",
+    "layer": "annotations",
+    "x": 288,
+    "y": 48,
+    "width": 216,
+    "height": 120
+  },
+  {
+    "id": "node:ptefb",
+    "key": "ptefb",
+    "layer": "annotations",
+    "x": 768,
+    "y": 48,
+    "width": 192,
+    "height": 120
+  }
+];
+      const EDGE_TEMPLATES = [
+  {
+    "id": "edge:chromatin-mediator",
+    "key": "chromatinMediator",
+    "from": "node:chromatin",
+    "to": "node:mediator",
+    "kind": "flow",
+    "router": "orthogonal"
+  },
+  {
+    "id": "edge:mediator-polii",
+    "key": "mediatorPolii",
+    "from": "node:mediator",
+    "to": "node:polii",
+    "kind": "flow",
+    "router": "orthogonal"
+  },
+  {
+    "id": "edge:polii-escape",
+    "key": "poliiEscape",
+    "from": "node:polii",
+    "to": "node:escape",
+    "kind": "flow",
+    "router": "orthogonal"
+  },
+  {
+    "id": "edge:enhancer-mediator",
+    "key": "enhancerMediator",
+    "from": "node:enhancer",
+    "to": "node:mediator",
+    "kind": "regulation",
+    "router": "orthogonal",
+    "markers": {
+      "end": "arrow-regulation"
+    }
+  },
+  {
+    "id": "edge:ptefb-escape",
+    "key": "ptefbEscape",
+    "from": "node:ptefb",
+    "to": "node:escape",
+    "kind": "regulation",
+    "router": "orthogonal",
+    "markers": {
+      "end": "arrow-regulation"
+    }
+  }
+];
+
+      const BASE_NODES = NODE_TEMPLATES.map(createLocalizedNode);
+      const BASE_EDGES = EDGE_TEMPLATES.map(createLocalizedEdge);
+
+      function createLocalizedNode(template) {
+        const nodeStrings = getLocaleEntry(`nodes.${template.key}`) || {};
+        const notes = Array.isArray(nodeStrings.notes) ? nodeStrings.notes.map(note => String(note)) : [];
+        return {
+          id: template.id,
+          label: typeof nodeStrings.label === 'string' ? nodeStrings.label : '',
+          type: typeof nodeStrings.type === 'string' ? nodeStrings.type : '',
+          layer: template.layer,
+          x: template.x,
+          y: template.y,
+          width: template.width,
+          height: template.height,
+          notes,
+          z: template.z
+        };
+      }
+
+      function createLocalizedEdge(template) {
+        const markers = template.markers ? { ...template.markers } : undefined;
+        return {
+          id: template.id,
+          from: template.from,
+          to: template.to,
+          kind: template.kind || 'flow',
+          router: template.router || 'orthogonal',
+          label: getLocaleString(`edges.${template.key}`),
+          markers
+        };
+      }
 
       const state = {
         nodes: new Map(BASE_NODES.map(node => [node.id, cloneNode(node)])),
@@ -870,6 +1703,7 @@
       const exportPngButton = document.getElementById('export-png');
       const exportPdfButton = document.getElementById('export-pdf');
 
+      applyStaticText();
       init();
       setupTimeline();
       setupOverlay();
@@ -980,6 +1814,135 @@
         mapCanvas.addEventListener('keydown', handleCanvasKeydown);
       }
 
+      function applyStaticText() {
+        document.title = getLocaleString('page.title');
+
+        const pageElement = document.querySelector('.page');
+        if (pageElement) {
+          pageElement.setAttribute('aria-label', getLocaleString('page.ariaLabel'));
+        }
+
+        const headerTitle = document.getElementById('header-title');
+        if (headerTitle) headerTitle.textContent = getLocaleString('page.header.title');
+        const headerPill = document.getElementById('header-pill');
+        if (headerPill) headerPill.textContent = getLocaleString('page.header.pill');
+        const metaEnvironment = document.getElementById('meta-environment');
+        if (metaEnvironment) metaEnvironment.textContent = getLocaleString('page.header.meta.environment');
+        const metaContext = document.getElementById('meta-context');
+        if (metaContext) metaContext.textContent = getLocaleString('page.header.meta.context');
+        const metaFocus = document.getElementById('meta-focus');
+        if (metaFocus) metaFocus.textContent = getLocaleString('page.header.meta.focus');
+
+        const mapTitleElement = document.getElementById('map-title');
+        if (mapTitleElement) mapTitleElement.textContent = getLocaleString('map.title');
+        const mapToolbar = document.getElementById('map-toolbar');
+        if (mapToolbar) mapToolbar.setAttribute('aria-label', getLocaleString('map.toolbarAria'));
+
+        if (fitToViewButton) fitToViewButton.textContent = getLocaleString('map.buttons.fit');
+        if (toggleGridButton) toggleGridButton.textContent = getLocaleString('map.buttons.grid');
+        const snapLabelText = document.getElementById('snap-label-text');
+        if (snapLabelText) snapLabelText.textContent = getLocaleString('map.buttons.snap');
+        if (resetOverlapButton) resetOverlapButton.textContent = getLocaleString('map.buttons.resetOverlap');
+
+        if (mapCanvas) mapCanvas.setAttribute('aria-label', getLocaleString('map.canvasAria'));
+        const axisLabel = document.getElementById('axis-label');
+        if (axisLabel) axisLabel.textContent = getLocaleString('map.axisLabel');
+        const instructions = document.getElementById('map-instructions');
+        if (instructions) instructions.textContent = getLocaleString('map.instructions');
+
+        const legendElement = document.getElementById('legend');
+        if (legendElement) legendElement.setAttribute('aria-label', getLocaleString('map.legendAria'));
+        const legendPolii = document.getElementById('legend-polii');
+        if (legendPolii) legendPolii.textContent = getLocaleString('map.legend.polii');
+        const legendChromatin = document.getElementById('legend-chromatin');
+        if (legendChromatin) legendChromatin.textContent = getLocaleString('map.legend.chromatin');
+        const legendRna = document.getElementById('legend-rna');
+        if (legendRna) legendRna.textContent = getLocaleString('map.legend.rna');
+
+        const stepsTitle = document.getElementById('steps-title');
+        if (stepsTitle) stepsTitle.textContent = getLocaleString('timeline.title');
+        const timelineContainer = document.getElementById('timeline');
+        if (timelineContainer) timelineContainer.setAttribute('aria-label', getLocaleString('timeline.ariaLabel'));
+
+        renderRegulation();
+
+        const modelTitleMain = document.getElementById('model-title-main');
+        if (modelTitleMain) modelTitleMain.textContent = getLocaleString('model.title');
+        const modelSubheading = document.getElementById('model-subheading');
+        if (modelSubheading) modelSubheading.textContent = getLocaleString('model.subheading');
+        const modelTabsElement = document.getElementById('model-tabs');
+        if (modelTabsElement) modelTabsElement.setAttribute('aria-label', getLocaleString('model.ariaLabel'));
+
+        const footerScales = document.getElementById('footer-scales');
+        if (footerScales) footerScales.textContent = getLocaleString('footer.scales');
+        const exportControls = document.getElementById('export-controls');
+        if (exportControls) exportControls.setAttribute('aria-label', getLocaleString('footer.controlsAria'));
+        if (exportSvgButton) exportSvgButton.textContent = getLocaleString('footer.buttons.exportSvg');
+        if (exportPngButton) exportPngButton.textContent = getLocaleString('footer.buttons.exportPng');
+        if (exportPdfButton) exportPdfButton.textContent = getLocaleString('footer.buttons.exportPdf');
+        if (exportJsonButton) exportJsonButton.textContent = getLocaleString('footer.buttons.exportJson');
+        if (importJsonButton) importJsonButton.textContent = getLocaleString('footer.buttons.importJson');
+        if (resetLayoutButton) resetLayoutButton.textContent = getLocaleString('footer.buttons.resetLayout');
+        const openReferenceButton = document.getElementById('open-reference');
+        if (openReferenceButton) openReferenceButton.textContent = getLocaleString('footer.buttons.openReference');
+
+        populateOverlayTable();
+      }
+
+      function renderRegulation() {
+        const grid = document.getElementById('regulation-grid');
+        if (!grid) return;
+        grid.setAttribute('aria-label', getLocaleString('regulation.ariaLabel'));
+        grid.innerHTML = '';
+        getLocaleArray('regulation.chips').forEach(text => {
+          const chip = document.createElement('div');
+          chip.className = 'chip';
+          chip.textContent = text;
+          grid.appendChild(chip);
+        });
+      }
+
+      function populateOverlayTable() {
+        const closeButton = document.getElementById('close-overlay');
+        if (closeButton) closeButton.textContent = getLocaleString('overlay.close');
+        const overlayTitle = document.getElementById('overlay-title');
+        if (overlayTitle) overlayTitle.textContent = getLocaleString('overlay.title');
+        const overlayElement = document.getElementById('reference-overlay');
+        if (overlayElement) overlayElement.setAttribute('aria-labelledby', 'overlay-title');
+        const colModule = document.getElementById('overlay-col-module');
+        if (colModule) colModule.textContent = getLocaleString('overlay.columns.module');
+        const colComposition = document.getElementById('overlay-col-composition');
+        if (colComposition) colComposition.textContent = getLocaleString('overlay.columns.composition');
+        const colFunction = document.getElementById('overlay-col-function');
+        if (colFunction) colFunction.textContent = getLocaleString('overlay.columns.function');
+        const colControl = document.getElementById('overlay-col-control');
+        if (colControl) colControl.textContent = getLocaleString('overlay.columns.control');
+
+        const tbody = document.getElementById('overlay-body');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        const rows = getLocaleEntry('overlay.rows');
+        if (Array.isArray(rows)) {
+          rows.forEach(row => {
+            const tr = document.createElement('tr');
+            ['module', 'composition', 'function', 'control'].forEach(key => {
+              const td = document.createElement('td');
+              const value = typeof row?.[key] === 'string' ? row[key] : '';
+              td.textContent = value;
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+        }
+      }
+
+      function formatNodeAria(label, type) {
+        const template = getLocaleString('messages.nodeAria') || '';
+        return template
+          .replace(/\{label\}/g, label ?? '')
+          .replace(/\{type\}/g, type ?? '');
+      }
+
       function handleImportFile(event) {
         const file = event.target.files && event.target.files[0];
         if (!file) return;
@@ -992,7 +1955,7 @@
             updateEdges();
             persistState();
           } catch (error) {
-            alert('Не удалось импортировать JSON: ' + error.message);
+            alert(getLocaleString('messages.importError') + error.message);
           }
         };
         reader.readAsText(file);
@@ -1094,7 +2057,7 @@
         element.dataset.id = node.id;
         element.tabIndex = 0;
         element.setAttribute('role', 'group');
-        element.setAttribute('aria-label', `${node.label}. ${node.type}. Перемещение стрелками, Shift — шаг x2.`);
+        element.setAttribute('aria-label', formatNodeAria(node.label, node.type));
 
         const title = document.createElement('div');
         title.className = 'node-title';
@@ -1120,7 +2083,7 @@
         const handle = document.createElement('div');
         handle.className = 'node-handle';
         handle.setAttribute('aria-hidden', 'true');
-        handle.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h2v2H7V4zm4 0h2v2h-2V4zm4 0h2v2h-2V4zM7 9h2v2H7V9zm4 0h2v2h-2V9zm4 0h2v2h-2V9zM7 14h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zM7 19h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z"></path></svg><span>Drag</span>';
+        handle.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h2v2H7V4zm4 0h2v2h-2V4zm4 0h2v2h-2V4zM7 9h2v2H7V9zm4 0h2v2h-2V9zm4 0h2v2h-2V9zM7 14h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zM7 19h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z"></path></svg><span>${getLocaleString('messages.dragHandle')}</span>`;
         element.appendChild(handle);
 
         applyNodePosition(element, node);
@@ -1423,7 +2386,7 @@
           toggleGridButton.setAttribute('aria-pressed', String(gridVisible));
           snapCheckbox.checked = gridSnapEnabled;
         } catch (error) {
-          console.warn('Сброс сохранённого состояния из-за ошибки', error);
+          console.warn(getLocaleString('messages.stateReset'), error);
           localStorage.removeItem(STORAGE_KEY);
           gridVisible = true;
           gridSnapEnabled = true;
@@ -1455,13 +2418,13 @@
           const payload = exportState();
           localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
         } catch (error) {
-          console.warn('Не удалось сохранить состояние', error);
+          console.warn(getLocaleString('messages.saveError'), error);
         }
       }
 
       function applyImportedState(payload) {
         if (!payload || !Array.isArray(payload.nodes)) {
-          throw new Error('Структура JSON не содержит массива "nodes"');
+          throw new Error(getLocaleString('messages.missingNodes'));
         }
         const merged = new Map(BASE_NODES.map(node => [node.id, cloneNode(node)]));
         payload.nodes.forEach(raw => {
@@ -1564,59 +2527,71 @@
       }
 
       function setupTimeline() {
-        const timelineButtons = document.querySelectorAll('.timeline button');
+        const timelineContainer = document.getElementById('timeline');
         const stepPanel = document.getElementById('step-panel');
-        const stepContent = {
-          assembly: {
-            title: '1. Предсборка преинициаторного комплекса',
-            points: [
-              'TBP изгибает ДНК на ~80°, позиционируя +1 сайт напротив активного центра.',
-              'TFIID взаимодействует с коактиваторами (TAF1/2) и метками H3K4me3.',
-              'TFIIA стабилизирует TBP–ДНК, TFIIB задаёт направление транскрипции.',
-              'Mediator передаёт сигналы от энхансеров, подготавливая CDK8-модуль.'
-            ]
-          },
-          isomerization: {
-            title: '2. Изомеризация и открытие промотора',
-            points: [
-              'TFIIE координирует рекрутирование TFIIH и подготавливает хеликазный цикл XPB.',
-              'ATP-зависимое расплетание формирует открытый пузырь (-9/+2) вокруг TSS.',
-              'Шаблонная цепь позиционируется в канал Pol II при участии TFIIB-B reader.',
-              'CTD Ser5-фосфориляция инициирует рекрутирование комплекса кэпирования.'
-            ]
-          },
-          initiation: {
-            title: '3. Старт синтеза и ранние транскрипты',
-            points: [
-              'Pol II инициирует синтез с +1 аденина/цитозина, формируя короткие РНК.',
-              'Abortive циклы (<10 нт) очищают канал; σ-подобная петля TFIIB ориентирует выход.',
-              'NELF/DSIF начинают связываться, подготавливая платформу паузы.',
-              'Ser5-P CTD рекрутирует TFIIH CAK и фактор кэпирования CE/HCE.'
-            ]
-          },
-          escape: {
-            title: '4. Промоторный побег и фиксация паузы',
-            points: [
-              'Pol II проходит +10/+12, выбрасывая TFIIB/TFIIE и ослабляя связи Mediator.',
-              'TFIIH остаётся до формирования устойчивого гибрида ДНК–РНК (~8–9 нт).',
-              'DSIF стабилизирует удлинение, NELF удерживает полимеразу на +20/+60.',
-              'P-TEFb (CDK9/CycT) фосфорилирует NELF/DSIF и CTD Ser2, переводя в элонгацию.'
-            ]
-          }
-        };
+        if (!timelineContainer || !stepPanel) return;
 
-        timelineButtons.forEach(button => {
-          button.addEventListener('click', () => {
-            timelineButtons.forEach(b => {
-              b.classList.toggle('active', b === button);
-              b.setAttribute('aria-selected', b === button);
-            });
-            const data = stepContent[button.dataset.step];
-            if (!data) return;
-            const listItems = data.points.map(point => `<li>${point}</li>`).join('');
-            stepPanel.innerHTML = `<h3>${data.title}</h3><ul>${listItems}</ul>`;
-          });
+        timelineContainer.innerHTML = '';
+        const steps = getLocaleEntry('timeline.steps') || {};
+        const orderSource = getLocaleEntry('timeline.order');
+        const order = Array.isArray(orderSource) ? orderSource : TIMELINE_ORDER;
+        let activeKey = null;
+
+        order.forEach(key => {
+          const step = steps?.[key];
+          if (!step) return;
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.dataset.step = key;
+          button.setAttribute('role', 'tab');
+          button.setAttribute('aria-selected', 'false');
+
+          const titleSpan = document.createElement('span');
+          titleSpan.className = 'title';
+          titleSpan.textContent = typeof step.buttonTitle === 'string' ? step.buttonTitle : '';
+          const detailSpan = document.createElement('span');
+          detailSpan.className = 'detail';
+          detailSpan.textContent = typeof step.buttonDetail === 'string' ? step.buttonDetail : '';
+          button.append(titleSpan, detailSpan);
+
+          button.addEventListener('click', () => selectStep(key));
+
+          timelineContainer.appendChild(button);
+          if (activeKey === null) {
+            activeKey = key;
+            button.classList.add('active');
+            button.setAttribute('aria-selected', 'true');
+          }
         });
+
+        function selectStep(stepKey) {
+          const step = steps?.[stepKey];
+          if (!step) return;
+          Array.from(timelineContainer.children).forEach(child => {
+            if (!(child instanceof HTMLElement)) return;
+            const isActive = child.dataset.step === stepKey;
+            child.classList.toggle('active', isActive);
+            child.setAttribute('aria-selected', String(isActive));
+          });
+          stepPanel.innerHTML = '';
+          const title = document.createElement('h3');
+          title.textContent = typeof step.panelTitle === 'string' ? step.panelTitle : '';
+          stepPanel.appendChild(title);
+          const list = document.createElement('ul');
+          const points = Array.isArray(step.panelPoints) ? step.panelPoints : [];
+          points.forEach(point => {
+            const li = document.createElement('li');
+            li.textContent = point;
+            list.appendChild(li);
+          });
+          stepPanel.appendChild(list);
+        }
+
+        if (activeKey) {
+          selectStep(activeKey);
+        } else {
+          stepPanel.innerHTML = '';
+        }
       }
 
       function setupOverlay() {
@@ -1635,81 +2610,69 @@
       function setupModelTabs() {
         const modelButtons = document.querySelectorAll('.model-tabs button');
         const modelPanel = document.getElementById('model-panel');
-        const modelContent = {
-          nodes: {
-            title: 'Структура узла {id, x, y, w, h, label, type, data}',
-            items: [
-              'Поле <strong>type</strong> принимает роли: DNA, RNA, Protein, Promoter, Enhancer, TSS, TF, Mediator и др.',
-              'Геометрия задаётся в миллиметрах A4: координаты (x, y) и размеры (w, h) относительно зоны сетки.',
-              'Доп. данные (<code>data</code>) включают метки 5′→3′, модификации (H3K4me3) и состояние комплекса.',
-              'Слои доступны через <code>layer</code> и <code>zIndex</code> — используют стандарт «process» для Pol II.'
-            ],
-            callout: 'Рекомендация: хранить идентификаторы в формате <code>promoter:tata</code>, <code>protein:tf2h</code> для совместимости с экспортом.',
-            snippet: `{
-  "id": "node:tfiih",
-  "type": "TFIIH",
-  "x": 420,
-  "y": 120,
-  "w": 90,
-  "h": 46,
-  "label": "TFIIH",
-  "layer": "factors",
-  "data": {"helicase": "XPB/XPD", "phosphorylation": "CTD Ser5"}
-}`
-          },
-          edges: {
-            title: 'Определение ребра {id, from, to, kind, label, router, markers}',
-            items: [
-              'Тип <strong>kind</strong>: flow (transcribes, recruits, phosphorylates) или regulation (activates, represses, pauses).',
-              'Поле <code>router</code> описывает геометрию: orthogonal для PIC, bezier для энхансерных петель, straight для коротких связей.',
-              'Маркеры стрелок (<code>markers</code>) задают форму/цвет; используем словарь arrow:polII, arrow:regulation, tee:repress.',
-              'Атрибут <code>timeline</code> хранит контрольные точки (например, {start: "+1", end: "+60"}) для синхронизации с осью времени.'
-            ],
-            callout: 'Связывайте рёбра с узлами по UUID — это облегчает слияние схем от разных авторов.',
-            snippet: `{
-  "id": "edge:tf2h-open",
-  "from": "node:tfiih",
-  "to": "node:openbubble",
-  "kind": "flow",
-  "label": "открывает",
-  "router": "orthogonal",
-  "markers": {"start": null, "end": "arrow:polII"}
-}`
-          },
-          layout: {
-            title: 'Правила вёрстки A4 landscape (print theme)',
-            items: [
-              'Поле <code>page</code>: {width: 297, height: 210, margin: 12} — размеры в мм с учётом сетки 28 мм.',
-              'Слои (<code>layers</code>): background, chromatin, factors, rna, annotations — управляют порядком рисования.',
-              'Стили (<code>styles</code>) фиксируют цвета ролей: Pol II #1d4ed8, chromatin #4d7c0f, RNA #b91c1c.',
-              'Гайды (<code>guides</code>) описывают линейки осей: time (left→right), assembly depth (top→bottom), regulation captions.'
-            ],
-            callout: 'Экспорт в SVG/PNG использует эти параметры — держите масштаб 1 мм = 3.78 px для консистентности.',
-            snippet: `{
-  "layout": {
-    "page": {"width": 297, "height": 210, "margin": 12},
-    "grid": {"size": 28, "visible": true},
-    "theme": "print"
-  }
-}`
+        if (!modelButtons.length || !modelPanel) return;
+
+        const tabLabels = getLocaleEntry('model.tabs') || {};
+        modelButtons.forEach(button => {
+          const key = button.dataset.model;
+          button.textContent = typeof tabLabels?.[key] === 'string' ? tabLabels[key] : '';
+          button.setAttribute('role', 'tab');
+          button.setAttribute('aria-selected', button.classList.contains('active') ? 'true' : 'false');
+        });
+
+        const content = getLocaleEntry('model.content') || {};
+
+        function renderModelSection(key) {
+          const section = content?.[key];
+          modelPanel.innerHTML = '';
+          if (!section) return;
+          const title = document.createElement('h3');
+          title.textContent = typeof section.title === 'string' ? section.title : '';
+          modelPanel.appendChild(title);
+          const list = document.createElement('ul');
+          const items = Array.isArray(section.items) ? section.items : [];
+          items.forEach(item => {
+            const li = document.createElement('li');
+            li.innerHTML = item;
+            list.appendChild(li);
+          });
+          modelPanel.appendChild(list);
+          if (section.callout) {
+            const callout = document.createElement('div');
+            callout.className = 'callout';
+            callout.innerHTML = section.callout;
+            modelPanel.appendChild(callout);
           }
-        };
+          if (section.snippet) {
+            const pre = document.createElement('pre');
+            pre.textContent = section.snippet;
+            modelPanel.appendChild(pre);
+          }
+        }
 
         modelButtons.forEach(button => {
           button.addEventListener('click', () => {
-            modelButtons.forEach(b => {
-              b.classList.toggle('active', b === button);
-              b.setAttribute('aria-selected', b === button);
+            modelButtons.forEach(other => {
+              const isActive = other === button;
+              other.classList.toggle('active', isActive);
+              other.setAttribute('aria-selected', String(isActive));
             });
-            const state = modelContent[button.dataset.model];
-            if (!state) return;
-            const list = state.items.map(item => `<li>${item}</li>`).join('');
-            const callout = state.callout ? `<div class="callout">${state.callout}</div>` : '';
-            const snippet = state.snippet ? `<pre>${state.snippet}</pre>` : '';
-            modelPanel.innerHTML = `<h3>${state.title}</h3><ul>${list}</ul>${callout}${snippet}`;
+            renderModelSection(button.dataset.model);
           });
         });
+
+        const activeButton = Array.from(modelButtons).find(btn => btn.classList.contains('active')) || modelButtons[0];
+        if (activeButton) {
+          modelButtons.forEach(btn => {
+            const isActive = btn === activeButton;
+            btn.classList.toggle('active', isActive);
+            btn.setAttribute('aria-selected', String(isActive));
+          });
+          renderModelSection(activeButton.dataset.model);
+        }
       }
+
+
     })();
   </script>
 </body>
