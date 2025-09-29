@@ -168,6 +168,71 @@
         }
       }
     },
+    "frame": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["genomic", "transcript", "protein", "regulatory", "interaction", "custom"]
+        },
+        "assembly": {"type": "string"},
+        "chromosome": {"type": "string"},
+        "locus": {"type": "string"},
+        "reference": {"type": "string"},
+        "notes": {"type": "string"}
+      }
+    },
+    "coordinateSpan": {
+      "type": "object",
+      "required": ["start", "end"],
+      "additionalProperties": false,
+      "properties": {
+        "start": {"type": "number"},
+        "end": {"type": "number"},
+        "unit": {"type": "string", "default": "bp"},
+        "reference": {"type": "string"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "strand": {
+      "type": "string",
+      "enum": ["plus", "minus", "bidirectional", "unknown"]
+    },
+    "recognitionSite": {
+      "type": "object",
+      "required": ["name", "start", "end"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string"},
+        "start": {"type": "number"},
+        "end": {"type": "number"},
+        "sequence": {"type": "string"},
+        "strand": {
+          "type": "string",
+          "enum": ["plus", "minus", "both"],
+          "default": "plus"
+        },
+        "evidence": {"type": "string"},
+        "notes": {"type": "string"}
+      }
+    },
+    "timeline": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "phase": {"type": "string"},
+        "order": {"type": "number"},
+        "start": {"type": "number"},
+        "end": {"type": "number"},
+        "unit": {"type": "string"}
+      }
+    },
+    "stringList": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
     "node": {
       "type": "object",
       "additionalProperties": false,
@@ -214,6 +279,21 @@
           "enum": ["5to3", "3to5", "bidirectional", "none"],
           "description": "Strand annotation (5′→3′, etc.)"
         },
+        "frame": {"$ref": "#/definitions/frame"},
+        "coordinates": {"$ref": "#/definitions/coordinateSpan"},
+        "strand": {"$ref": "#/definitions/strand"},
+        "recognitionSites": {
+          "type": "array",
+          "items": {"$ref": "#/definitions/recognitionSite"}
+        },
+        "aliases": {"$ref": "#/definitions/stringList"},
+        "timeline": {"$ref": "#/definitions/timeline"},
+        "evidence": {"$ref": "#/definitions/stringList"},
+        "references": {
+          "type": "array",
+          "items": {"type": "string", "format": "uri-reference"}
+        },
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
         "style": {
           "type": "object",
           "properties": {
@@ -257,6 +337,20 @@
           "enum": ["orthogonal", "bezier", "straight"],
           "default": "orthogonal"
         },
+        "frame": {"$ref": "#/definitions/frame"},
+        "coordinates": {"$ref": "#/definitions/coordinateSpan"},
+        "strand": {"$ref": "#/definitions/strand"},
+        "recognitionSites": {
+          "type": "array",
+          "items": {"$ref": "#/definitions/recognitionSite"}
+        },
+        "timeline": {"$ref": "#/definitions/timeline"},
+        "evidence": {"$ref": "#/definitions/stringList"},
+        "references": {
+          "type": "array",
+          "items": {"type": "string", "format": "uri-reference"}
+        },
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
         "style": {
           "type": "object",
           "properties": {
