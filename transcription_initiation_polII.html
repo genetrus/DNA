@@ -113,20 +113,194 @@
     }
     .flow-map {
       position: relative;
+      display: flex;
+      flex-direction: column;
       height: 100%;
+      gap: 4mm;
     }
-    .flow-map svg {
+    .map-stage {
+      display: flex;
+      flex-direction: column;
+      gap: 3mm;
+      flex: 1;
+      min-height: 0;
+    }
+    .map-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3mm;
+      align-items: center;
+    }
+    .map-toolbar button,
+    .map-toolbar label {
+      display: inline-flex;
+      align-items: center;
+      gap: 2mm;
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 999px;
+      background: #f8fafc;
+      padding: 2mm 4mm;
+      font-size: 8.5pt;
+      cursor: pointer;
+      transition: background 0.2s, border 0.2s, color 0.2s;
+    }
+    .map-toolbar button:focus-visible,
+    .map-toolbar label:focus-within {
+      outline: 2px solid var(--accent);
+      outline-offset: 1mm;
+    }
+    .map-toolbar button.active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+    .map-toolbar input[type="checkbox"] {
+      accent-color: var(--accent);
+    }
+    .map-canvas {
+      position: relative;
+      flex: 1;
+      border: 1px solid rgba(0,0,0,0.14);
+      border-radius: 8px;
+      overflow: hidden;
+      background:
+        linear-gradient(to right, rgba(29, 78, 216, 0.12) 0 1px, transparent 1px 120px) 0 0 / 120px 120px,
+        linear-gradient(to bottom, rgba(29, 78, 216, 0.08) 0 1px, transparent 1px 120px) 0 0 / 120px 120px,
+        linear-gradient(to right, rgba(148, 163, 184, 0.18) 0 1px, transparent 1px 24px) 0 0 / 24px 24px,
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.18) 0 1px, transparent 1px 24px) 0 0 / 24px 24px,
+        #f8fafc;
+      touch-action: none;
+      min-height: 0;
+      cursor: grab;
+    }
+    .map-canvas:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 1mm;
+    }
+    .map-canvas.panning {
+      cursor: grabbing;
+    }
+    .map-canvas.no-grid {
+      background: #f8fafc;
+    }
+    .map-viewport {
+      position: absolute;
+      inset: 0;
+      transform-origin: top left;
+      width: 960px;
+      height: 520px;
+    }
+    .map-background {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .node-layer {
+      position: absolute;
+      inset: 0;
+    }
+    .edge-layer {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
     }
-    .flow-map .step-label {
-      font-size: 9pt;
-      fill: var(--ink);
-      font-weight: 600;
+    .edge-layer path {
+      fill: none;
+      stroke-width: 2.5px;
     }
-    .flow-map .step-note {
+    .edge-layer path[data-kind="flow"] {
+      stroke: var(--accent);
+    }
+    .edge-layer path[data-kind="regulation"] {
+      stroke: #b91c1c;
+      stroke-dasharray: 6 3;
+    }
+    .node {
+      position: absolute;
+      border-radius: 10px;
+      border: 1px solid rgba(15, 23, 42, 0.12);
+      padding: 6px 8px;
+      background: rgba(255,255,255,0.96);
+      min-width: 96px;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      cursor: grab;
+      box-shadow: 0 3px 10px rgba(15, 23, 42, 0.08);
+      transition: box-shadow 0.2s;
+    }
+    .node:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .node.dragging {
+      cursor: grabbing;
+      box-shadow: 0 10px 24px rgba(29, 78, 216, 0.28);
+    }
+    .node[data-layer="chromatin"] {
+      background: rgba(74, 222, 128, 0.16);
+      border-color: #4d7c0f;
+    }
+    .node[data-layer="rna"] {
+      background: rgba(254, 202, 202, 0.2);
+      border-color: #b91c1c;
+    }
+    .node[data-layer="factors"] {
+      background: rgba(199, 210, 254, 0.22);
+      border-color: #4338ca;
+    }
+    .node[data-layer="annotations"] {
+      background: rgba(226, 232, 240, 0.6);
+      border-color: rgba(15, 23, 42, 0.18);
+    }
+    .node-title {
+      font-size: 10.5pt;
+      font-weight: 600;
+      color: var(--ink);
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      align-items: center;
+    }
+    .node-type {
+      font-size: 7.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.6pt;
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.08);
+      border-radius: 999px;
+      padding: 2px 6px;
+      flex-shrink: 0;
+    }
+    .node-notes {
+      margin: 0;
+      padding-left: 16px;
+      font-size: 8.5pt;
+      line-height: 1.4;
+      color: var(--muted);
+    }
+    .node-handle {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
       font-size: 8pt;
-      fill: var(--muted);
+      color: var(--accent);
+    }
+    .node-handle svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+    .axis-label {
+      position: absolute;
+      left: 16px;
+      top: -26px;
+      font-size: 8pt;
+      color: var(--muted);
+      letter-spacing: 0.4pt;
+      text-transform: uppercase;
     }
     .legend {
       display: flex;
@@ -152,6 +326,17 @@
     }
     .legend-item[data-type="rna"] .legend-swatch {
       background: #b91c1c;
+    }
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
     .data-model {
       grid-column: span 2;
@@ -383,64 +568,39 @@
     <main>
       <section class="block flow-map" aria-labelledby="map-title">
         <h2 id="map-title">Схема сборки и переходов</h2>
-        <svg viewBox="0 0 760 420" role="img" aria-describedby="map-desc">
-          <desc id="map-desc">Графическое представление сборки преинициаторного комплекса Pol II и продвижения к промоторному побегу.</desc>
-          <defs>
-            <linearGradient id="gradPolII" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#bfdbfe" />
-              <stop offset="100%" stop-color="#60a5fa" />
-            </linearGradient>
-            <linearGradient id="gradMediator" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#ede9fe" />
-              <stop offset="100%" stop-color="#c4b5fd" />
-            </linearGradient>
-          </defs>
-          <rect x="30" y="40" width="700" height="320" fill="#f8fafc" stroke="rgba(0,0,0,0.15)" stroke-dasharray="6 4" rx="12" ry="12"></rect>
-          <text class="step-label" x="60" y="70">Хроматин ремоделирован</text>
-          <rect x="50" y="90" width="130" height="70" fill="#dcfce7" stroke="#4d7c0f" rx="10"></rect>
-          <text class="step-note" x="65" y="120">SWI/SNF, HAT</text>
-          <text class="step-note" x="65" y="140">H3K4me3, ацетил-H3</text>
-
-          <path d="M180 125 H240" stroke="#4d7c0f" stroke-width="3" marker-end="url(#arrow1)"></path>
-          <defs>
-            <marker id="arrow1" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="strokeWidth" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#4d7c0f"></path>
-            </marker>
-            <marker id="arrow2" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="strokeWidth" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#1d4ed8"></path>
-            </marker>
-          </defs>
-          <rect x="240" y="95" width="150" height="120" fill="url(#gradMediator)" stroke="#7c3aed" rx="14"></rect>
-          <text class="step-label" x="260" y="120">Mediator + TFs</text>
-          <text class="step-note" x="260" y="145">TFIID-TBP, TFIIA, TFIIB</text>
-          <text class="step-note" x="260" y="165">Петли энхансеров</text>
-
-          <path d="M390 155 H470" stroke="#1d4ed8" stroke-width="3" marker-end="url(#arrow2)"></path>
-          <rect x="470" y="80" width="170" height="140" fill="url(#gradPolII)" stroke="#2563eb" rx="18"></rect>
-          <text class="step-label" x="490" y="110">Pol II–TFIIF ядро</text>
-          <text class="step-note" x="490" y="132">Присоединение TFIIE/TFIIH</text>
-          <text class="step-note" x="490" y="152">CDK7 серин-5 CTD</text>
-
-          <path d="M555 220 V270 H400" stroke="#1d4ed8" stroke-width="2.5" stroke-dasharray="6 3" marker-end="url(#arrow2)"></path>
-          <rect x="300" y="250" width="200" height="90" fill="#fee2e2" stroke="#b91c1c" rx="12"></rect>
-          <text class="step-label" x="320" y="280">Промоторный побег</text>
-          <text class="step-note" x="320" y="300">Гибрид ДНК–РНК ~8 нт</text>
-          <text class="step-note" x="320" y="320">NTP-флюкс, освобождение Mediator</text>
-
-          <path d="M400 340 H620" stroke="#b91c1c" stroke-width="3" marker-end="url(#arrow3)"></path>
-          <defs>
-            <marker id="arrow3" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="strokeWidth" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"></path>
-            </marker>
-          </defs>
-          <rect x="620" y="300" width="90" height="60" fill="#fee2e2" stroke="#b91c1c" rx="10"></rect>
-          <text class="step-label" x="630" y="330">Elongation</text>
-          <text class="step-note" x="630" y="348">P-TEFb → Ser2</text>
-        </svg>
+        <div class="map-stage" role="application" aria-labelledby="map-title" aria-describedby="map-instructions">
+          <div class="map-toolbar" role="group" aria-label="Управление картой">
+            <button type="button" id="fit-to-view">Подогнать вид</button>
+            <button type="button" id="toggle-grid" class="active" aria-pressed="true">Сетка</button>
+            <label for="snap-to-grid"><input type="checkbox" id="snap-to-grid" checked> Привязка к сетке</label>
+            <span aria-hidden="true">·</span>
+            <button type="button" id="reset-overlap">Упорядочить слои</button>
+          </div>
+          <div class="map-canvas" id="map-canvas" tabindex="0" aria-label="Рабочая зона" role="region">
+            <div class="axis-label" aria-hidden="true">Геном (5′ → 3′)</div>
+            <div class="map-viewport" id="map-viewport">
+              <svg class="edge-layer" id="edge-layer" viewBox="0 0 960 520" aria-hidden="true">
+                <defs>
+                  <marker id="arrow-flow" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="8" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)"></path>
+                  </marker>
+                  <marker id="arrow-regulation" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="8" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"></path>
+                  </marker>
+                  <marker id="tee-regulation" viewBox="0 0 10 10" refX="2" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="8" orient="auto">
+                    <path d="M 2 0 L 2 10" stroke="#b91c1c" stroke-width="2"></path>
+                  </marker>
+                </defs>
+              </svg>
+              <div class="node-layer" id="node-layer" aria-live="polite"></div>
+            </div>
+          </div>
+          <p class="visually-hidden" id="map-instructions">Используйте мышь или стрелки для перемещения узлов. Колесо мыши с зажатой клавишей Ctrl управляет масштабом, простое прокручивание сдвигает поле. Перетаскивание удерживает элементы в пределах сетки и автоматически перерассчитывает связи.</p>
+        </div>
         <div class="legend" aria-label="Условные обозначения">
-          <div class="legend-item" data-type="polii"><span class="legend-swatch"></span>Полимераза II + общие факторы</div>
-          <div class="legend-item" data-type="chromatin"><span class="legend-swatch"></span>Модифицированный хроматин</div>
-          <div class="legend-item" data-type="rna"><span class="legend-swatch"></span>Ранний транскрипт/выход из промотора</div>
+          <div class="legend-item" data-type="polii"><span class="legend-swatch"></span>Полимераза II и общие факторы</div>
+          <div class="legend-item" data-type="chromatin"><span class="legend-swatch"></span>Хроматин и промоторная ДНК</div>
+          <div class="legend-item" data-type="rna"><span class="legend-swatch"></span>РНК, побег и пауза</div>
         </div>
       </section>
       <section class="block" aria-labelledby="steps-title">
@@ -515,9 +675,13 @@
         <button type="button" id="export-svg">Экспорт SVG</button>
         <button type="button" id="export-png">Экспорт PNG</button>
         <button type="button" id="export-pdf">PDF / Печать</button>
+        <button type="button" id="export-json">Экспорт JSON</button>
+        <button type="button" id="import-json">Импорт JSON</button>
+        <button type="button" id="reset-layout">Сброс</button>
         <button type="button" id="open-reference">Таблица комплексов</button>
       </div>
     </footer>
+    <input type="file" id="import-file" accept="application/json" class="visually-hidden" aria-hidden="true" tabindex="-1" />
     <div class="overlay" id="reference-overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
       <button class="close-overlay" type="button" id="close-overlay">Закрыть</button>
       <h2 id="overlay-title">Факторный состав и функции</h2>
@@ -572,133 +736,916 @@
     </div>
   </div>
   <script>
-    const timelineButtons = document.querySelectorAll('.timeline button');
-    const stepPanel = document.getElementById('step-panel');
-    const stepContent = {
-      assembly: {
-        title: '1. Предсборка преинициаторного комплекса',
-        points: [
-          'TBP изгибает ДНК на ~80°, позиционируя +1 сайт напротив активного центра.',
-          'TFIID взаимодействует с коактиваторами (TAF1/2) и метками H3K4me3.',
-          'TFIIA стабилизирует TBP–ДНК, TFIIB задаёт направление транскрипции.',
-          'Mediator передаёт сигналы от энхансеров, подготавливая CDK8-модуль.'
-        ]
-      },
-      isomerization: {
-        title: '2. Изомеризация и открытие промотора',
-        points: [
-          'TFIIE координирует рекрутирование TFIIH и подготавливает хеликазный цикл XPB.',
-          'ATP-зависимое расплетание формирует открытый пузырь (-9/+2) вокруг TSS.',
-          'Шаблонная цепь позиционируется в канал Pol II при участии TFIIB-B reader.',
-          'CTD Ser5-фосфориляция инициирует рекрутирование комплекса кэпирования.'
-        ]
-      },
-      initiation: {
-        title: '3. Старт синтеза и ранние транскрипты',
-        points: [
-          'Pol II инициирует синтез с +1 аденина/цитозина, формируя короткие РНК.',
-          'Abortive циклы (&lt;10 нт) очищают канал; σ-подобная петля TFIIB ориентирует выход.',
-          'NELF/DSIF начинают связываться, подготавливая платформу паузы.',
-          'Ser5-P CTD рекрутирует TFIIH CAK и фактор кэпирования CE/HCE.'
-        ]
-      },
-      escape: {
-        title: '4. Промоторный побег и фиксация паузы',
-        points: [
-          'Pol II проходит +10/+12, выбрасывая TFIIB/TFIIE и ослабляя связи Mediator.',
-          'TFIIH остаётся до формирования устойчивого гибрида ДНК–РНК (~8–9 нт).',
-          'DSIF стабилизирует удлинение, NELF удерживает полимеразу на +20/+60.',
-          'P-TEFb (CDK9/CycT) фосфорилирует NELF/DSIF и CTD Ser2, переводя в элонгацию.'
-        ]
-      }
-    };
-
-    timelineButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        timelineButtons.forEach(b => {
-          b.classList.toggle('active', b === button);
-          b.setAttribute('aria-selected', b === button);
-        });
-        const data = stepContent[button.dataset.step];
-        if (!data) return;
-        const listItems = data.points.map(point => `<li>${point}</li>`).join('');
-        stepPanel.innerHTML = `<h3>${data.title}</h3><ul>${listItems}</ul>`;
-      });
-    });
-
-    function download(filename, content, type) {
-      const blob = new Blob([content], { type });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = filename;
-      link.click();
-      URL.revokeObjectURL(link.href);
-    }
-
-    document.getElementById('export-svg').addEventListener('click', () => {
-      const svg = document.querySelector('.flow-map svg');
-      const serializer = new XMLSerializer();
-      const source = serializer.serializeToString(svg);
-      const svgWithHeader = `<?xml version="1.0" encoding="UTF-8"?>\n${source}`;
-      download('transcription_initiation_polII.svg', svgWithHeader, 'image/svg+xml;charset=utf-8');
-    });
-
-    document.getElementById('export-png').addEventListener('click', () => {
-      const svg = document.querySelector('.flow-map svg');
-      const serializer = new XMLSerializer();
-      const svgData = serializer.serializeToString(svg);
-      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-      const url = URL.createObjectURL(svgBlob);
-      const img = new Image();
-      const canvas = document.createElement('canvas');
-      const scale = window.devicePixelRatio || 2;
-      const bbox = svg.viewBox.baseVal;
-      canvas.width = bbox.width * scale;
-      canvas.height = bbox.height * scale;
-      const ctx = canvas.getContext('2d');
-      img.onload = () => {
-        ctx.setTransform(scale, 0, 0, scale, 0, 0);
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, bbox.width, bbox.height);
-        ctx.drawImage(img, 0, 0);
-        URL.revokeObjectURL(url);
-        canvas.toBlob(blob => {
-          download('transcription_initiation_polII.png', blob, 'image/png');
-        }, 'image/png');
+    (function() {
+      const GRID_SIZE = 24;
+      const MAP_WIDTH = 960;
+      const MAP_HEIGHT = 520;
+      const STORAGE_KEY = 'polii-map-layout-v1';
+      const LAYER_ORDER = { chromatin: 10, factors: 20, rna: 30, annotations: 40 };
+      const LAYER_STYLE = {
+        chromatin: { fill: '#dcfce7', stroke: '#4d7c0f' },
+        factors: { fill: '#ede9fe', stroke: '#4338ca' },
+        rna: { fill: '#fee2e2', stroke: '#b91c1c' },
+        annotations: { fill: '#e2e8f0', stroke: '#475569' }
       };
-      img.src = url;
-    });
+      const BASE_NODES = [
+        {
+          id: 'node:chromatin',
+          label: 'Хроматин ремоделирован',
+          type: 'Chromatin',
+          layer: 'chromatin',
+          x: 48,
+          y: 216,
+          width: 216,
+          height: 132,
+          notes: [
+            'SWI/SNF и HAT открывают TATA-бокс и снимают нуклеосомы.',
+            'H3K4me3 / ацетил-H3 повышают аффинность TFIID.'
+          ]
+        },
+        {
+          id: 'node:mediator',
+          label: 'Mediator + общие факторы',
+          type: 'Mediator complex',
+          layer: 'factors',
+          x: 288,
+          y: 192,
+          width: 216,
+          height: 144,
+          notes: [
+            'TFIID-TBP, TFIIA и TFIIB фиксируют +1 позицию.',
+            'Tail/Head модули интегрируют сигналы энхансеров.'
+          ]
+        },
+        {
+          id: 'node:polii',
+          label: 'Pol II–TFIIF ядро',
+          type: 'Pol II core',
+          layer: 'factors',
+          x: 528,
+          y: 192,
+          width: 216,
+          height: 156,
+          notes: [
+            'TFIIE координирует загрузку TFIIH; XPB раскрывает пузырь (-9/+2).',
+            'CDK7 (CAK) фосфорилирует CTD Ser5, рекрутирует кэпирующий комплекс.'
+          ]
+        },
+        {
+          id: 'node:escape',
+          label: 'Промоторный побег и пауза',
+          type: 'RNA transition',
+          layer: 'rna',
+          x: 768,
+          y: 252,
+          width: 192,
+          height: 144,
+          notes: [
+            'Гибрид ДНК–РНК стабилизируется (~8–9 нт), Mediator отходит.',
+            'DSIF/NELF удерживают Pol II на +20/+60 до активации P-TEFb.'
+          ]
+        },
+        {
+          id: 'node:enhancer',
+          label: 'Энхансерные петли',
+          type: 'Enhancer',
+          layer: 'annotations',
+          x: 288,
+          y: 48,
+          width: 216,
+          height: 120,
+          notes: [
+            'Активаторы и Mediator Tail формируют петлю, вовлекая Cohesin.',
+            'Chromatin reader-комплексы удерживают гистоновые метки.'
+          ]
+        },
+        {
+          id: 'node:ptefb',
+          label: 'P-TEFb / сигналы освобождения',
+          type: 'Regulation',
+          layer: 'annotations',
+          x: 768,
+          y: 48,
+          width: 192,
+          height: 120,
+          notes: [
+            'CDK9/CycT активируются через BRD4/SEC и сигналы стресс-ответа.',
+            'Фосфорилируют DSIF, NELF и CTD Ser2, переводя в продуктивную элонгацию.'
+          ]
+        }
+      ];
+      const BASE_EDGES = [
+        { id: 'edge:chromatin-mediator', from: 'node:chromatin', to: 'node:mediator', kind: 'flow', router: 'orthogonal', label: 'рекрутирует' },
+        { id: 'edge:mediator-polii', from: 'node:mediator', to: 'node:polii', kind: 'flow', router: 'orthogonal', label: 'собирает PIC' },
+        { id: 'edge:polii-escape', from: 'node:polii', to: 'node:escape', kind: 'flow', router: 'orthogonal', label: 'инициирует транскрипцию' },
+        { id: 'edge:enhancer-mediator', from: 'node:enhancer', to: 'node:mediator', kind: 'regulation', router: 'orthogonal', label: 'активирует', markers: { end: 'arrow-regulation' } },
+        { id: 'edge:ptefb-escape', from: 'node:ptefb', to: 'node:escape', kind: 'regulation', router: 'orthogonal', label: 'освобождает паузу', markers: { end: 'arrow-regulation' } }
+      ];
 
-    document.getElementById('export-pdf').addEventListener('click', () => {
-      window.print();
-    });
+      const state = {
+        nodes: new Map(BASE_NODES.map(node => [node.id, cloneNode(node)])),
+        edges: BASE_EDGES.map(edge => ({ ...edge }))
+      };
 
-    const overlay = document.getElementById('reference-overlay');
-    document.getElementById('open-reference').addEventListener('click', () => {
-      overlay.classList.add('active');
-    });
-    document.getElementById('close-overlay').addEventListener('click', () => {
-      overlay.classList.remove('active');
-    });
-    overlay.addEventListener('click', event => {
-      if (event.target === overlay) {
-        overlay.classList.remove('active');
+      let scale = 1;
+      let pan = { x: 0, y: 0 };
+      let gridSnapEnabled = true;
+      let gridVisible = true;
+      let isPanning = false;
+      let panPointerId = null;
+
+      const mapCanvas = document.getElementById('map-canvas');
+      const mapViewport = document.getElementById('map-viewport');
+      const nodeLayer = document.getElementById('node-layer');
+      const edgeLayer = document.getElementById('edge-layer');
+      const toggleGridButton = document.getElementById('toggle-grid');
+      const snapCheckbox = document.getElementById('snap-to-grid');
+      const fitToViewButton = document.getElementById('fit-to-view');
+      const resetOverlapButton = document.getElementById('reset-overlap');
+      const resetLayoutButton = document.getElementById('reset-layout');
+      const exportJsonButton = document.getElementById('export-json');
+      const importJsonButton = document.getElementById('import-json');
+      const importFileInput = document.getElementById('import-file');
+      const exportSvgButton = document.getElementById('export-svg');
+      const exportPngButton = document.getElementById('export-png');
+      const exportPdfButton = document.getElementById('export-pdf');
+
+      init();
+      setupTimeline();
+      setupOverlay();
+      setupModelTabs();
+
+      function init() {
+        restoreState();
+        renderNodes();
+        applyTransform();
+        updateEdges();
+        wireControls();
       }
-    });
 
-    const modelButtons = document.querySelectorAll('.model-tabs button');
-    const modelPanel = document.getElementById('model-panel');
-    const modelContent = {
-      nodes: {
-        title: 'Структура узла {id, x, y, w, h, label, type, data}',
-        items: [
-          'Поле <strong>type</strong> принимает роли: DNA, RNA, Protein, Promoter, Enhancer, TSS, TF, Mediator и др.',
-          'Геометрия задаётся в миллиметрах A4: координаты (x, y) и размеры (w, h) относительно зоны сетки.',
-          'Доп. данные (<code>data</code>) включают метки 5′→3′, модификации (H3K4me3) и состояние комплекса.',
-          'Слои доступны через <code>layer</code> и <code>zIndex</code> — используют стандарт «process» для Pol II.'
-        ],
-        callout: 'Рекомендация: хранить идентификаторы в формате <code>promoter:tata</code>, <code>protein:tf2h</code> для совместимости с экспортом.',
-        snippet: `{
+      function wireControls() {
+        toggleGridButton.addEventListener('click', () => {
+          gridVisible = !gridVisible;
+          mapCanvas.classList.toggle('no-grid', !gridVisible);
+          toggleGridButton.classList.toggle('active', gridVisible);
+          toggleGridButton.setAttribute('aria-pressed', String(gridVisible));
+          persistState();
+        });
+
+        snapCheckbox.addEventListener('change', () => {
+          gridSnapEnabled = snapCheckbox.checked;
+          persistState();
+        });
+
+        fitToViewButton.addEventListener('click', () => {
+          fitToView();
+          persistState();
+        });
+
+        resetOverlapButton.addEventListener('click', () => {
+          resolveAllOverlaps();
+          renderNodes();
+          updateEdges();
+          persistState();
+        });
+
+        resetLayoutButton.addEventListener('click', () => {
+          localStorage.removeItem(STORAGE_KEY);
+          scale = 1;
+          pan = { x: 0, y: 0 };
+          gridVisible = true;
+          gridSnapEnabled = true;
+          toggleGridButton.classList.add('active');
+          toggleGridButton.setAttribute('aria-pressed', 'true');
+          snapCheckbox.checked = true;
+          mapCanvas.classList.remove('no-grid');
+          state.nodes = new Map(BASE_NODES.map(node => [node.id, cloneNode(node)]));
+          state.edges = BASE_EDGES.map(edge => ({ ...edge }));
+          renderNodes();
+          applyTransform();
+          updateEdges();
+          persistState();
+        });
+
+        exportJsonButton.addEventListener('click', () => {
+          const payload = exportState();
+          download('transcription_initiation_polII.json', JSON.stringify(payload, null, 2), 'application/json');
+        });
+
+        importJsonButton.addEventListener('click', () => {
+          importFileInput.click();
+        });
+
+        importFileInput.addEventListener('change', handleImportFile);
+
+        exportSvgButton.addEventListener('click', () => {
+          const svgMarkup = buildExportSvg();
+          download('transcription_initiation_polII.svg', `<?xml version="1.0" encoding="UTF-8"?>\n${svgMarkup}`, 'image/svg+xml;charset=utf-8');
+        });
+
+        exportPngButton.addEventListener('click', () => {
+          const svgMarkup = buildExportSvg();
+          const blob = new Blob([svgMarkup], { type: 'image/svg+xml;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const img = new Image();
+          const canvas = document.createElement('canvas');
+          const ratio = Math.max(2, Math.round(window.devicePixelRatio || 2));
+          canvas.width = MAP_WIDTH * ratio;
+          canvas.height = MAP_HEIGHT * ratio;
+          const ctx = canvas.getContext('2d');
+          img.onload = () => {
+            ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, MAP_WIDTH, MAP_HEIGHT);
+            ctx.drawImage(img, 0, 0);
+            URL.revokeObjectURL(url);
+            canvas.toBlob(result => {
+              if (result) {
+                download('transcription_initiation_polII.png', result, 'image/png');
+              }
+            }, 'image/png');
+          };
+          img.src = url;
+        });
+
+        exportPdfButton.addEventListener('click', () => {
+          window.print();
+        });
+
+        mapCanvas.addEventListener('wheel', handleWheel, { passive: false });
+        mapCanvas.addEventListener('pointerdown', handlePanStart);
+        mapCanvas.addEventListener('pointermove', handlePanMove);
+        mapCanvas.addEventListener('pointerup', handlePanEnd);
+        mapCanvas.addEventListener('pointercancel', handlePanEnd);
+        mapCanvas.addEventListener('keydown', handleCanvasKeydown);
+      }
+
+      function handleImportFile(event) {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const payload = JSON.parse(reader.result);
+            applyImportedState(payload);
+            renderNodes();
+            updateEdges();
+            persistState();
+          } catch (error) {
+            alert('Не удалось импортировать JSON: ' + error.message);
+          }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+      }
+
+      function handleWheel(event) {
+        event.preventDefault();
+        if (event.ctrlKey) {
+          const factor = event.deltaY < 0 ? 1.1 : 0.9;
+          zoomAt(factor, event.clientX, event.clientY);
+          persistState();
+        } else {
+          pan.x -= event.deltaX;
+          pan.y -= event.deltaY;
+          applyTransform();
+          persistState();
+        }
+      }
+
+      function handlePanStart(event) {
+        if (event.button !== 0) return;
+        if (!(event.target === mapCanvas || event.target === mapViewport)) return;
+        isPanning = true;
+        panPointerId = event.pointerId;
+        mapCanvas.setPointerCapture(panPointerId);
+        mapCanvas.classList.add('panning');
+      }
+
+      function handlePanMove(event) {
+        if (!isPanning || event.pointerId !== panPointerId) return;
+        pan.x += event.movementX;
+        pan.y += event.movementY;
+        applyTransform();
+      }
+
+      function handlePanEnd(event) {
+        if (panPointerId !== null && event.pointerId === panPointerId) {
+          mapCanvas.releasePointerCapture(panPointerId);
+          panPointerId = null;
+          isPanning = false;
+          mapCanvas.classList.remove('panning');
+          persistState();
+        }
+      }
+
+      function handleCanvasKeydown(event) {
+        const panStep = event.shiftKey ? 60 : 30;
+        const center = getCanvasCenter();
+        let handled = false;
+        if (event.key === 'ArrowUp') {
+          pan.y += panStep;
+          handled = true;
+        } else if (event.key === 'ArrowDown') {
+          pan.y -= panStep;
+          handled = true;
+        } else if (event.key === 'ArrowLeft') {
+          pan.x += panStep;
+          handled = true;
+        } else if (event.key === 'ArrowRight') {
+          pan.x -= panStep;
+          handled = true;
+        } else if (event.key === '+' || event.key === '=') {
+          zoomAt(1.1, center.x, center.y);
+          handled = true;
+        } else if (event.key === '-' || event.key === '_') {
+          zoomAt(0.9, center.x, center.y);
+          handled = true;
+        } else if (event.key === '0') {
+          fitToView();
+          handled = true;
+        }
+        if (handled) {
+          event.preventDefault();
+          applyTransform();
+          persistState();
+        }
+      }
+
+      function renderNodes() {
+        nodeLayer.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+        const sorted = Array.from(state.nodes.values()).sort((a, b) => {
+          const za = a.z ?? (LAYER_ORDER[a.layer] ?? 1);
+          const zb = b.z ?? (LAYER_ORDER[b.layer] ?? 1);
+          return za - zb;
+        });
+        sorted.forEach(node => {
+          const element = createNodeElement(node);
+          fragment.appendChild(element);
+        });
+        nodeLayer.appendChild(fragment);
+      }
+
+      function createNodeElement(node) {
+        const element = document.createElement('div');
+        element.className = 'node';
+        element.dataset.layer = node.layer;
+        element.dataset.id = node.id;
+        element.tabIndex = 0;
+        element.setAttribute('role', 'group');
+        element.setAttribute('aria-label', `${node.label}. ${node.type}. Перемещение стрелками, Shift — шаг x2.`);
+
+        const title = document.createElement('div');
+        title.className = 'node-title';
+        const label = document.createElement('span');
+        label.textContent = node.label;
+        const type = document.createElement('span');
+        type.className = 'node-type';
+        type.textContent = node.type;
+        title.append(label, type);
+        element.appendChild(title);
+
+        if (Array.isArray(node.notes) && node.notes.length) {
+          const list = document.createElement('ul');
+          list.className = 'node-notes';
+          node.notes.forEach(note => {
+            const li = document.createElement('li');
+            li.textContent = note;
+            list.appendChild(li);
+          });
+          element.appendChild(list);
+        }
+
+        const handle = document.createElement('div');
+        handle.className = 'node-handle';
+        handle.setAttribute('aria-hidden', 'true');
+        handle.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h2v2H7V4zm4 0h2v2h-2V4zm4 0h2v2h-2V4zM7 9h2v2H7V9zm4 0h2v2h-2V9zm4 0h2v2h-2V9zM7 14h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zM7 19h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z"></path></svg><span>Drag</span>';
+        element.appendChild(handle);
+
+        applyNodePosition(element, node);
+        attachDrag(element, node);
+        element.addEventListener('keydown', event => handleNodeKeydown(event, node, element));
+        return element;
+      }
+
+      function attachDrag(element, node) {
+        let pointerId = null;
+        let origin = null;
+        element.addEventListener('pointerdown', event => {
+          if (event.button !== 0) return;
+          pointerId = event.pointerId;
+          origin = {
+            mapX: getMapPoint(event).x,
+            mapY: getMapPoint(event).y,
+            nodeX: node.x,
+            nodeY: node.y
+          };
+          element.setPointerCapture(pointerId);
+          element.classList.add('dragging');
+          const baseZ = node.z ?? (LAYER_ORDER[node.layer] ?? 1);
+          element.style.zIndex = String(baseZ + 100);
+          event.stopPropagation();
+        });
+
+        element.addEventListener('pointermove', event => {
+          if (pointerId !== event.pointerId || !origin) return;
+          const point = getMapPoint(event);
+          let nextX = origin.nodeX + (point.x - origin.mapX);
+          let nextY = origin.nodeY + (point.y - origin.mapY);
+          if (gridSnapEnabled) {
+            nextX = snap(nextX);
+            nextY = snap(nextY);
+          }
+          node.x = nextX;
+          node.y = nextY;
+          clampNode(node);
+          applyNodePosition(element, node, false);
+          updateEdges();
+        });
+
+        const finish = event => {
+          if (pointerId === null || (event && event.pointerId !== pointerId)) return;
+          element.releasePointerCapture(pointerId);
+          pointerId = null;
+          element.classList.remove('dragging');
+          resolveOverlapsFor(node);
+          applyNodePosition(element, node);
+          updateEdges();
+          persistState();
+        };
+
+        element.addEventListener('pointerup', finish);
+        element.addEventListener('pointercancel', finish);
+      }
+
+      function handleNodeKeydown(event, node, element) {
+        const step = event.shiftKey ? GRID_SIZE * 2 : GRID_SIZE;
+        let moved = false;
+        if (event.key === 'ArrowUp') {
+          node.y -= step;
+          moved = true;
+        } else if (event.key === 'ArrowDown') {
+          node.y += step;
+          moved = true;
+        } else if (event.key === 'ArrowLeft') {
+          node.x -= step;
+          moved = true;
+        } else if (event.key === 'ArrowRight') {
+          node.x += step;
+          moved = true;
+        }
+        if (moved) {
+          event.preventDefault();
+          if (gridSnapEnabled) {
+            node.x = snap(node.x);
+            node.y = snap(node.y);
+          }
+          clampNode(node);
+          resolveOverlapsFor(node);
+          applyNodePosition(element, node);
+          updateEdges();
+          persistState();
+        }
+      }
+
+      function applyNodePosition(element, node, resetZ = true) {
+        element.style.left = `${node.x}px`;
+        element.style.top = `${node.y}px`;
+        element.style.width = `${node.width}px`;
+        element.style.height = `${node.height}px`;
+        if (resetZ) {
+          const baseZ = node.z ?? (LAYER_ORDER[node.layer] ?? 1);
+          element.style.zIndex = String(baseZ);
+        }
+      }
+
+      function getMapPoint(event) {
+        const rect = mapCanvas.getBoundingClientRect();
+        return {
+          x: (event.clientX - rect.left - pan.x) / scale,
+          y: (event.clientY - rect.top - pan.y) / scale
+        };
+      }
+
+      function updateEdges() {
+        edgeLayer.querySelectorAll('path').forEach(path => path.remove());
+        state.edges.forEach(edge => {
+          const from = state.nodes.get(edge.from);
+          const to = state.nodes.get(edge.to);
+          if (!from || !to) return;
+          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          path.dataset.kind = edge.kind || 'flow';
+          path.dataset.router = edge.router || 'orthogonal';
+          path.setAttribute('d', computeOrthogonalPath(from, to));
+          const markerEnd = edge.markers?.end || (edge.kind === 'regulation' ? 'arrow-regulation' : 'arrow-flow');
+          if (markerEnd) {
+            path.setAttribute('marker-end', `url(#${markerEnd})`);
+          }
+          if (edge.markers?.start) {
+            path.setAttribute('marker-start', `url(#${edge.markers.start})`);
+          }
+          if (edge.label) {
+            const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+            title.textContent = edge.label;
+            path.appendChild(title);
+          }
+          edgeLayer.appendChild(path);
+        });
+      }
+
+      function computeOrthogonalPath(from, to) {
+        const fromCenter = { x: from.x + from.width / 2, y: from.y + from.height / 2 };
+        const toCenter = { x: to.x + to.width / 2, y: to.y + to.height / 2 };
+        const horizontalPreference = Math.abs(fromCenter.x - toCenter.x) >= Math.abs(fromCenter.y - toCenter.y);
+        let segments = [];
+        if (horizontalPreference) {
+          const startX = fromCenter.x <= toCenter.x ? from.x + from.width : from.x;
+          const endX = fromCenter.x <= toCenter.x ? to.x : to.x + to.width;
+          const midX = startX + (endX - startX) / 2;
+          segments = [
+            `M ${startX} ${fromCenter.y}`,
+            `H ${midX}`,
+            `V ${toCenter.y}`,
+            `H ${endX}`
+          ];
+        } else {
+          const startY = fromCenter.y <= toCenter.y ? from.y + from.height : from.y;
+          const endY = fromCenter.y <= toCenter.y ? to.y : to.y + to.height;
+          const midY = startY + (endY - startY) / 2;
+          segments = [
+            `M ${fromCenter.x} ${startY}`,
+            `V ${midY}`,
+            `H ${toCenter.x}`,
+            `V ${endY}`
+          ];
+        }
+        return segments.join(' ');
+      }
+
+      function resolveOverlapsFor(node) {
+        const others = Array.from(state.nodes.values()).filter(other => other.id !== node.id);
+        let iterations = 0;
+        while (others.some(other => boxesOverlap(node, other))) {
+          node.y = snap(node.y + GRID_SIZE);
+          if (node.y + node.height > MAP_HEIGHT) {
+            node.y = clamp(node.y - GRID_SIZE, 0, MAP_HEIGHT - node.height);
+            node.x = snap(node.x + GRID_SIZE);
+          }
+          clampNode(node);
+          if (++iterations > 200) break;
+        }
+      }
+
+      function resolveAllOverlaps() {
+        const ordered = Array.from(state.nodes.values()).sort((a, b) => a.x - b.x || a.y - b.y);
+        ordered.forEach(node => resolveOverlapsFor(node));
+      }
+
+      function boxesOverlap(a, b) {
+        return !(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y);
+      }
+
+      function clampNode(node) {
+        node.width = Math.max(96, node.width);
+        node.height = Math.max(80, node.height);
+        node.x = clamp(node.x, 0, MAP_WIDTH - node.width);
+        node.y = clamp(node.y, 0, MAP_HEIGHT - node.height);
+      }
+
+      function snap(value) {
+        return Math.round(value / GRID_SIZE) * GRID_SIZE;
+      }
+
+      function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+      }
+
+      function zoomAt(factor, clientX, clientY) {
+        const rect = mapCanvas.getBoundingClientRect();
+        const originX = clientX - rect.left;
+        const originY = clientY - rect.top;
+        const mapX = (originX - pan.x) / scale;
+        const mapY = (originY - pan.y) / scale;
+        const newScale = clamp(scale * factor, 0.5, 2.5);
+        pan.x = originX - mapX * newScale;
+        pan.y = originY - mapY * newScale;
+        scale = newScale;
+        applyTransform();
+      }
+
+      function fitToView() {
+        const rect = mapCanvas.getBoundingClientRect();
+        const scaleX = rect.width / MAP_WIDTH;
+        const scaleY = rect.height / MAP_HEIGHT;
+        scale = clamp(Math.min(scaleX, scaleY), 0.5, 2.5);
+        pan = {
+          x: (rect.width - MAP_WIDTH * scale) / 2,
+          y: (rect.height - MAP_HEIGHT * scale) / 2
+        };
+        applyTransform();
+      }
+
+      function getCanvasCenter() {
+        const rect = mapCanvas.getBoundingClientRect();
+        return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+      }
+
+      function applyTransform() {
+        mapViewport.style.transform = `translate(${pan.x}px, ${pan.y}px) scale(${scale})`;
+      }
+
+      function cloneNode(node, overrides = {}) {
+        const width = Math.max(96, Number.isFinite(Number(overrides.width)) ? Number(overrides.width) : node.width);
+        const height = Math.max(80, Number.isFinite(Number(overrides.height)) ? Number(overrides.height) : node.height);
+        let x = Number.isFinite(Number(overrides.x)) ? Number(overrides.x) : node.x;
+        let y = Number.isFinite(Number(overrides.y)) ? Number(overrides.y) : node.y;
+        x = clamp(x, 0, MAP_WIDTH - width);
+        y = clamp(y, 0, MAP_HEIGHT - height);
+        const baseNotes = Array.isArray(node.notes) ? node.notes.slice() : [];
+        const notes = Array.isArray(overrides.notes) && overrides.notes.length ? overrides.notes.slice(0, 6).map(String) : baseNotes;
+        return {
+          id: overrides.id ?? node.id,
+          label: overrides.label ?? node.label,
+          type: overrides.type ?? node.type,
+          layer: overrides.layer ?? node.layer,
+          x,
+          y,
+          width,
+          height,
+          notes,
+          z: Number.isFinite(overrides.z) ? overrides.z : node.z ?? (LAYER_ORDER[node.layer] ?? 1)
+        };
+      }
+
+      function restoreState() {
+        try {
+          const storedRaw = localStorage.getItem(STORAGE_KEY);
+          if (!storedRaw) {
+            gridVisible = true;
+            gridSnapEnabled = true;
+            return;
+          }
+          const stored = JSON.parse(storedRaw);
+          if (Array.isArray(stored.nodes)) {
+            const merged = new Map(BASE_NODES.map(node => [node.id, cloneNode(node)]));
+            stored.nodes.forEach(raw => {
+              if (!raw || !raw.id) return;
+              const base = merged.get(raw.id) || BASE_NODES.find(node => node.id === raw.id) || raw;
+              merged.set(raw.id, cloneNode(base, raw));
+            });
+            state.nodes = merged;
+          }
+          if (Array.isArray(stored.edges) && stored.edges.length) {
+            state.edges = stored.edges.map(edge => ({
+              id: edge.id,
+              from: edge.from,
+              to: edge.to,
+              kind: edge.kind || 'flow',
+              router: edge.router || 'orthogonal',
+              label: edge.label || '',
+              markers: edge.markers || null
+            }));
+          }
+          if (stored.transform) {
+            scale = clamp(Number(stored.transform.scale) || 1, 0.5, 2.5);
+            pan = {
+              x: Number.isFinite(Number(stored.transform.pan?.x)) ? Number(stored.transform.pan.x) : 0,
+              y: Number.isFinite(Number(stored.transform.pan?.y)) ? Number(stored.transform.pan.y) : 0
+            };
+          }
+          if (stored.preferences) {
+            gridVisible = stored.preferences.gridVisible ?? true;
+            gridSnapEnabled = stored.preferences.gridSnap ?? true;
+          }
+          mapCanvas.classList.toggle('no-grid', !gridVisible);
+          toggleGridButton.classList.toggle('active', gridVisible);
+          toggleGridButton.setAttribute('aria-pressed', String(gridVisible));
+          snapCheckbox.checked = gridSnapEnabled;
+        } catch (error) {
+          console.warn('Сброс сохранённого состояния из-за ошибки', error);
+          localStorage.removeItem(STORAGE_KEY);
+          gridVisible = true;
+          gridSnapEnabled = true;
+        }
+      }
+
+      function exportState() {
+        return {
+          nodes: Array.from(state.nodes.values()).map(node => ({
+            id: node.id,
+            label: node.label,
+            type: node.type,
+            layer: node.layer,
+            x: node.x,
+            y: node.y,
+            width: node.width,
+            height: node.height,
+            notes: node.notes,
+            z: node.z
+          })),
+          edges: state.edges,
+          transform: { scale, pan },
+          preferences: { gridVisible, gridSnap: gridSnapEnabled }
+        };
+      }
+
+      function persistState() {
+        try {
+          const payload = exportState();
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        } catch (error) {
+          console.warn('Не удалось сохранить состояние', error);
+        }
+      }
+
+      function applyImportedState(payload) {
+        if (!payload || !Array.isArray(payload.nodes)) {
+          throw new Error('Структура JSON не содержит массива "nodes"');
+        }
+        const merged = new Map(BASE_NODES.map(node => [node.id, cloneNode(node)]));
+        payload.nodes.forEach(raw => {
+          if (!raw || !raw.id) return;
+          const base = merged.get(raw.id) || BASE_NODES.find(node => node.id === raw.id) || raw;
+          merged.set(raw.id, cloneNode(base, raw));
+        });
+        state.nodes = merged;
+        if (Array.isArray(payload.edges) && payload.edges.length) {
+          state.edges = payload.edges.map(edge => ({
+            id: edge.id,
+            from: edge.from,
+            to: edge.to,
+            kind: edge.kind || 'flow',
+            router: edge.router || 'orthogonal',
+            label: edge.label || '',
+            markers: edge.markers || null
+          }));
+        } else {
+          state.edges = BASE_EDGES.map(edge => ({ ...edge }));
+        }
+        if (payload.transform) {
+          scale = clamp(Number(payload.transform.scale) || 1, 0.5, 2.5);
+          pan = {
+            x: Number.isFinite(Number(payload.transform.pan?.x)) ? Number(payload.transform.pan.x) : 0,
+            y: Number.isFinite(Number(payload.transform.pan?.y)) ? Number(payload.transform.pan.y) : 0
+          };
+        }
+        if (payload.preferences) {
+          gridVisible = payload.preferences.gridVisible ?? gridVisible;
+          gridSnapEnabled = payload.preferences.gridSnap ?? gridSnapEnabled;
+          mapCanvas.classList.toggle('no-grid', !gridVisible);
+          toggleGridButton.classList.toggle('active', gridVisible);
+          toggleGridButton.setAttribute('aria-pressed', String(gridVisible));
+          snapCheckbox.checked = gridSnapEnabled;
+        }
+        applyTransform();
+      }
+
+      function buildExportSvg() {
+        const parts = [];
+        parts.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${MAP_WIDTH}" height="${MAP_HEIGHT}" viewBox="0 0 ${MAP_WIDTH} ${MAP_HEIGHT}">`);
+        parts.push('<rect width="100%" height="100%" fill="#f8fafc"/>');
+        parts.push('<g stroke-width="1">');
+        for (let x = GRID_SIZE; x < MAP_WIDTH; x += GRID_SIZE) {
+          const major = x % (GRID_SIZE * 5) === 0;
+          const color = major ? 'rgba(29,78,216,0.18)' : 'rgba(148,163,184,0.16)';
+          parts.push(`<line x1="${x}" y1="0" x2="${x}" y2="${MAP_HEIGHT}" stroke="${color}"/>`);
+        }
+        for (let y = GRID_SIZE; y < MAP_HEIGHT; y += GRID_SIZE) {
+          const major = y % (GRID_SIZE * 5) === 0;
+          const color = major ? 'rgba(29,78,216,0.18)' : 'rgba(148,163,184,0.16)';
+          parts.push(`<line x1="0" y1="${y}" x2="${MAP_WIDTH}" y2="${y}" stroke="${color}"/>`);
+        }
+        parts.push('</g>');
+        state.edges.forEach(edge => {
+          const from = state.nodes.get(edge.from);
+          const to = state.nodes.get(edge.to);
+          if (!from || !to) return;
+          const d = computeOrthogonalPath(from, to);
+          const stroke = edge.kind === 'regulation' ? '#b91c1c' : '#1d4ed8';
+          const dash = edge.kind === 'regulation' ? ' stroke-dasharray="6 3"' : '';
+          parts.push(`<path d="${d}" fill="none" stroke="${stroke}" stroke-width="2.5"${dash} marker-end="url(#${edge.markers?.end || (edge.kind === 'regulation' ? 'arrow-regulation' : 'arrow-flow')})"/>`);
+        });
+        parts.push('<defs>');
+        parts.push('<marker id="arrow-flow" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#1d4ed8"></path></marker>');
+        parts.push('<marker id="arrow-regulation" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"></path></marker>');
+        parts.push('<marker id="tee-regulation" viewBox="0 0 10 10" refX="2" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="8" orient="auto"><path d="M 2 0 L 2 10" stroke="#b91c1c" stroke-width="2"></path></marker>');
+        parts.push('</defs>');
+        const nodes = Array.from(state.nodes.values()).sort((a, b) => (a.z ?? LAYER_ORDER[a.layer] ?? 1) - (b.z ?? LAYER_ORDER[b.layer] ?? 1));
+        nodes.forEach(node => {
+          const style = LAYER_STYLE[node.layer] || { fill: '#e2e8f0', stroke: '#475569' };
+          parts.push(`<g>`);
+          parts.push(`<rect x="${node.x}" y="${node.y}" width="${node.width}" height="${node.height}" rx="10" ry="10" fill="${style.fill}" stroke="${style.stroke}" stroke-width="1.5"/>`);
+          parts.push(`<text x="${node.x + 12}" y="${node.y + 22}" font-size="12" font-family="Fira Sans, Segoe UI, sans-serif" font-weight="600" fill="#111111">${escapeXml(node.label)}</text>`);
+          parts.push(`<text x="${node.x + 12}" y="${node.y + 38}" font-size="9" font-family="Fira Sans, Segoe UI, sans-serif" fill="#475569">${escapeXml(node.type)}</text>`);
+          node.notes.forEach((note, index) => {
+            const noteY = node.y + 58 + index * 16;
+            if (noteY < node.y + node.height - 8) {
+              parts.push(`<text x="${node.x + 12}" y="${noteY}" font-size="9" font-family="Fira Sans, Segoe UI, sans-serif" fill="#4b5563">${escapeXml(note)}</text>`);
+            }
+          });
+          parts.push('</g>');
+        });
+        parts.push('</svg>');
+        return parts.join('');
+      }
+
+      function download(filename, content, type) {
+        const blob = content instanceof Blob ? content : new Blob([content], { type });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      }
+
+      function escapeXml(value) {
+        return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+      }
+
+      function setupTimeline() {
+        const timelineButtons = document.querySelectorAll('.timeline button');
+        const stepPanel = document.getElementById('step-panel');
+        const stepContent = {
+          assembly: {
+            title: '1. Предсборка преинициаторного комплекса',
+            points: [
+              'TBP изгибает ДНК на ~80°, позиционируя +1 сайт напротив активного центра.',
+              'TFIID взаимодействует с коактиваторами (TAF1/2) и метками H3K4me3.',
+              'TFIIA стабилизирует TBP–ДНК, TFIIB задаёт направление транскрипции.',
+              'Mediator передаёт сигналы от энхансеров, подготавливая CDK8-модуль.'
+            ]
+          },
+          isomerization: {
+            title: '2. Изомеризация и открытие промотора',
+            points: [
+              'TFIIE координирует рекрутирование TFIIH и подготавливает хеликазный цикл XPB.',
+              'ATP-зависимое расплетание формирует открытый пузырь (-9/+2) вокруг TSS.',
+              'Шаблонная цепь позиционируется в канал Pol II при участии TFIIB-B reader.',
+              'CTD Ser5-фосфориляция инициирует рекрутирование комплекса кэпирования.'
+            ]
+          },
+          initiation: {
+            title: '3. Старт синтеза и ранние транскрипты',
+            points: [
+              'Pol II инициирует синтез с +1 аденина/цитозина, формируя короткие РНК.',
+              'Abortive циклы (<10 нт) очищают канал; σ-подобная петля TFIIB ориентирует выход.',
+              'NELF/DSIF начинают связываться, подготавливая платформу паузы.',
+              'Ser5-P CTD рекрутирует TFIIH CAK и фактор кэпирования CE/HCE.'
+            ]
+          },
+          escape: {
+            title: '4. Промоторный побег и фиксация паузы',
+            points: [
+              'Pol II проходит +10/+12, выбрасывая TFIIB/TFIIE и ослабляя связи Mediator.',
+              'TFIIH остаётся до формирования устойчивого гибрида ДНК–РНК (~8–9 нт).',
+              'DSIF стабилизирует удлинение, NELF удерживает полимеразу на +20/+60.',
+              'P-TEFb (CDK9/CycT) фосфорилирует NELF/DSIF и CTD Ser2, переводя в элонгацию.'
+            ]
+          }
+        };
+
+        timelineButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            timelineButtons.forEach(b => {
+              b.classList.toggle('active', b === button);
+              b.setAttribute('aria-selected', b === button);
+            });
+            const data = stepContent[button.dataset.step];
+            if (!data) return;
+            const listItems = data.points.map(point => `<li>${point}</li>`).join('');
+            stepPanel.innerHTML = `<h3>${data.title}</h3><ul>${listItems}</ul>`;
+          });
+        });
+      }
+
+      function setupOverlay() {
+        const overlay = document.getElementById('reference-overlay');
+        const openButton = document.getElementById('open-reference');
+        const closeButton = document.getElementById('close-overlay');
+        openButton.addEventListener('click', () => overlay.classList.add('active'));
+        closeButton.addEventListener('click', () => overlay.classList.remove('active'));
+        overlay.addEventListener('click', event => {
+          if (event.target === overlay) {
+            overlay.classList.remove('active');
+          }
+        });
+      }
+
+      function setupModelTabs() {
+        const modelButtons = document.querySelectorAll('.model-tabs button');
+        const modelPanel = document.getElementById('model-panel');
+        const modelContent = {
+          nodes: {
+            title: 'Структура узла {id, x, y, w, h, label, type, data}',
+            items: [
+              'Поле <strong>type</strong> принимает роли: DNA, RNA, Protein, Promoter, Enhancer, TSS, TF, Mediator и др.',
+              'Геометрия задаётся в миллиметрах A4: координаты (x, y) и размеры (w, h) относительно зоны сетки.',
+              'Доп. данные (<code>data</code>) включают метки 5′→3′, модификации (H3K4me3) и состояние комплекса.',
+              'Слои доступны через <code>layer</code> и <code>zIndex</code> — используют стандарт «process» для Pol II.'
+            ],
+            callout: 'Рекомендация: хранить идентификаторы в формате <code>promoter:tata</code>, <code>protein:tf2h</code> для совместимости с экспортом.',
+            snippet: `{
   "id": "node:tfiih",
   "type": "TFIIH",
   "x": 420,
@@ -709,17 +1656,17 @@
   "layer": "factors",
   "data": {"helicase": "XPB/XPD", "phosphorylation": "CTD Ser5"}
 }`
-      },
-      edges: {
-        title: 'Определение ребра {id, from, to, kind, label, router, markers}',
-        items: [
-          'Тип <strong>kind</strong>: flow (transcribes, recruits, phosphorylates) или regulation (activates, represses, pauses).',
-          'Поле <code>router</code> описывает геометрию: orthogonal для PIC, bezier для энхансерных петель, straight для коротких связей.',
-          'Маркеры стрелок (<code>markers</code>) задают форму/цвет; используем словарь arrow:polII, arrow:regulation, tee:repress.',
-          'Атрибут <code>timeline</code> хранит контрольные точки (e.g. {start: "+1", end: "+60"}) для синхронизации с осью времени.'
-        ],
-        callout: 'Связывайте рёбра с узлами по UUID — это облегчает слияние схем от разных авторов.',
-        snippet: `{
+          },
+          edges: {
+            title: 'Определение ребра {id, from, to, kind, label, router, markers}',
+            items: [
+              'Тип <strong>kind</strong>: flow (transcribes, recruits, phosphorylates) или regulation (activates, represses, pauses).',
+              'Поле <code>router</code> описывает геометрию: orthogonal для PIC, bezier для энхансерных петель, straight для коротких связей.',
+              'Маркеры стрелок (<code>markers</code>) задают форму/цвет; используем словарь arrow:polII, arrow:regulation, tee:repress.',
+              'Атрибут <code>timeline</code> хранит контрольные точки (например, {start: "+1", end: "+60"}) для синхронизации с осью времени.'
+            ],
+            callout: 'Связывайте рёбра с узлами по UUID — это облегчает слияние схем от разных авторов.',
+            snippet: `{
   "id": "edge:tf2h-open",
   "from": "node:tfiih",
   "to": "node:openbubble",
@@ -728,40 +1675,42 @@
   "router": "orthogonal",
   "markers": {"start": null, "end": "arrow:polII"}
 }`
-      },
-      layout: {
-        title: 'Правила вёрстки A4 landscape (print theme)',
-        items: [
-          'Поле <code>page</code>: {width: 297, height: 210, margin: 12} — размеры в мм с учётом сетки 28 мм.',
-          'Слои (<code>layers</code>): background, chromatin, factors, rna, annotations — управляют порядком рисования.',
-          'Стили (<code>styles</code>) фиксируют цвета ролей: Pol II #1d4ed8, chromatin #4d7c0f, RNA #b91c1c.',
-          'Гайды (<code>guides</code>) описывают линейки осей: time (left→right), assembly depth (top→bottom), regulation captions.'
-        ],
-        callout: 'Экспорт в SVG/PNG использует эти параметры — держите масштаб 1 мм = 3.78 px для консистентности.',
-        snippet: `{
+          },
+          layout: {
+            title: 'Правила вёрстки A4 landscape (print theme)',
+            items: [
+              'Поле <code>page</code>: {width: 297, height: 210, margin: 12} — размеры в мм с учётом сетки 28 мм.',
+              'Слои (<code>layers</code>): background, chromatin, factors, rna, annotations — управляют порядком рисования.',
+              'Стили (<code>styles</code>) фиксируют цвета ролей: Pol II #1d4ed8, chromatin #4d7c0f, RNA #b91c1c.',
+              'Гайды (<code>guides</code>) описывают линейки осей: time (left→right), assembly depth (top→bottom), regulation captions.'
+            ],
+            callout: 'Экспорт в SVG/PNG использует эти параметры — держите масштаб 1 мм = 3.78 px для консистентности.',
+            snippet: `{
   "layout": {
     "page": {"width": 297, "height": 210, "margin": 12},
     "grid": {"size": 28, "visible": true},
     "theme": "print"
   }
 }`
-      }
-    };
+          }
+        };
 
-    modelButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        modelButtons.forEach(b => {
-          b.classList.toggle('active', b === button);
-          b.setAttribute('aria-selected', b === button);
+        modelButtons.forEach(button => {
+          button.addEventListener('click', () => {
+            modelButtons.forEach(b => {
+              b.classList.toggle('active', b === button);
+              b.setAttribute('aria-selected', b === button);
+            });
+            const state = modelContent[button.dataset.model];
+            if (!state) return;
+            const list = state.items.map(item => `<li>${item}</li>`).join('');
+            const callout = state.callout ? `<div class="callout">${state.callout}</div>` : '';
+            const snippet = state.snippet ? `<pre>${state.snippet}</pre>` : '';
+            modelPanel.innerHTML = `<h3>${state.title}</h3><ul>${list}</ul>${callout}${snippet}`;
+          });
         });
-        const state = modelContent[button.dataset.model];
-        if (!state) return;
-        const list = state.items.map(item => `<li>${item}</li>`).join('');
-        const callout = state.callout ? `<div class="callout">${state.callout}</div>` : '';
-        const snippet = state.snippet ? `<pre>${state.snippet}</pre>` : '';
-        modelPanel.innerHTML = `<h3>${state.title}</h3><ul>${list}</ul>${callout}${snippet}`;
-      });
-    });
+      }
+    })();
   </script>
 </body>
 </html>
