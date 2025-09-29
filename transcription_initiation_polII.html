@@ -281,6 +281,37 @@
       background: rgba(226, 232, 240, 0.6);
       border-color: rgba(15, 23, 42, 0.18);
     }
+    .node-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      font-size: 7.2pt;
+      letter-spacing: 0.5pt;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .node-frame {
+      background: rgba(37, 99, 235, 0.12);
+      color: #1d4ed8;
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-weight: 600;
+    }
+    .node-frame[data-kind="genomic"] {
+      background: rgba(34, 197, 94, 0.16);
+      color: #15803d;
+    }
+    .node-frame[data-kind="regulatory"] {
+      background: rgba(202, 138, 4, 0.18);
+      color: #b45309;
+    }
+    .node-strand {
+      background: rgba(15, 23, 42, 0.1);
+      color: #0f172a;
+      border-radius: 999px;
+      padding: 2px 6px;
+      font-weight: 600;
+    }
     .node-title {
       font-size: 10.5pt;
       font-weight: 600;
@@ -299,6 +330,22 @@
       border-radius: 999px;
       padding: 2px 6px;
       flex-shrink: 0;
+    }
+    .node-coordinates {
+      font-size: 8pt;
+      color: #1f2937;
+      font-variant-numeric: tabular-nums;
+    }
+    .node-sites {
+      margin: 0;
+      padding-left: 14px;
+      font-size: 8pt;
+      line-height: 1.35;
+      color: #334155;
+      list-style: square;
+    }
+    .node-sites li + li {
+      margin-top: 2px;
     }
     .node-notes {
       margin: 0;
@@ -348,10 +395,29 @@
       background: var(--accent-strong);
     }
     .legend-item[data-type="chromatin"] .legend-swatch {
-      background: #4d7c0f;
+      background: linear-gradient(135deg, #22c55e, #4d7c0f);
     }
     .legend-item[data-type="rna"] .legend-swatch {
-      background: #b91c1c;
+      background: linear-gradient(135deg, #fb7185, #b91c1c);
+    }
+    .legend-item[data-type="strand"] .legend-swatch {
+      background: linear-gradient(90deg, #1d4ed8, #9333ea);
+      position: relative;
+    }
+    .legend-item[data-type="strand"] .legend-swatch::after {
+      content: '5′→3′';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 6pt;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .legend-item[data-type="frame"] .legend-swatch {
+      background: transparent;
+      border: 2px dashed rgba(29, 78, 216, 0.7);
     }
     .visually-hidden {
       position: absolute !important;
@@ -638,6 +704,8 @@
           <div class="legend-item" data-type="polii"><span class="legend-swatch"></span><span id="legend-polii"></span></div>
           <div class="legend-item" data-type="chromatin"><span class="legend-swatch"></span><span id="legend-chromatin"></span></div>
           <div class="legend-item" data-type="rna"><span class="legend-swatch"></span><span id="legend-rna"></span></div>
+          <div class="legend-item" data-type="strand"><span class="legend-swatch"></span><span id="legend-strand"></span></div>
+          <div class="legend-item" data-type="frame"><span class="legend-swatch"></span><span id="legend-frame"></span></div>
         </div>
       </section>
       <section class="block" aria-labelledby="steps-title">
@@ -736,7 +804,9 @@
       "legend": {
         "polii": "Полимераза II и общие факторы",
         "chromatin": "Хроматин и промоторная ДНК",
-        "rna": "РНК, побег и пауза"
+        "rna": "РНК, побег и пауза",
+        "strand": "Направленность цепи (5′→3′ / 3′→5′)",
+        "frame": "Окно координат (frame, сборка hg38)"
       }
     },
     "timeline": {
@@ -819,6 +889,7 @@
           "items": [
             "Поле <strong>type</strong> принимает роли: DNA, RNA, Protein, Promoter, Enhancer, TSS, TF, Mediator и др.",
             "Геометрия задаётся в миллиметрах A4: координаты (x, y) и размеры (w, h) относительно зоны сетки.",
+            "Уровень advanced добавляет <code>frame</code>, <code>coordinates</code>, <code>strand</code> и <code>recognitionSites</code> для описания геномного окна, ориентации и сайтов узнавания.",
             "Доп. данные (<code>data</code>) включают метки 5′→3′, модификации (H3K4me3) и состояние комплекса.",
             "Слои доступны через <code>layer</code> и <code>zIndex</code> — используют стандарт «process» для Pol II."
           ],
@@ -831,6 +902,7 @@
             "Тип <strong>kind</strong>: flow (transcribes, recruits, phosphorylates) или regulation (activates, represses, pauses).",
             "Поле <code>router</code> описывает геометрию: orthogonal для PIC, bezier для энхансерных петель, straight для коротких связей.",
             "Маркеры стрелок (<code>markers</code>) задают форму/цвет; используем словарь arrow:polII, arrow:regulation, tee:repress.",
+            "Расширенные рёбра содержат <code>frame</code>, <code>coordinates</code>, <code>strand</code> и <code>recognitionSites</code> для фиксации контактов по геному и времени.",
             "Атрибут <code>timeline</code> хранит контрольные точки (например, {start: \"+1\", end: \"+60\"}) для синхронизации с осью времени."
           ],
           "callout": "Связывайте рёбра с узлами по UUID — это облегчает слияние схем от разных авторов.",
@@ -1496,7 +1568,9 @@
       "legend": {
         "polii": "Pol II and general factors",
         "chromatin": "Chromatin and promoter DNA",
-        "rna": "RNA, escape and pause"
+        "rna": "RNA, escape and pause",
+        "strand": "Strand orientation (5′→3′ / 3′→5′)",
+        "frame": "Coordinate frame / genomic window"
       }
     },
     "timeline": {
@@ -1579,6 +1653,7 @@
           "items": [
             "Field <strong>type</strong> covers roles: DNA, RNA, Protein, Promoter, Enhancer, TSS, TF, Mediator, etc.",
             "Geometry is in A4 millimetres: coordinates (x, y) and size (w, h) within the grid area.",
+            "Advanced level introduces <code>frame</code>, <code>coordinates</code>, <code>strand</code> and <code>recognitionSites</code> for genomic windows, orientation and motif metadata.",
             "Extra <code>data</code> stores 5′→3′ marks, modifications (H3K4me3) and complex states.",
             "<code>layer</code> and <code>zIndex</code> follow the Pol II “process” standard."
           ],
@@ -1591,6 +1666,7 @@
             "<strong>kind</strong>: flow (transcribes, recruits, phosphorylates) or regulation (activates, represses, pauses).",
             "<code>router</code> shapes geometry: orthogonal for the PIC, bezier for enhancer loops, straight for short links.",
             "Arrow markers (<code>markers</code>) pick shape/colour; use the catalog arrow:polII, arrow:regulation, tee:repress.",
+            "Advanced edges track <code>frame</code>, <code>coordinates</code>, <code>strand</code> and <code>recognitionSites</code> for genomic spans and contact hotspots.",
             "<code>timeline</code> marks checkpoints (e.g. {start: \"+1\", end: \"+60\"}) to align with the time axis."
           ],
           "callout": "Bind edges to nodes via UUIDs — it simplifies merging diagrams from different authors.",
@@ -2256,7 +2332,9 @@
       "legend": {
         "polii": "Pol II und allgemeine Faktoren",
         "chromatin": "Chromatin und Promotor-DNA",
-        "rna": "RNA, Escape und Pause"
+        "rna": "RNA, Escape und Pause",
+        "strand": "Strangrichtung (5′→3′ / 3′→5′)",
+        "frame": "Koordinatenrahmen / Genomfenster"
       }
     },
     "timeline": {
@@ -2339,6 +2417,7 @@
           "items": [
             "Feld <strong>type</strong> umfasst Rollen wie DNA, RNA, Protein, Promoter, Enhancer, TSS, TF, Mediator usw.",
             "Geometrie in A4-Millimetern: Koordinaten (x, y) und Größen (w, h) relativ zum Rasterbereich.",
+            "Im Advanced-Level ergänzen <code>frame</code>, <code>coordinates</code>, <code>strand</code> und <code>recognitionSites</code> das genombasierte Fenster, die Orientierung und Erkennungsmotive.",
             "Zusätzliche <code>data</code> enthalten 5′→3′-Marken, Modifikationen (H3K4me3) und Komplexzustände.",
             "<code>layer</code> und <code>zIndex</code> folgen dem Pol-II-Standard „process“."
           ],
@@ -2351,6 +2430,7 @@
             "<strong>kind</strong>: flow (transkribiert, rekrutiert, phosphoryliert) oder regulation (aktiviert, reprimiert, pausiert).",
             "<code>router</code> beschreibt die Geometrie: orthogonal für PIC, Bezier für Enhancer-Schleifen, straight für kurze Verbindungen.",
             "Pfeilmarker (<code>markers</code>) bestimmen Form/Farbe; nutzen Sie arrow:polII, arrow:regulation, tee:repress.",
+            "Erweiterte Kanten führen <code>frame</code>, <code>coordinates</code>, <code>strand</code> und <code>recognitionSites</code> für Genombereiche und Kontakt-Hotspots.",
             "<code>timeline</code> speichert Kontrollpunkte (z. B. {start: \"+1\", end: \"+60\"}) zur Synchronisation mit der Zeitachse."
           ],
           "callout": "Kanten per UUID mit Knoten verknüpfen – erleichtert das Zusammenführen verschiedener Diagramme.",
@@ -3036,6 +3116,83 @@
         annotations: { fill: '#e2e8f0', stroke: '#475569' }
       };
 
+      function cloneFrame(frame) {
+        if (!frame || typeof frame !== 'object') return null;
+        const result = {};
+        if (frame.type) result.type = String(frame.type);
+        if (frame.assembly) result.assembly = String(frame.assembly);
+        if (frame.chromosome) result.chromosome = String(frame.chromosome);
+        if (frame.locus) result.locus = String(frame.locus);
+        if (frame.reference) result.reference = String(frame.reference);
+        if (frame.notes) result.notes = String(frame.notes);
+        return Object.keys(result).length ? result : null;
+      }
+
+      function cloneCoordinates(coordinates) {
+        if (!coordinates || typeof coordinates !== 'object') return null;
+        const start = Number(coordinates.start);
+        const end = Number(coordinates.end);
+        if (!Number.isFinite(start) || !Number.isFinite(end)) return null;
+        const result = { start, end };
+        if (coordinates.unit) {
+          result.unit = String(coordinates.unit);
+        }
+        if (coordinates.reference) {
+          result.reference = String(coordinates.reference);
+        }
+        if (Number.isFinite(Number(coordinates.confidence))) {
+          const confidence = Math.min(1, Math.max(0, Number(coordinates.confidence)));
+          result.confidence = confidence;
+        }
+        return result;
+      }
+
+      function cloneRecognitionSites(sites) {
+        if (!Array.isArray(sites)) return [];
+        return sites
+          .map(site => {
+            if (!site || typeof site !== 'object') return null;
+            if (!site.name && !Number.isFinite(Number(site.start)) && !Number.isFinite(Number(site.end))) return null;
+            const start = Number(site.start);
+            const end = Number(site.end);
+            if (!Number.isFinite(start) || !Number.isFinite(end)) return null;
+            const entry = {
+              name: site.name ? String(site.name) : '',
+              start,
+              end
+            };
+            if (site.sequence) entry.sequence = String(site.sequence);
+            if (site.strand) entry.strand = String(site.strand);
+            if (site.evidence) entry.evidence = String(site.evidence);
+            if (site.notes) entry.notes = String(site.notes);
+            return entry;
+          })
+          .filter(Boolean);
+      }
+
+      function cloneStringArray(value) {
+        return Array.isArray(value) ? value.map(item => String(item)) : [];
+      }
+
+      function cloneTimeline(timeline) {
+        if (!timeline || typeof timeline !== 'object') return null;
+        const result = {};
+        if (timeline.phase) result.phase = String(timeline.phase);
+        if (Number.isFinite(Number(timeline.order))) result.order = Number(timeline.order);
+        if (Number.isFinite(Number(timeline.start))) result.start = Number(timeline.start);
+        if (Number.isFinite(Number(timeline.end))) result.end = Number(timeline.end);
+        if (timeline.unit) result.unit = String(timeline.unit);
+        return Object.keys(result).length ? result : null;
+      }
+
+      function cloneMarkers(markers) {
+        if (!markers || typeof markers !== 'object') return null;
+        const result = {};
+        if (markers.start) result.start = String(markers.start);
+        if (markers.end) result.end = String(markers.end);
+        return Object.keys(result).length ? result : null;
+      }
+
       let activePresetKey = 'tssMini';
       let activeOrgKey = 'eukaryote';
       let storageKey = buildStorageKey(activePresetKey, activeOrgKey);
@@ -3050,7 +3207,47 @@
     "x": 48,
     "y": 216,
     "width": 216,
-    "height": 132
+    "height": 132,
+    "frame": {
+      "type": "genomic",
+      "assembly": "GRCh38",
+      "chromosome": "chr17",
+      "locus": "POLR2A promoter window",
+      "reference": "chr17:74,617,320-74,617,520"
+    },
+    "coordinates": {
+      "start": -45,
+      "end": 60,
+      "unit": "bp",
+      "reference": "+1 = POLR2A TSS (hg38)",
+      "confidence": 0.92
+    },
+    "strand": "plus",
+    "recognitionSites": [
+      {
+        "name": "TATA-box",
+        "start": -31,
+        "end": -24,
+        "sequence": "TATAWAWR",
+        "strand": "plus",
+        "evidence": "TBP ChIP-seq (ENCODE)",
+        "notes": "Core promoter motif"
+      },
+      {
+        "name": "Inr",
+        "start": -2,
+        "end": 4,
+        "sequence": "YYANWYY",
+        "strand": "plus",
+        "evidence": "CAGE +1 peak",
+        "notes": "Defines transcription start"
+      }
+    ],
+    "aliases": ["POLR2A promoter", "Core promoter window"],
+    "timeline": { "phase": "assembly", "order": 1, "start": -45, "end": 4, "unit": "bp" },
+    "evidence": ["Cryo-EM PIC (PDB 7E8S)", "ENCODE TFIID ChIP-seq"],
+    "references": ["https://doi.org/10.1038/s41594-021-00606-2"],
+    "confidence": 0.9
   },
   {
     "id": "node:mediator",
@@ -3059,7 +3256,45 @@
     "x": 288,
     "y": 192,
     "width": 216,
-    "height": 144
+    "height": 144,
+    "frame": {
+      "type": "interaction",
+      "reference": "Mediator–PIC scaffold",
+      "notes": "Head/Middle modules contacting TBP and Pol II"
+    },
+    "coordinates": {
+      "start": -35,
+      "end": 12,
+      "unit": "bp",
+      "reference": "Relative to POLR2A +1",
+      "confidence": 0.88
+    },
+    "strand": "plus",
+    "recognitionSites": [
+      {
+        "name": "TFIID–Mediator interface",
+        "start": -35,
+        "end": -10,
+        "sequence": "TAF1/Med17",
+        "strand": "plus",
+        "evidence": "Crosslinking MS",
+        "notes": "Stabilises PIC assembly"
+      },
+      {
+        "name": "Activator relay",
+        "start": -200,
+        "end": -60,
+        "sequence": "Mediator tail",
+        "strand": "plus",
+        "evidence": "ChIA-PET loops",
+        "notes": "Connects enhancer inputs"
+      }
+    ],
+    "aliases": ["Mediator + GTF ensemble"],
+    "timeline": { "phase": "assembly", "order": 2, "start": -35, "end": 12, "unit": "bp" },
+    "evidence": ["Mediator cryo-EM (PDB 7ECC)", "Mediator-TFIID CLMS"],
+    "references": ["https://doi.org/10.1038/s41467-022-28438-3"],
+    "confidence": 0.85
   },
   {
     "id": "node:polii",
@@ -3068,7 +3303,45 @@
     "x": 528,
     "y": 192,
     "width": 216,
-    "height": 156
+    "height": 156,
+    "frame": {
+      "type": "protein",
+      "reference": "Pol II–TFIIF/TFIIE/H open complex",
+      "notes": "Clamp closed on template"
+    },
+    "coordinates": {
+      "start": -3,
+      "end": 35,
+      "unit": "bp",
+      "reference": "Template strand relative to +1",
+      "confidence": 0.88
+    },
+    "strand": "plus",
+    "recognitionSites": [
+      {
+        "name": "Active site cleft",
+        "start": 1,
+        "end": 9,
+        "sequence": "RNA:DNA hybrid",
+        "strand": "plus",
+        "evidence": "Run-on assays",
+        "notes": "Abortive products engage"
+      },
+      {
+        "name": "TFIIB reader",
+        "start": -3,
+        "end": 5,
+        "sequence": "B-finger",
+        "strand": "plus",
+        "evidence": "Cryo-EM densities",
+        "notes": "Guides +1 alignment"
+      }
+    ],
+    "aliases": ["Pol II-TFIIF-TFIIE/H"],
+    "timeline": { "phase": "isomerization", "order": 3, "start": -3, "end": 12, "unit": "bp" },
+    "evidence": ["TFIIE/TFIIH PIC (PDB 7E8S)", "In vitro run-on assays"],
+    "references": ["https://doi.org/10.1126/science.abg3075"],
+    "confidence": 0.88
   },
   {
     "id": "node:escape",
@@ -3077,7 +3350,36 @@
     "x": 768,
     "y": 252,
     "width": 192,
-    "height": 144
+    "height": 144,
+    "frame": {
+      "type": "transcript",
+      "reference": "Promoter-proximal RNA",
+      "notes": "Paused 20–60 nt"
+    },
+    "coordinates": {
+      "start": 10,
+      "end": 60,
+      "unit": "nt",
+      "reference": "Nascent RNA length",
+      "confidence": 0.83
+    },
+    "strand": "plus",
+    "recognitionSites": [
+      {
+        "name": "Pause element",
+        "start": 20,
+        "end": 40,
+        "sequence": "G-rich pause",
+        "strand": "plus",
+        "evidence": "NET-seq",
+        "notes": "NELF/DSIF engagement"
+      }
+    ],
+    "aliases": ["Promoter escape window"],
+    "timeline": { "phase": "escape", "order": 4, "start": 10, "end": 60, "unit": "nt" },
+    "evidence": ["NET-seq pause maps", "P-TEFb release assays"],
+    "references": ["https://doi.org/10.1038/nature14290"],
+    "confidence": 0.82
   },
   {
     "id": "node:enhancer",
@@ -3086,7 +3388,47 @@
     "x": 288,
     "y": 48,
     "width": 216,
-    "height": 120
+    "height": 120,
+    "frame": {
+      "type": "genomic",
+      "assembly": "GRCh38",
+      "chromosome": "chr17",
+      "locus": "Upstream enhancer cluster",
+      "reference": "chr17:74,615,000-74,616,200"
+    },
+    "coordinates": {
+      "start": -2000,
+      "end": -200,
+      "unit": "bp",
+      "reference": "Relative to POLR2A +1",
+      "confidence": 0.7
+    },
+    "strand": "bidirectional",
+    "recognitionSites": [
+      {
+        "name": "Activator hub",
+        "start": -1800,
+        "end": -1500,
+        "sequence": "AP-1/ETS",
+        "strand": "both",
+        "evidence": "ATAC-seq peaks",
+        "notes": "Mediator tail recruitment"
+      },
+      {
+        "name": "Cohesin anchor",
+        "start": -600,
+        "end": -400,
+        "sequence": "CTCF",
+        "strand": "both",
+        "evidence": "ChIA-PET",
+        "notes": "Loop stabilisation"
+      }
+    ],
+    "aliases": ["Enhancer loop cluster"],
+    "timeline": { "phase": "assembly", "order": 0, "start": -2000, "end": -200, "unit": "bp" },
+    "evidence": ["ChIA-PET Mediator loops", "ATAC-seq accessible chromatin"],
+    "references": ["https://doi.org/10.1038/s41586-018-0173-5"],
+    "confidence": 0.75
   },
   {
     "id": "node:ptefb",
@@ -3095,7 +3437,45 @@
     "x": 768,
     "y": 48,
     "width": 192,
-    "height": 120
+    "height": 120,
+    "frame": {
+      "type": "regulatory",
+      "reference": "P-TEFb pause-release module",
+      "notes": "BRD4/SEC recruitment"
+    },
+    "coordinates": {
+      "start": 20,
+      "end": 120,
+      "unit": "bp",
+      "reference": "Pause-release window",
+      "confidence": 0.78
+    },
+    "strand": "plus",
+    "recognitionSites": [
+      {
+        "name": "NELF release",
+        "start": 20,
+        "end": 45,
+        "sequence": "NELF-A interface",
+        "strand": "plus",
+        "evidence": "P-TEFb ChIP",
+        "notes": "CDK9 phosphorylation"
+      },
+      {
+        "name": "DSIF Ser2 phosphorylation",
+        "start": 45,
+        "end": 80,
+        "sequence": "Spt5 repeats",
+        "strand": "plus",
+        "evidence": "Ser2P mapping",
+        "notes": "Transitions into elongation"
+      }
+    ],
+    "aliases": ["P-TEFb activation"],
+    "timeline": { "phase": "escape", "order": 5, "start": 20, "end": 120, "unit": "bp" },
+    "evidence": ["P-TEFb ChIP-seq", "BRD4 dependency assays"],
+    "references": ["https://doi.org/10.1038/nature14290"],
+    "confidence": 0.8
   }
 ];
       const EDGE_TEMPLATES = [
@@ -3105,7 +3485,34 @@
     "from": "node:chromatin",
     "to": "node:mediator",
     "kind": "flow",
-    "router": "orthogonal"
+    "router": "orthogonal",
+    "strand": "plus",
+    "frame": {
+      "type": "interaction",
+      "reference": "TBP–Mediator handshake"
+    },
+    "coordinates": {
+      "start": -35,
+      "end": -10,
+      "unit": "bp",
+      "reference": "POLR2A core promoter",
+      "confidence": 0.86
+    },
+    "recognitionSites": [
+      {
+        "name": "TBP–TAF1 contact",
+        "start": -31,
+        "end": -24,
+        "sequence": "TATA",
+        "strand": "plus",
+        "evidence": "Cryo-EM PIC",
+        "notes": "Mediator head engages TBP"
+      }
+    ],
+    "timeline": { "phase": "assembly", "order": 1 },
+    "evidence": ["Mediator recruitment assays"],
+    "references": ["https://doi.org/10.1038/s41467-022-28438-3"],
+    "confidence": 0.85
   },
   {
     "id": "edge:mediator-polii",
@@ -3113,7 +3520,34 @@
     "from": "node:mediator",
     "to": "node:polii",
     "kind": "flow",
-    "router": "orthogonal"
+    "router": "orthogonal",
+    "strand": "plus",
+    "frame": {
+      "type": "interaction",
+      "reference": "Mediator to Pol II core"
+    },
+    "coordinates": {
+      "start": -12,
+      "end": 5,
+      "unit": "bp",
+      "reference": "Template strand",
+      "confidence": 0.84
+    },
+    "recognitionSites": [
+      {
+        "name": "Med14 latch",
+        "start": -12,
+        "end": -4,
+        "sequence": "Med14 loop",
+        "strand": "plus",
+        "evidence": "Cryo-EM",
+        "notes": "Stabilises closed clamp"
+      }
+    ],
+    "timeline": { "phase": "assembly", "order": 2 },
+    "evidence": ["Mediator–Pol II biochemical reconstitution"],
+    "references": ["https://doi.org/10.1126/science.abf6735"],
+    "confidence": 0.84
   },
   {
     "id": "edge:polii-escape",
@@ -3121,7 +3555,34 @@
     "from": "node:polii",
     "to": "node:escape",
     "kind": "flow",
-    "router": "orthogonal"
+    "router": "orthogonal",
+    "strand": "plus",
+    "frame": {
+      "type": "interaction",
+      "reference": "Catalysis to promoter escape"
+    },
+    "coordinates": {
+      "start": 1,
+      "end": 25,
+      "unit": "nt",
+      "reference": "Nascent RNA length",
+      "confidence": 0.82
+    },
+    "recognitionSites": [
+      {
+        "name": "Early RNA hybrid",
+        "start": 1,
+        "end": 9,
+        "sequence": "rAUGG",
+        "strand": "plus",
+        "evidence": "Abortive transcripts",
+        "notes": "Determines escape efficiency"
+      }
+    ],
+    "timeline": { "phase": "initiation", "order": 3 },
+    "evidence": ["Abortive transcription assays"],
+    "references": ["https://doi.org/10.1038/nature14290"],
+    "confidence": 0.82
   },
   {
     "id": "edge:enhancer-mediator",
@@ -3130,9 +3591,36 @@
     "to": "node:mediator",
     "kind": "regulation",
     "router": "orthogonal",
+    "strand": "bidirectional",
+    "frame": {
+      "type": "interaction",
+      "reference": "Enhancer loop delivery"
+    },
+    "coordinates": {
+      "start": -2000,
+      "end": -200,
+      "unit": "bp",
+      "reference": "Enhancer span",
+      "confidence": 0.72
+    },
+    "recognitionSites": [
+      {
+        "name": "Mediator tail hub",
+        "start": -900,
+        "end": -450,
+        "sequence": "Tail modules",
+        "strand": "both",
+        "evidence": "Mediator ChIA-PET",
+        "notes": "Bridges enhancer to core"
+      }
+    ],
     "markers": {
       "end": "arrow-regulation"
-    }
+    },
+    "timeline": { "phase": "assembly", "order": 0 },
+    "evidence": ["Enhancer loop capture"],
+    "references": ["https://doi.org/10.1038/s41586-018-0173-5"],
+    "confidence": 0.75
   },
   {
     "id": "edge:ptefb-escape",
@@ -3141,9 +3629,36 @@
     "to": "node:escape",
     "kind": "regulation",
     "router": "orthogonal",
+    "strand": "plus",
+    "frame": {
+      "type": "interaction",
+      "reference": "P-TEFb pause release"
+    },
+    "coordinates": {
+      "start": 20,
+      "end": 60,
+      "unit": "nt",
+      "reference": "Pause window",
+      "confidence": 0.8
+    },
+    "recognitionSites": [
+      {
+        "name": "Ser2 CTD phosphorylation",
+        "start": 20,
+        "end": 60,
+        "sequence": "YS2P repeats",
+        "strand": "plus",
+        "evidence": "ChIP-seq Ser2P",
+        "notes": "Releases DSIF/NELF"
+      }
+    ],
     "markers": {
       "end": "arrow-regulation"
-    }
+    },
+    "timeline": { "phase": "escape", "order": 5 },
+    "evidence": ["P-TEFb kinase assays"],
+    "references": ["https://doi.org/10.1038/nature14290"],
+    "confidence": 0.8
   }
 ];
 
@@ -3356,7 +3871,7 @@
         const entry = template.localePath ? getLocaleEntry(template.localePath) : null;
         const baseNotes = Array.isArray(template.notes) ? template.notes.slice() : [];
         const notes = Array.isArray(entry?.notes) ? entry.notes.map(note => String(note)) : baseNotes;
-        return {
+        const node = {
           id: template.id,
           label: typeof entry?.label === 'string' ? entry.label : template.label || '',
           type: typeof entry?.type === 'string' ? entry.type : template.type || '',
@@ -3366,27 +3881,46 @@
           width: template.width,
           height: template.height,
           notes,
-          z: template.z
+          z: template.z,
+          frame: entry?.frame ?? template.frame,
+          coordinates: entry?.coordinates ?? template.coordinates,
+          strand: entry?.strand ?? template.strand,
+          recognitionSites: entry?.recognitionSites ?? template.recognitionSites,
+          aliases: entry?.aliases ?? template.aliases,
+          timeline: entry?.timeline ?? template.timeline,
+          evidence: entry?.evidence ?? template.evidence,
+          references: entry?.references ?? template.references,
+          confidence: entry?.confidence ?? template.confidence
         };
+        return cloneNode(node);
       }
 
       function createPresetEdge(template) {
-        const markers = template.markers ? { ...template.markers } : undefined;
-        return {
+        const entry = template.localePath ? getLocaleEntry(template.localePath) : null;
+        const edge = {
           id: template.id,
           from: template.from,
           to: template.to,
           kind: template.kind || 'flow',
           router: template.router || 'orthogonal',
-          label: template.localePath ? getLocaleString(template.localePath) : template.label || '',
-          markers
+          label: typeof entry?.label === 'string' ? entry.label : template.label || '',
+          markers: template.markers,
+          frame: entry?.frame ?? template.frame,
+          coordinates: entry?.coordinates ?? template.coordinates,
+          strand: entry?.strand ?? template.strand,
+          recognitionSites: entry?.recognitionSites ?? template.recognitionSites,
+          timeline: entry?.timeline ?? template.timeline,
+          evidence: entry?.evidence ?? template.evidence,
+          references: entry?.references ?? template.references,
+          confidence: entry?.confidence ?? template.confidence
         };
+        return cloneEdge(edge);
       }
 
       function createLocalizedNode(template) {
         const nodeStrings = getLocaleEntry(`nodes.${template.key}`) || {};
         const notes = Array.isArray(nodeStrings.notes) ? nodeStrings.notes.map(note => String(note)) : [];
-        return {
+        const node = {
           id: template.id,
           label: typeof nodeStrings.label === 'string' ? nodeStrings.label : '',
           type: typeof nodeStrings.type === 'string' ? nodeStrings.type : '',
@@ -3396,21 +3930,40 @@
           width: template.width,
           height: template.height,
           notes,
-          z: template.z
+          z: template.z,
+          frame: nodeStrings.frame ?? template.frame,
+          coordinates: nodeStrings.coordinates ?? template.coordinates,
+          strand: nodeStrings.strand ?? template.strand,
+          recognitionSites: nodeStrings.recognitionSites ?? template.recognitionSites,
+          aliases: nodeStrings.aliases ?? template.aliases,
+          timeline: nodeStrings.timeline ?? template.timeline,
+          evidence: nodeStrings.evidence ?? template.evidence,
+          references: nodeStrings.references ?? template.references,
+          confidence: nodeStrings.confidence ?? template.confidence
         };
+        return cloneNode(node);
       }
 
       function createLocalizedEdge(template) {
-        const markers = template.markers ? { ...template.markers } : undefined;
-        return {
+        const entry = getLocaleEntry(`edges.${template.key}`);
+        const edge = {
           id: template.id,
           from: template.from,
           to: template.to,
           kind: template.kind || 'flow',
           router: template.router || 'orthogonal',
-          label: getLocaleString(`edges.${template.key}`),
-          markers
+          label: typeof entry === 'string' ? entry : template.label || '',
+          markers: template.markers,
+          frame: template.frame,
+          coordinates: template.coordinates,
+          strand: template.strand,
+          recognitionSites: template.recognitionSites,
+          timeline: template.timeline,
+          evidence: template.evidence,
+          references: template.references,
+          confidence: template.confidence
         };
+        return cloneEdge(edge);
       }
 
       const state = {
@@ -3498,7 +4051,7 @@
           snapCheckbox.checked = true;
           mapCanvas.classList.remove('no-grid');
           state.nodes = new Map(presetNodes.map(node => [node.id, cloneNode(node)]));
-          state.edges = presetEdges.map(edge => ({ ...edge }));
+          state.edges = presetEdges.map(edge => cloneEdge(edge));
           renderNodes();
           applyTransform();
           updateEdges();
@@ -3586,7 +4139,7 @@
         const baseEdges = Array.isArray(result.edges) ? result.edges : [];
 
         presetNodes = baseNodes.map(node => cloneNode(node));
-        presetEdges = baseEdges.map(edge => ({ ...edge }));
+        presetEdges = baseEdges.map(edge => cloneEdge(edge));
 
         activePresetKey = fallbackPreset;
         activeOrgKey = resolvedOrg;
@@ -3602,7 +4155,7 @@
         }
 
         state.nodes = new Map(presetNodes.map(node => [node.id, cloneNode(node)]));
-        state.edges = presetEdges.map(edge => ({ ...edge }));
+        state.edges = presetEdges.map(edge => cloneEdge(edge));
 
         let restored = false;
         if (!options.skipRestore) {
@@ -3815,6 +4368,10 @@
         if (legendChromatin) legendChromatin.textContent = getLocaleString('map.legend.chromatin');
         const legendRna = document.getElementById('legend-rna');
         if (legendRna) legendRna.textContent = getLocaleString('map.legend.rna');
+        const legendStrand = document.getElementById('legend-strand');
+        if (legendStrand) legendStrand.textContent = getLocaleString('map.legend.strand');
+        const legendFrame = document.getElementById('legend-frame');
+        if (legendFrame) legendFrame.textContent = getLocaleString('map.legend.frame');
 
         const stepsTitle = document.getElementById('steps-title');
         if (stepsTitle) stepsTitle.textContent = getLocaleString('timeline.title');
@@ -3893,11 +4450,79 @@
         }
       }
 
-      function formatNodeAria(label, type) {
+      function formatSigned(value) {
+        const num = Number(value);
+        if (!Number.isFinite(num)) return '';
+        if (num === 0) return '0';
+        const sign = num > 0 ? '+' : '−';
+        return `${sign}${Math.abs(num)}`;
+      }
+
+      function formatStrandSymbol(strand) {
+        const normalized = typeof strand === 'string' ? strand.toLowerCase() : '';
+        if (normalized === 'plus' || normalized === '5to3') return '5′→3′';
+        if (normalized === 'minus' || normalized === '3to5') return '3′→5′';
+        if (normalized === 'bidirectional' || normalized === 'both') return '5′↔3′';
+        if (normalized === 'unknown') return 'strand?';
+        return '';
+      }
+
+      function formatCoordinateRange(coordinates) {
+        if (!coordinates) return '';
+        const start = formatSigned(coordinates.start);
+        const end = formatSigned(coordinates.end);
+        if (!start || !end) return '';
+        const unit = coordinates.unit ? String(coordinates.unit) : 'bp';
+        let text = `${start} … ${end} ${unit}`;
+        if (coordinates.reference) {
+          text += ` (${coordinates.reference})`;
+        }
+        return text;
+      }
+
+      function formatFrameLabel(frame) {
+        if (!frame) return '';
+        if (frame.locus) return String(frame.locus);
+        if (frame.reference) return String(frame.reference);
+        if (frame.chromosome && frame.assembly) return `${frame.chromosome} · ${frame.assembly}`;
+        if (frame.chromosome) return String(frame.chromosome);
+        if (frame.type) return String(frame.type);
+        return '';
+      }
+
+      function formatRecognitionSite(site) {
+        if (!site) return '';
+        const parts = [];
+        if (site.name) parts.push(String(site.name));
+        const start = formatSigned(site.start);
+        const end = formatSigned(site.end);
+        if (start && end) {
+          parts.push(`${start}–${end}`);
+        }
+        if (site.sequence) parts.push(String(site.sequence));
+        const strand = formatStrandSymbol(site.strand);
+        if (strand) parts.push(strand);
+        return parts.join(' • ');
+      }
+
+      function formatNodeAria(node) {
         const template = getLocaleString('messages.nodeAria') || '';
-        return template
-          .replace(/\{label\}/g, label ?? '')
-          .replace(/\{type\}/g, type ?? '');
+        let text = template
+          .replace(/\{label\}/g, node.label ?? '')
+          .replace(/\{type\}/g, node.type ?? '');
+        const extras = [];
+        const coords = formatCoordinateRange(node.coordinates);
+        if (coords) extras.push(coords);
+        const strand = formatStrandSymbol(node.strand);
+        if (strand) extras.push(strand);
+        if (Array.isArray(node.recognitionSites) && node.recognitionSites.length) {
+          const siteText = formatRecognitionSite(node.recognitionSites[0]);
+          if (siteText) extras.push(siteText);
+        }
+        if (extras.length) {
+          text = `${text} ${extras.join('. ')}.`;
+        }
+        return text;
       }
 
       function handleImportFile(event) {
@@ -4014,7 +4639,35 @@
         element.dataset.id = node.id;
         element.tabIndex = 0;
         element.setAttribute('role', 'group');
-        element.setAttribute('aria-label', formatNodeAria(node.label, node.type));
+        element.setAttribute('aria-label', formatNodeAria(node));
+        if (node.strand) {
+          element.dataset.strand = node.strand;
+        } else {
+          delete element.dataset.strand;
+        }
+
+        const meta = document.createElement('div');
+        meta.className = 'node-meta';
+        const frameLabel = formatFrameLabel(node.frame);
+        if (frameLabel) {
+          const badge = document.createElement('span');
+          badge.className = 'node-frame';
+          if (node.frame?.type) {
+            badge.dataset.kind = node.frame.type;
+          }
+          badge.textContent = frameLabel;
+          meta.appendChild(badge);
+        }
+        const strandLabel = formatStrandSymbol(node.strand);
+        if (strandLabel) {
+          const strandBadge = document.createElement('span');
+          strandBadge.className = 'node-strand';
+          strandBadge.textContent = strandLabel;
+          meta.appendChild(strandBadge);
+        }
+        if (meta.childElementCount) {
+          element.appendChild(meta);
+        }
 
         const title = document.createElement('div');
         title.className = 'node-title';
@@ -4025,6 +4678,29 @@
         type.textContent = node.type;
         title.append(label, type);
         element.appendChild(title);
+
+        const coordinateText = formatCoordinateRange(node.coordinates);
+        if (coordinateText) {
+          const coords = document.createElement('div');
+          coords.className = 'node-coordinates';
+          coords.textContent = coordinateText;
+          element.appendChild(coords);
+        }
+
+        if (Array.isArray(node.recognitionSites) && node.recognitionSites.length) {
+          const siteList = document.createElement('ul');
+          siteList.className = 'node-sites';
+          node.recognitionSites.slice(0, 3).forEach(site => {
+            const text = formatRecognitionSite(site);
+            if (!text) return;
+            const item = document.createElement('li');
+            item.textContent = text;
+            siteList.appendChild(item);
+          });
+          if (siteList.childElementCount) {
+            element.appendChild(siteList);
+          }
+        }
 
         if (Array.isArray(node.notes) && node.notes.length) {
           const list = document.createElement('ul');
@@ -4158,6 +4834,9 @@
           path.dataset.kind = edge.kind || 'flow';
           path.dataset.router = edge.router || 'orthogonal';
           path.setAttribute('d', computeOrthogonalPath(from, to));
+          if (edge.strand) {
+            path.dataset.strand = edge.strand;
+          }
           const markerEnd = edge.markers?.end || (edge.kind === 'regulation' ? 'arrow-regulation' : 'arrow-flow');
           if (markerEnd) {
             path.setAttribute('marker-end', `url(#${markerEnd})`);
@@ -4165,9 +4844,23 @@
           if (edge.markers?.start) {
             path.setAttribute('marker-start', `url(#${edge.markers.start})`);
           }
-          if (edge.label) {
+          const tooltipParts = [];
+          if (edge.label) tooltipParts.push(edge.label);
+          const coordText = formatCoordinateRange(edge.coordinates);
+          if (coordText) tooltipParts.push(coordText);
+          const strandText = formatStrandSymbol(edge.strand);
+          if (strandText) tooltipParts.push(strandText);
+          if (Array.isArray(edge.recognitionSites) && edge.recognitionSites.length) {
+            const sites = edge.recognitionSites
+              .slice(0, 2)
+              .map(formatRecognitionSite)
+              .filter(Boolean)
+              .join('; ');
+            if (sites) tooltipParts.push(sites);
+          }
+          if (tooltipParts.length) {
             const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-            title.textContent = edge.label;
+            title.textContent = tooltipParts.join(' • ');
             path.appendChild(title);
           }
           edgeLayer.appendChild(path);
@@ -4284,6 +4977,16 @@
         y = clamp(y, 0, MAP_HEIGHT - height);
         const baseNotes = Array.isArray(node.notes) ? node.notes.slice() : [];
         const notes = Array.isArray(overrides.notes) && overrides.notes.length ? overrides.notes.slice(0, 6).map(String) : baseNotes;
+        const frame = overrides.frame !== undefined ? cloneFrame(overrides.frame) : cloneFrame(node.frame);
+        const coordinates = overrides.coordinates !== undefined ? cloneCoordinates(overrides.coordinates) : cloneCoordinates(node.coordinates);
+        const recognitionSites = overrides.recognitionSites !== undefined ? cloneRecognitionSites(overrides.recognitionSites) : cloneRecognitionSites(node.recognitionSites);
+        const aliases = overrides.aliases !== undefined ? cloneStringArray(overrides.aliases) : cloneStringArray(node.aliases);
+        const timeline = overrides.timeline !== undefined ? cloneTimeline(overrides.timeline) : cloneTimeline(node.timeline);
+        const evidence = overrides.evidence !== undefined ? cloneStringArray(overrides.evidence) : cloneStringArray(node.evidence);
+        const references = overrides.references !== undefined ? cloneStringArray(overrides.references) : cloneStringArray(node.references);
+        const strand = overrides.strand !== undefined ? overrides.strand : node.strand;
+        const confidenceValue = overrides.confidence !== undefined ? Number(overrides.confidence) : node.confidence;
+        const confidence = Number.isFinite(confidenceValue) ? clamp(confidenceValue, 0, 1) : undefined;
         return {
           id: overrides.id ?? node.id,
           label: overrides.label ?? node.label,
@@ -4294,14 +4997,53 @@
           width,
           height,
           notes,
-          z: Number.isFinite(overrides.z) ? overrides.z : node.z ?? (LAYER_ORDER[node.layer] ?? 1)
+          z: Number.isFinite(overrides.z) ? overrides.z : node.z ?? (LAYER_ORDER[node.layer] ?? 1),
+          frame,
+          coordinates,
+          strand: strand ?? null,
+          recognitionSites,
+          aliases,
+          timeline,
+          evidence,
+          references,
+          confidence
+        };
+      }
+
+      function cloneEdge(edge, overrides = {}) {
+        const markers = overrides.markers !== undefined ? cloneMarkers(overrides.markers) : cloneMarkers(edge.markers);
+        const frame = overrides.frame !== undefined ? cloneFrame(overrides.frame) : cloneFrame(edge.frame);
+        const coordinates = overrides.coordinates !== undefined ? cloneCoordinates(overrides.coordinates) : cloneCoordinates(edge.coordinates);
+        const recognitionSites = overrides.recognitionSites !== undefined ? cloneRecognitionSites(overrides.recognitionSites) : cloneRecognitionSites(edge.recognitionSites);
+        const timeline = overrides.timeline !== undefined ? cloneTimeline(overrides.timeline) : cloneTimeline(edge.timeline);
+        const evidence = overrides.evidence !== undefined ? cloneStringArray(overrides.evidence) : cloneStringArray(edge.evidence);
+        const references = overrides.references !== undefined ? cloneStringArray(overrides.references) : cloneStringArray(edge.references);
+        const strand = overrides.strand !== undefined ? overrides.strand : edge.strand;
+        const confidenceValue = overrides.confidence !== undefined ? Number(overrides.confidence) : edge.confidence;
+        const confidence = Number.isFinite(confidenceValue) ? clamp(confidenceValue, 0, 1) : undefined;
+        return {
+          id: overrides.id ?? edge.id,
+          from: overrides.from ?? edge.from,
+          to: overrides.to ?? edge.to,
+          kind: overrides.kind ?? edge.kind ?? 'flow',
+          router: overrides.router ?? edge.router ?? 'orthogonal',
+          label: overrides.label ?? edge.label ?? '',
+          markers,
+          frame,
+          coordinates,
+          strand: strand ?? null,
+          recognitionSites,
+          timeline,
+          evidence,
+          references,
+          confidence
         };
       }
 
       function restoreState() {
         let restored = false;
         state.nodes = new Map(presetNodes.map(node => [node.id, cloneNode(node)]));
-        state.edges = presetEdges.map(edge => ({ ...edge }));
+        state.edges = presetEdges.map(edge => cloneEdge(edge));
         gridVisible = true;
         gridSnapEnabled = true;
         try {
@@ -4322,15 +5064,7 @@
             restored = true;
           }
           if (Array.isArray(stored.edges) && stored.edges.length) {
-            state.edges = stored.edges.map(edge => ({
-              id: edge.id,
-              from: edge.from,
-              to: edge.to,
-              kind: edge.kind || 'flow',
-              router: edge.router || 'orthogonal',
-              label: edge.label || '',
-              markers: edge.markers || null
-            }));
+            state.edges = stored.edges.map(edge => cloneEdge(edge));
             restored = true;
           }
           if (stored.transform) {
@@ -4368,19 +5102,8 @@
         return {
           preset: activePresetKey,
           org: activeOrgKey,
-          nodes: Array.from(state.nodes.values()).map(node => ({
-            id: node.id,
-            label: node.label,
-            type: node.type,
-            layer: node.layer,
-            x: node.x,
-            y: node.y,
-            width: node.width,
-            height: node.height,
-            notes: node.notes,
-            z: node.z
-          })),
-          edges: state.edges,
+          nodes: Array.from(state.nodes.values()).map(node => cloneNode(node)),
+          edges: state.edges.map(edge => cloneEdge(edge)),
           transform: { scale, pan },
           preferences: { gridVisible, gridSnap: gridSnapEnabled }
         };
@@ -4404,7 +5127,7 @@
           applyPreset(payload.preset, payload.org, { skipRender: true, skipPersist: true, skipRestore: true });
         }
         state.nodes = new Map(presetNodes.map(node => [node.id, cloneNode(node)]));
-        state.edges = presetEdges.map(edge => ({ ...edge }));
+        state.edges = presetEdges.map(edge => cloneEdge(edge));
 
         const merged = new Map(state.nodes);
         payload.nodes.forEach(raw => {
@@ -4415,17 +5138,9 @@
         state.nodes = merged;
 
         if (Array.isArray(payload.edges) && payload.edges.length) {
-          state.edges = payload.edges.map(edge => ({
-            id: edge.id,
-            from: edge.from,
-            to: edge.to,
-            kind: edge.kind || 'flow',
-            router: edge.router || 'orthogonal',
-            label: edge.label || '',
-            markers: edge.markers || null
-          }));
+          state.edges = payload.edges.map(edge => cloneEdge(edge));
         } else {
-          state.edges = presetEdges.map(edge => ({ ...edge }));
+          state.edges = presetEdges.map(edge => cloneEdge(edge));
         }
 
         if (payload.transform) {
@@ -4466,7 +5181,22 @@
           const d = computeOrthogonalPath(from, to);
           const stroke = edge.kind === 'regulation' ? '#b91c1c' : '#1d4ed8';
           const dash = edge.kind === 'regulation' ? ' stroke-dasharray="6 3"' : '';
-          parts.push(`<path d="${d}" fill="none" stroke="${stroke}" stroke-width="2.5"${dash} marker-end="url(#${edge.markers?.end || (edge.kind === 'regulation' ? 'arrow-regulation' : 'arrow-flow')})"/>`);
+          const markerEnd = edge.markers?.end || (edge.kind === 'regulation' ? 'arrow-regulation' : 'arrow-flow');
+          const markerStart = edge.markers?.start ? ` marker-start="url(#${escapeXml(edge.markers.start)})"` : '';
+          const markerEndAttr = markerEnd ? ` marker-end="url(#${escapeXml(markerEnd)})"` : '';
+          const strandAttr = edge.strand ? ` data-strand="${escapeXml(edge.strand)}"` : '';
+          const tooltipParts = [];
+          if (edge.label) tooltipParts.push(edge.label);
+          const coordText = formatCoordinateRange(edge.coordinates);
+          if (coordText) tooltipParts.push(coordText);
+          const strandText = formatStrandSymbol(edge.strand);
+          if (strandText) tooltipParts.push(strandText);
+          if (Array.isArray(edge.recognitionSites) && edge.recognitionSites.length) {
+            const sites = edge.recognitionSites.slice(0, 2).map(formatRecognitionSite).filter(Boolean).join('; ');
+            if (sites) tooltipParts.push(sites);
+          }
+          const title = tooltipParts.length ? `<title>${escapeXml(tooltipParts.join(' • '))}</title>` : '';
+          parts.push(`<path d="${d}" fill="none" stroke="${stroke}" stroke-width="2.5"${dash}${markerStart}${markerEndAttr}${strandAttr}>${title}</path>`);
         });
         parts.push('<defs>');
         parts.push('<marker id="arrow-flow" viewBox="0 0 10 10" refX="10" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#1d4ed8"></path></marker>');
@@ -4476,16 +5206,45 @@
         const nodes = Array.from(state.nodes.values()).sort((a, b) => (a.z ?? LAYER_ORDER[a.layer] ?? 1) - (b.z ?? LAYER_ORDER[b.layer] ?? 1));
         nodes.forEach(node => {
           const style = LAYER_STYLE[node.layer] || { fill: '#e2e8f0', stroke: '#475569' };
-          parts.push(`<g>`);
+          parts.push('<g>');
           parts.push(`<rect x="${node.x}" y="${node.y}" width="${node.width}" height="${node.height}" rx="10" ry="10" fill="${style.fill}" stroke="${style.stroke}" stroke-width="1.5"/>`);
-          parts.push(`<text x="${node.x + 12}" y="${node.y + 22}" font-size="12" font-family="Fira Sans, Segoe UI, sans-serif" font-weight="600" fill="#111111">${escapeXml(node.label)}</text>`);
-          parts.push(`<text x="${node.x + 12}" y="${node.y + 38}" font-size="9" font-family="Fira Sans, Segoe UI, sans-serif" fill="#475569">${escapeXml(node.type)}</text>`);
-          node.notes.forEach((note, index) => {
-            const noteY = node.y + 58 + index * 16;
-            if (noteY < node.y + node.height - 8) {
-              parts.push(`<text x="${node.x + 12}" y="${noteY}" font-size="9" font-family="Fira Sans, Segoe UI, sans-serif" fill="#4b5563">${escapeXml(note)}</text>`);
-            }
-          });
+          let cursorY = node.y + 20;
+          const frameText = formatFrameLabel(node.frame);
+          if (frameText) {
+            parts.push(`<text x="${node.x + 12}" y="${cursorY}" font-size="8" font-family="Fira Sans, Segoe UI, sans-serif" fill="#2563eb" font-weight="600">${escapeXml(frameText)}</text>`);
+            cursorY += 12;
+          }
+          parts.push(`<text x="${node.x + 12}" y="${cursorY}" font-size="12" font-family="Fira Sans, Segoe UI, sans-serif" font-weight="600" fill="#111111">${escapeXml(node.label)}</text>`);
+          cursorY += 16;
+          parts.push(`<text x="${node.x + 12}" y="${cursorY}" font-size="9" font-family="Fira Sans, Segoe UI, sans-serif" fill="#475569">${escapeXml(node.type)}</text>`);
+          cursorY += 14;
+          const coordText = formatCoordinateRange(node.coordinates);
+          if (coordText) {
+            parts.push(`<text x="${node.x + 12}" y="${cursorY}" font-size="9" font-family="Fira Sans, Segoe UI, sans-serif" fill="#1f2937">${escapeXml(coordText)}</text>`);
+            cursorY += 12;
+          }
+          const strandText = formatStrandSymbol(node.strand);
+          if (strandText) {
+            parts.push(`<text x="${node.x + 12}" y="${cursorY}" font-size="9" font-family="Fira Sans, Segoe UI, sans-serif" fill="#0f172a">${escapeXml(strandText)}</text>`);
+            cursorY += 12;
+          }
+          if (Array.isArray(node.recognitionSites) && node.recognitionSites.length) {
+            node.recognitionSites.slice(0, 2).forEach(site => {
+              const siteText = formatRecognitionSite(site);
+              if (!siteText) return;
+              parts.push(`<text x="${node.x + 12}" y="${cursorY}" font-size="8" font-family="Fira Sans, Segoe UI, sans-serif" fill="#334155">${escapeXml(siteText)}</text>`);
+              cursorY += 12;
+            });
+          }
+          const notesStart = Math.max(cursorY + 8, node.y + 58);
+          if (Array.isArray(node.notes)) {
+            node.notes.forEach((note, index) => {
+              const noteY = notesStart + index * 14;
+              if (noteY < node.y + node.height - 8) {
+                parts.push(`<text x="${node.x + 12}" y="${noteY}" font-size="9" font-family="Fira Sans, Segoe UI, sans-serif" fill="#4b5563">${escapeXml(note)}</text>`);
+              }
+            });
+          }
           parts.push('</g>');
         });
         parts.push('</svg>');
